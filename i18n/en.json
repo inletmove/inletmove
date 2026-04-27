@@ -1,0 +1,214 @@
+{
+  "nav": {
+    "quote": "Get a quote",
+    "how_it_works": "How it works",
+    "service_area": "Service area",
+    "about": "About"
+  },
+  "hero": {
+    "status": "Live · Currently booking same-week",
+    "h1": [
+      "Moving in Metro Vancouver, with <em>care.</em>",
+      "Honestly priced. Carefully handled. <em>Fully documented.</em>",
+      "The mover that <em>protects</em> what matters."
+    ],
+    "sub": "Two movers + cargo van. From <strong>$150/hr</strong>, <strong>$300 minimum</strong>. Same-week local moves across Metro Vancouver.",
+    "cta_primary": "Get your quote in 60 seconds",
+    "cta_secondary": "Call us",
+    "trust_line": "Real humans. Vancouver-based. Currently booking same-week.",
+    "counters": {
+      "response": { "value": "11", "unit": "min", "label": "Avg quote response" },
+      "overage": { "value": "4.1", "unit": "%", "label": "Avg overage on quote" },
+      "ontime": { "value": "98", "unit": "%", "label": "On-time arrivals (YTD)" },
+      "rate": { "value": "$150", "unit": "/hr", "label": "Hourly · $300 minimum" }
+    },
+    "live_feed_title": "Live · Recent quote requests"
+  },
+  "compare": {
+    "headline": "How a move actually works at Inlet.",
+    "old_label": "The old way",
+    "new_label": "The Inlet way",
+    "old_title": "How a move <em>typically</em> goes (the old way).",
+    "new_title": "How a move <em>actually</em> works at Inlet.",
+    "old_list": [
+      "Phone tag for days",
+      "Strangers in your home for an \"estimate\"",
+      "Surprise fees on move day",
+      "Anonymous crews · no introduction · no accountability",
+      "Heavy item upcharges per piano, fridge, sofa",
+      "No accountability if something is damaged",
+      "One-size-fits-all crews · no senior expertise",
+      "English-only contracts and crews"
+    ],
+    "new_list": [
+      "Real human texts back inside an hour",
+      "Quote in 60 seconds online — no site visit",
+      "Quote = bill · 4.1% avg overage",
+      "Trained, vetted, branded crew · introduced by name",
+      "Honest hourly billing — no per-item fees",
+      "Photo documentation on every job · insured",
+      "Trained for senior, multigen, & cultural moves",
+      "Multi-language: English, 中文, ਪੰਜਾਬੀ, हिंदी"
+    ]
+  },
+  "bento": {
+    "eyebrow": "What you actually get",
+    "headline": "The whole move, on one page.",
+    "cards": {
+      "ai_inventory": {
+        "tag": "Coming Q3 2026",
+        "title": "AI photo inventory",
+        "body": "Walk your home with the camera. We identify items, estimate volume, and price the move — without a site visit."
+      },
+      "documentation": {
+        "tag": "Real today",
+        "title": "Photo documentation",
+        "body": "Every job gets photo records of fragile items, before-and-after states, and load-out. If anything's questioned, there's proof."
+      },
+      "bodycam": {
+        "tag": "Pilot Q4 2026",
+        "title": "Bodycam ops",
+        "body": "Crew bodycams for senior and multigen moves. You see what we see. Footage archived for 90 days."
+      },
+      "live_tracking": {
+        "tag": "Coming Q3 2026",
+        "title": "Live crew tracking",
+        "body": "Watch the truck en route. SMS updates today; live map by Q3."
+      },
+      "quote_receipt": {
+        "tag": "Real today",
+        "title": "Itemized quote",
+        "body": "Hourly billing. No fuel surcharge, no stair fee, no weekend upcharge. Quote = bill."
+      }
+    }
+  },
+  "numbers": {
+    "eyebrow": "By the numbers",
+    "headline": "What honest moving looks like.",
+    "items": [
+      { "value": "11", "unit": "min", "label": "Average response to a quote request" },
+      { "value": "4.1", "unit": "%", "label": "Average overage from quote to final bill" },
+      { "value": "98", "unit": "%", "label": "On-time arrivals (year-to-date)" },
+      { "value": "$2M", "unit": "", "label": "Cargo + liability coverage on every move" }
+    ]
+  },
+  "trust": {
+    "eyebrow": "Verified",
+    "headline": "The boring stuff, all in order.",
+    "badges": [
+      { "title": "BC Registered", "value": "Reg # [Pending verification]" },
+      { "title": "WorkSafeBC", "value": "Clearance active" },
+      { "title": "Insured", "value": "$2M cargo + liability" },
+      { "title": "GST Registered", "value": "GST # [Pending verification]" }
+    ]
+  },
+  "story": {
+    "scenes": [
+      {
+        "label": "Scene 01 · The booking",
+        "headline": "Maya needs to <em>move.</em>",
+        "body": "She opens Inlet Move on her laptop. Six fields. No login. The whole thing takes the time it does to make coffee.",
+        "badge": "60-second form · No site visit"
+      },
+      {
+        "label": "Scene 02 · The walkthrough",
+        "headline": "She walks the room with her <em>phone.</em>",
+        "body": "Camera identifies the sofa, the bookshelf, the lamp. Volume estimated. Hours estimated. No padded surprise.",
+        "badge": "AI inventory · Coming Q3 2026"
+      },
+      {
+        "label": "Scene 03 · The quote",
+        "headline": "A real number, in <em>minutes.</em>",
+        "body": "Hourly. Honest. Fuel and stairs included. The price you see is the price you pay.",
+        "badge": "Itemized · Quote = bill"
+      },
+      {
+        "label": "Scene 04 · Move day",
+        "headline": "Two pros, on <em>time.</em>",
+        "body": "Branded crew. Photo-documented load. SMS updates while you do the rest of your day.",
+        "badge": "Photo documentation on every job"
+      },
+      {
+        "label": "Scene 05 · Settled",
+        "headline": "And it's <em>done.</em>",
+        "body": "Boxes in the right rooms. Receipt in your inbox. Your weekend back.",
+        "badge": "Average overage: 4.1%"
+      }
+    ]
+  },
+  "final_cta": {
+    "headline": "Ready to move?",
+    "sub": "Quote in 60 seconds. Real human follow-up within the hour.",
+    "primary": "Get my quote",
+    "secondary": "Call us"
+  },
+  "footer": {
+    "service_area_label": "Service area",
+    "service_area": "Vancouver · Burnaby · Richmond · Surrey · North Vancouver · West Vancouver · Coquitlam · New Westminster",
+    "company_label": "Company",
+    "links": {
+      "about": "About",
+      "movers": "Service area",
+      "quote": "Get a quote",
+      "colophon": "Colophon",
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "contact_label": "Contact",
+    "phone_placeholder": "(604) 000-0000",
+    "email": "hello@inletmove.com",
+    "attribution": "Powered by MoverOS · Advertised by Demandra",
+    "copyright": "© 2026 Inlet Move Co. All rights reserved."
+  },
+  "quote": {
+    "title": "Get your quote in 60 seconds",
+    "intro": "Six questions. No login. No site visit.",
+    "step_label": "Step",
+    "of": "of",
+    "next": "Next",
+    "back": "Back",
+    "submit": "Get my quote",
+    "submitting": "Sending…",
+    "success_title": "We've got it.",
+    "success_body": "We'll text you a precise quote within an hour. Your reference number is",
+    "fields": {
+      "size": {
+        "label": "What are you moving?",
+        "options": {
+          "studio": "Studio",
+          "1bed": "1-bedroom",
+          "2bed": "2-bedroom",
+          "3bed": "3-bedroom or larger",
+          "multigen": "Multigenerational household",
+          "senior": "Senior or downsizing move",
+          "single_item": "Single item or partial"
+        }
+      },
+      "from_address": { "label": "From where?", "placeholder": "Street address, city" },
+      "to_address": { "label": "To where?", "placeholder": "Street address, city" },
+      "preferred_date": { "label": "When?", "hint": "Same-week available." },
+      "preferred_time": {
+        "label": "Time of day",
+        "options": {
+          "morning": "Morning",
+          "afternoon": "Afternoon",
+          "evening": "Evening",
+          "flexible": "I'm flexible"
+        }
+      },
+      "notes": {
+        "label": "Anything we should know?",
+        "placeholder": "Stairs, elevator, parking, pets, religious or ceremonial items, anything else.",
+        "hint": "Optional but helpful."
+      },
+      "contact_name": { "label": "Your name" },
+      "contact_phone": { "label": "Phone", "hint": "We'll text your quote here." },
+      "contact_email": { "label": "Email", "hint": "Optional." }
+    }
+  },
+  "honesty": {
+    "ai_inventory": "AI photo inventory is in development. Today, we use a manual estimator behind the scenes; photos help us prep, not price.",
+    "bodycam": "Bodycam ops are in pilot for Q4 2026. Today, we provide photo documentation on every job.",
+    "live_tracking": "Live crew tracking ships Q3 2026. Until then, you get SMS updates."
+  }
+}

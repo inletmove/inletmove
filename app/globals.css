@@ -1,0 +1,66 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Inlet Move Co. — global styles
+   Design tokens live in tailwind.config.ts. This file bootstraps
+   Tailwind, injects font CSS variables, and defines a few base
+   styles that are easier to express as raw CSS than utilities.
+   ============================================================ */
+
+:root {
+  --line-light: rgba(14, 42, 71, 0.08);
+  --line-mid: rgba(14, 42, 71, 0.14);
+  --line-dark: rgba(255, 255, 255, 0.08);
+  --line-darker: rgba(255, 255, 255, 0.16);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-paper text-charcoal font-body;
+    font-size: 17px;
+    line-height: 1.6;
+  }
+
+  ::selection {
+    @apply bg-ember text-bone;
+  }
+
+  /* Honour reduced motion across the board. Components also gate on useReducedMotion(). */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  :focus-visible {
+    @apply outline outline-2 outline-offset-2 outline-pacific;
+  }
+}
+
+@layer components {
+  .display-italic {
+    font-style: italic;
+    font-variation-settings: 'opsz' 144, 'SOFT' 100;
+  }
+
+  .display-soft {
+    font-variation-settings: 'opsz' 144, 'SOFT' 50;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[200]
+           focus:rounded-md focus:bg-inlet-deep focus:px-4 focus:py-2 focus:text-bone;
+  }
+}
