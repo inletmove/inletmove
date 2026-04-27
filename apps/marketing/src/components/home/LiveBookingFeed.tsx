@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn';
 /**
  * Cycling booking feed. v1 ships with seed data only and is labeled "Sample".
  * When PUBLIC_FEED_URL is set (v1.1, after the Vercel quote app deploys at
- * quote.inletmove.com), the component fetches real masked booking data and
+ * quote.inletmove.ca), the component fetches real masked booking data and
  * the badge swaps from "Sample" to "Live". This is the network-boundary
  * abstraction: zero code change between v1 and v1.1.
  */

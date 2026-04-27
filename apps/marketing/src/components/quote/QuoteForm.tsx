@@ -6,7 +6,7 @@ import { cn } from '@/lib/cn';
  * Posts JSON to PUBLIC_QUOTE_ENDPOINT (set in apps/marketing/.env).
  *
  * v1: PUBLIC_QUOTE_ENDPOINT=/quote-handler.php (Hostinger PHP shim, emails Feroz)
- * v1.1: PUBLIC_QUOTE_ENDPOINT=https://quote.inletmove.com/api/quote (Vercel + Supabase)
+ * v1.1: PUBLIC_QUOTE_ENDPOINT=https://quote.inletmove.ca/api/quote (Vercel + Supabase)
  *
  * The swap is one env var change. The form code does not need to change.
  * Field names are snake_case to match the eventual Vercel/Supabase schema

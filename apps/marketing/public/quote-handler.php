@@ -11,9 +11,9 @@
  *   - Hostinger shared hosting runs PHP, not Node. The Astro site is built
  *     to static HTML; there is no server runtime for the Astro side.
  *   - The proper backend (Next.js + Supabase + Twilio + Resend at
- *     quote.inletmove.com on Vercel) ships in v1.1. When that lands, the
+ *     quote.inletmove.ca on Vercel) ships in v1.1. When that lands, the
  *     marketing form swaps PUBLIC_QUOTE_ENDPOINT to point at
- *     https://quote.inletmove.com/api/quote — zero code change in the form.
+ *     https://quote.inletmove.ca/api/quote — zero code change in the form.
  *   - Until then, this PHP file at least gets us emails so leads aren't lost.
  *
  * Environment variables (set in Hostinger's hPanel under Advanced > PHP
@@ -22,9 +22,9 @@
  *
  *   RESEND_API_KEY        re_xxxxxxxxxxxxxxx
  *   FEROZ_NOTIFY_EMAIL    feroz@example.com  (where lead notifications go)
- *   FROM_EMAIL_LEADS      leads@inletmove.com (must be a Resend-verified domain
+ *   FROM_EMAIL_LEADS      leads@inletmove.ca (must be a Resend-verified domain
  *                                              or use Resend's onboarding domain)
- *   FROM_EMAIL_CUSTOMER   hello@inletmove.com
+ *   FROM_EMAIL_CUSTOMER   hello@inletmove.ca
  *
  * Returns JSON:
  *   { "success": true,  "quoteId": "q_xxxxx" }
@@ -199,7 +199,7 @@ if (!empty($data['contact_email']) && filter_var($data['contact_email'], FILTER_
         . "Reference: $quoteId\n\n"
         . "If you don't hear from us by then, please call (604) 000-0000.\n\n"
         . "— Inlet Move Co.\n"
-        . "  https://inletmove.com\n";
+        . "  https://inletmove.ca\n";
 
     $confirmPayload = json_encode([
         'from'    => "Inlet Move <$fromCustomer>",

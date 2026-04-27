@@ -4,18 +4,18 @@
  *
  * This file is the source of truth for the shape of a quote submission
  * crossing the network boundary between the marketing site (Astro,
- * inletmove.com on Hostinger) and the quote backend.
+ * inletmove.ca on Hostinger) and the quote backend.
  *
  * In v1 the backend is `apps/marketing/public/quote-handler.php` — a
  * Hostinger PHP shim that emails Feroz via Resend.
  *
  * In v1.1 the backend is `apps/quote/app/api/quote/route.ts` — a Next.js
- * route on Vercel at https://quote.inletmove.com/api/quote that writes
+ * route on Vercel at https://quote.inletmove.ca/api/quote that writes
  * to Supabase and triggers Twilio SMS + Resend confirmation.
  *
  * The swap is a single env var change in `apps/marketing/.env`:
  *   PUBLIC_QUOTE_ENDPOINT=/quote-handler.php                    (v1)
- *   PUBLIC_QUOTE_ENDPOINT=https://quote.inletmove.com/api/quote (v1.1)
+ *   PUBLIC_QUOTE_ENDPOINT=https://quote.inletmove.ca/api/quote (v1.1)
  *
  * Field names below MUST match what the form posts and what BOTH backends
  * accept. snake_case is canonical (matches the apps/quote schema and the

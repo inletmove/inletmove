@@ -26,7 +26,7 @@ const localAreaSchema = {
   '@context': 'https://schema.org',
   '@type': 'MovingCompany',
   name: 'Inlet Move Co.',
-  url: `https://inletmove.com/movers/${neighborhood.slug}`,
+  url: `https://inletmove.ca/movers/${neighborhood.slug}`,
   areaServed: {
     '@type': 'City',
     name: neighborhood.display_name,
@@ -43,13 +43,13 @@ const breadcrumbSchema = {
   '@context': 'https://schema.org',
   '@type': 'BreadcrumbList',
   itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://inletmove.com/' },
-    { '@type': 'ListItem', position: 2, name: 'Service area', item: 'https://inletmove.com/movers' },
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://inletmove.ca/' },
+    { '@type': 'ListItem', position: 2, name: 'Service area', item: 'https://inletmove.ca/movers' },
     {
       '@type': 'ListItem',
       position: 3,
       name: `Movers in ${neighborhood.display_name}`,
-      item: `https://inletmove.com/movers/${neighborhood.slug}`,
+      item: `https://inletmove.ca/movers/${neighborhood.slug}`,
     },
   ],
 };

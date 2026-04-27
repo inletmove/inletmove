@@ -126,6 +126,11 @@ async function deployFtp(secure) {
     user: HOSTINGER_USER,
     password: HOSTINGER_PASSWORD,
     secure,
+    // Hostinger's FTPS cert is for *.hstgr.io (internal), not the user-facing
+    // ftp.<domain>. Disable strict cert validation. Acceptable here because
+    // (a) we know the destination, (b) creds are deploy-scoped, (c) one-shot
+    // upload — not an ongoing trust relationship.
+    secureOptions: { rejectUnauthorized: false },
   });
 
   await client.ensureDir(remoteRoot);

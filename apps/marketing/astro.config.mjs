@@ -9,7 +9,7 @@ import react from '@astrojs/react';
 // is wired in. Re-add when analytics lands.
 
 export default defineConfig({
-  site: 'https://inletmove.com',
+  site: 'https://inletmove.ca',
   output: 'static',
   trailingSlash: 'never',
   integrations: [

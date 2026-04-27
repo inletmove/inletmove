@@ -3,4 +3,4 @@ Allow: /
 Disallow: /thanks
 Disallow: /quote-handler.php
 
-Sitemap: https://inletmove.com/sitemap.xml
+Sitemap: https://inletmove.ca/sitemap.xml
