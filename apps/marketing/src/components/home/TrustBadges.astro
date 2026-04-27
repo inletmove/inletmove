@@ -48,10 +48,13 @@ const BADGES: Badge[] = [
       </h2>
     </div>
 
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4" data-stagger-root>
       {
-        BADGES.map((b) => (
-          <div class="group flex items-start gap-4 rounded-xl border border-line-light bg-paper p-6">
+        BADGES.map((b, i) => (
+          <div
+            class="trust-badge group flex items-start gap-4 rounded-xl border border-line-light bg-paper p-6"
+            style={`--stagger:${i * 80}ms;`}
+          >
             <div
               aria-hidden
               class="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-pacific/10 text-pacific"
@@ -84,3 +87,45 @@ const BADGES: Badge[] = [
     </p>
   </div>
 </section>
+
+<style>
+  .trust-badge {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  .trust-badge.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--stagger, 0ms),
+                transform 600ms cubic-bezier(0.16, 1, 0.3, 1) var(--stagger, 0ms);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .trust-badge { opacity: 1; transform: none; }
+  }
+</style>
+
+<script>
+  // Stagger-reveal trust badges when the section enters the viewport.
+  // Vanilla IO; respects reduced motion via the `is-visible` class.
+  const root = document.querySelector<HTMLElement>('[data-stagger-root]');
+  if (root) {
+    const cards = root.querySelectorAll<HTMLElement>('.trust-badge');
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduced) {
+      cards.forEach((c) => c.classList.add('is-visible'));
+    } else {
+      const obs = new IntersectionObserver(
+        (entries) => {
+          for (const e of entries) {
+            if (e.isIntersecting) {
+              cards.forEach((c) => c.classList.add('is-visible'));
+              obs.disconnect();
+            }
+          }
+        },
+        { rootMargin: '-15%' },
+      );
+      obs.observe(root);
+    }
+  }
+</script>
