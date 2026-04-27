@@ -1,6 +1,9 @@
 # Reference docs (not part of codebase, kept on disk for context)
 _inputs/
 
+# Claude Code worktree state
+.claude/
+
 # Dependencies
 node_modules/
 .pnp
