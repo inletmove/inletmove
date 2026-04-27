@@ -12,15 +12,81 @@ import FinalCTA from '../components/home/FinalCTA.astro';
 const title = 'Inlet Move Co. — Vancouver movers, same-week, $150/hr';
 const description =
   'Local moving company in Metro Vancouver. Same-week moves from $150/hr ($300 minimum). Quote in 60 seconds. English, Mandarin, Punjabi, Hindi support.';
+
+const homeFaqs = [
+  {
+    q: 'How much does a Metro Vancouver move cost?',
+    a: 'Inlet Move Co. bills hourly at $150/hr with a $300 minimum (two hours of two-mover crew). A typical studio runs $450–$600 all-in; a 2-bedroom condo runs $750–$1,200. No fuel surcharge, no stair fee, no weekend upcharge.',
+  },
+  {
+    q: 'How fast can you move me?',
+    a: 'Same-week is the standard. Most weeks we have slots open 3–5 days out. Weekend slots fill first, so request earlier in the week if you need a Saturday.',
+  },
+  {
+    q: 'Do you do multigenerational and senior moves?',
+    a: 'Yes — both are specialties. Crew is trained for handling religious and ceremonial items, coordinating across generations, and pacing the move for senior downsizing.',
+  },
+  {
+    q: 'What happens if my final bill goes over the quote?',
+    a: 'We aim for under 5% overage from quote to final bill (industry typical is around 22%). The hourly rate doesn\'t change mid-job, and we tell you in real time if a move is running long.',
+  },
+  {
+    q: 'Where is Inlet Move Co. based?',
+    a: 'Vancouver, BC. We serve all of Metro Vancouver — Vancouver, Burnaby, Richmond, Surrey, North Vancouver, West Vancouver, Coquitlam, and New Westminster — at the same hourly rate.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: homeFaqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
 ---
 
-<Base title={title} description={description}>
+<Base title={title} description={description} ogImage="/og/home.png" extraSchema={[faqSchema]}>
   <Nav slot="nav" />
   <Hero />
   <Bento />
   <CompareToggle client:visible />
   <BigNumbers client:visible />
   <TrustBadges />
+
+  <section aria-labelledby="home-faq" class="bg-paper px-6 py-20 md:px-8 md:py-24">
+    <div class="mx-auto max-w-container">
+      <div class="mb-10 max-w-2xl">
+        <p class="mb-3 font-mono text-xs uppercase tracking-widest text-pacific">
+          Common questions
+        </p>
+        <h2
+          id="home-faq"
+          class="font-display text-display-2 font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          The quick
+          <em class="display-italic text-ember">answers.</em>
+        </h2>
+      </div>
+      <ul class="grid gap-3 md:grid-cols-2">
+        {
+          homeFaqs.map((f) => (
+            <li class="rounded-xl border border-line-light bg-bone p-5">
+              <details class="group">
+                <summary class="cursor-pointer list-none font-body font-semibold text-inlet-navy">
+                  <span class="mr-2 inline-block transition-transform group-open:rotate-90 text-ember">›</span>
+                  {f.q}
+                </summary>
+                <p class="mt-3 font-body text-base leading-relaxed text-charcoal">{f.a}</p>
+              </details>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
   <FinalCTA />
   <Footer slot="footer" />
 </Base>

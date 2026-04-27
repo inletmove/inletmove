@@ -1,7 +1,7 @@
 {
   "_meta": {
-    "version": 1,
-    "comment": "v1 ships 3 seeded neighborhoods (Mt Pleasant, Yaletown, Burnaby Metrotown). v1.5 expands to all 35 per spec v2 §1.4. Mirror of apps/quote/content/neighborhoods.json — keep in sync until packages/content/ extraction in v1.1."
+    "version": 2,
+    "comment": "v2 expands from 3 to 8 seeded neighborhoods; full 35 still deferred to v1.5. Each entry gains a `faqs` array, a `nearby` array (for internal-link suggestions), and a `hero_photo` slug pointing at /images/stock/. Mirror of apps/quote/content/neighborhoods.json — keep in sync until packages/content/ extraction in v1.1."
   },
   "neighborhoods": [
     {
@@ -15,7 +15,23 @@
       "common_moves": "Most Mt Pleasant moves we run are studio and one-bedroom apartments going to Yaletown, Kitsilano, or East Van. Walk-up buildings are common; we handle the stairs without a stair fee.",
       "common_pickup_addresses_hint": "Apartment buildings along Main Street, Kingsway, and Quebec Street.",
       "average_move_hours": 3.5,
-      "active": true
+      "active": true,
+      "hero_photo": "vancouver-skyline",
+      "nearby": ["yaletown", "kitsilano"],
+      "faqs": [
+        {
+          "q": "How much does a Mt Pleasant move usually cost?",
+          "a": "A typical studio or one-bedroom Mt Pleasant move runs ~3.5 hours, billed at $150/hr with a $300 minimum. That puts most moves between $450 and $700 all-in, with no fuel surcharge, no stair fee, and no weekend upcharge."
+        },
+        {
+          "q": "Do you charge extra for walk-up buildings on Main Street?",
+          "a": "No. Mt Pleasant has plenty of three- and four-storey walk-ups, and stairs are part of the job. We don't add a stair fee to the bill."
+        },
+        {
+          "q": "Can you move me from Mt Pleasant to Burnaby or the North Shore?",
+          "a": "Yes. Inlet Move Co. covers all of Metro Vancouver — including Burnaby, Richmond, Surrey, North Vancouver, West Vancouver, Coquitlam, and New Westminster — at the same hourly rate."
+        }
+      ]
     },
     {
       "slug": "yaletown",
@@ -28,7 +44,23 @@
       "common_moves": "Condo-to-condo within the downtown core, or downtown-to-suburb (North Van, Burnaby) for couples upgrading to larger spaces.",
       "common_pickup_addresses_hint": "Mainland Street, Pacific Boulevard, Davie Street.",
       "average_move_hours": 4,
-      "active": true
+      "active": true,
+      "hero_photo": "vancouver-skyline",
+      "nearby": ["mt-pleasant", "kitsilano"],
+      "faqs": [
+        {
+          "q": "Do you handle elevator-pad bookings for Yaletown buildings?",
+          "a": "Yes. We can either coordinate with your concierge directly, or you book the freight elevator window and we arrive on it. There's no extra elevator fee."
+        },
+        {
+          "q": "What's the minimum-charge for a small Yaletown condo move?",
+          "a": "Our minimum is $300 (two hours of two-mover crew). Most studio Yaletown moves still come in under that ceiling, so you're paying for time used."
+        },
+        {
+          "q": "Are weekend Yaletown moves more expensive?",
+          "a": "No. We charge the same $150/hr seven days a week. Same-week Saturday slots fill up first, so request early."
+        }
+      ]
     },
     {
       "slug": "burnaby-metrotown",
@@ -41,7 +73,168 @@
       "common_moves": "Condo-to-condo within Burnaby, or Metrotown-to-Surrey for families upgrading to detached homes.",
       "common_pickup_addresses_hint": "Kingsway, Willingdon Avenue, Beresford Street, Imperial Street.",
       "average_move_hours": 5,
-      "active": true
+      "active": true,
+      "hero_photo": "north-van-mountains",
+      "nearby": ["burnaby-heights", "coquitlam-centre"],
+      "faqs": [
+        {
+          "q": "Do you do multigenerational moves out of Metrotown high-rises?",
+          "a": "Yes — multigen moves are a specialty. We've trained the crew on handling ceremonial and religious items, and on coordinating across families during a single move."
+        },
+        {
+          "q": "How long does a 2-bedroom Metrotown move typically take?",
+          "a": "Around 5 hours for a 2-bedroom condo, including elevator wait, loading, transit to a typical Metro Vancouver destination, and unloading. Bigger 3-bedroom moves run 6-8 hours."
+        },
+        {
+          "q": "Can you move from Metrotown to Surrey or Coquitlam in one trip?",
+          "a": "Yes. Our cargo van handles 2- and 3-bedroom loads. The hourly rate covers transit time, so longer moves still come in at $150/hr."
+        }
+      ]
+    },
+    {
+      "slug": "kitsilano",
+      "display_name": "Kitsilano",
+      "city": "Vancouver",
+      "region": "Vancouver West Side",
+      "postal_codes": ["V6K", "V6J"],
+      "tier": 1,
+      "intro": "Kitsilano sits on Vancouver's West Side, with a mix of heritage walk-ups and modern townhouse strata buildings. Inlet Move Co. runs same-week studio and one-bedroom moves in and out of Kits every week — $150/hr, $300 minimum, no stair fee, no weekend upcharge. Quote in 60 seconds.",
+      "common_moves": "Kits-to-downtown for couples shifting to a high-rise, or Kits-to-North-Shore when families upgrade to a detached home. Heritage three-storey walk-ups along West Broadway and West 4th are common.",
+      "common_pickup_addresses_hint": "West 4th Avenue, West Broadway, Yew Street, Cornwall Avenue, Burrard Street.",
+      "average_move_hours": 3.75,
+      "active": true,
+      "hero_photo": "west-van-mist",
+      "nearby": ["mt-pleasant", "yaletown"],
+      "faqs": [
+        {
+          "q": "Are most Kitsilano buildings walk-ups, or do they have elevators?",
+          "a": "Mix of both. Heritage three- and four-storey walk-ups dominate near West 4th and Yew, while strata buildings further west have elevators. We handle either at the same $150/hr rate, no stair fee."
+        },
+        {
+          "q": "Do you do moves from Kitsilano to UBC or Point Grey?",
+          "a": "Yes — student moves to UBC and family moves to Point Grey are routine. Both fall well inside our same-day Metro Vancouver radius."
+        },
+        {
+          "q": "Can you handle bike racks, surfboards, or paddleboards from Kits apartments?",
+          "a": "Yes. Bikes are blanket-wrapped and strapped in the van. Long items (surfboards, paddleboards, ladders) we secure separately along the side wall — no extra charge."
+        }
+      ]
+    },
+    {
+      "slug": "north-vancouver",
+      "display_name": "North Vancouver",
+      "city": "North Vancouver",
+      "region": "North Shore",
+      "postal_codes": ["V7L", "V7M", "V7N", "V7P"],
+      "tier": 2,
+      "intro": "North Vancouver crosses the Lions Gate Bridge from the rest of the Metro region — and that bridge crossing matters during rush hour. Inlet Move Co. plans North Van moves around bridge timing so you're not paying for bridge gridlock. $150/hr, $300 minimum, same-week availability.",
+      "common_moves": "Detached-to-detached across Lonsdale, or downtown-to-North-Shore for families upgrading. We also handle a steady stream of UBC-grad-to-North-Van condo moves in May and August.",
+      "common_pickup_addresses_hint": "Lonsdale Avenue, 13th Street, Marine Drive, Capilano Road.",
+      "average_move_hours": 5.5,
+      "active": true,
+      "hero_photo": "north-van-mountains",
+      "nearby": ["yaletown", "burnaby-metrotown"],
+      "faqs": [
+        {
+          "q": "Does the Lions Gate Bridge add cost to a North Van move?",
+          "a": "Bridge time is part of the hourly rate at $150/hr — no separate bridge surcharge. We schedule mid-morning or mid-afternoon to avoid rush-hour gridlock when possible."
+        },
+        {
+          "q": "Can you do a North Van move on a same-week basis?",
+          "a": "Most weeks, yes. North Shore slots fill faster on Fridays and Saturdays — request a quote early in the week if you need a weekend slot."
+        },
+        {
+          "q": "Do you handle moves between West Vancouver and North Vancouver?",
+          "a": "Yes. North Shore-internal moves (between West Van, North Van, and Deep Cove) are short and usually under our 4-hour zone."
+        }
+      ]
+    },
+    {
+      "slug": "richmond",
+      "display_name": "Richmond",
+      "city": "Richmond",
+      "region": "Richmond",
+      "postal_codes": ["V6X", "V6Y", "V7A", "V7C"],
+      "tier": 1,
+      "intro": "Richmond moves run the spread from compact Brighouse condos to detached family homes near Steveston. Inlet Move Co. handles both ends of that range with one cargo van and a two-mover crew. Multigenerational moves are common in Richmond — our crew is trained to coordinate across generations and to handle ceremonial items with care.",
+      "common_moves": "Condo-to-condo within Brighouse and Lansdowne; detached moves between Steveston and central Richmond. Richmond-to-Burnaby and Richmond-to-Vancouver moves are routine.",
+      "common_pickup_addresses_hint": "No. 3 Road, Westminster Highway, Granville Avenue, Steveston Highway, Williams Road.",
+      "average_move_hours": 4.5,
+      "active": true,
+      "hero_photo": "vancouver-skyline",
+      "nearby": ["burnaby-metrotown", "surrey-newton"],
+      "faqs": [
+        {
+          "q": "Do you do multigenerational moves in Richmond?",
+          "a": "Yes — multigen moves are something our crew is trained for. We coordinate with multiple decision-makers in the household and handle ceremonial and religious items with care."
+        },
+        {
+          "q": "Can you communicate in Mandarin or Cantonese during the move?",
+          "a": "Mandarin and Cantonese support is on the roadmap. Today we run in English with respect for cultural-specific handling — full multi-language phone support ships once we partner with a verified translation reviewer."
+        },
+        {
+          "q": "How long does a Richmond-to-Vancouver move take?",
+          "a": "About 4.5 hours for a typical one- or two-bedroom move, including loading, the No. 2 Road or Knight Street Bridge crossing, and unloading. Bigger detached homes run longer."
+        }
+      ]
+    },
+    {
+      "slug": "surrey-newton",
+      "display_name": "Surrey — Newton",
+      "city": "Surrey",
+      "region": "Surrey",
+      "postal_codes": ["V3W", "V3V"],
+      "tier": 2,
+      "intro": "Surrey-Newton moves are typically 2- and 3-bedroom detached or townhouse moves, often with multigenerational households. Inlet Move Co. handles Newton at the same $150/hr rate as anywhere else in Metro Vancouver, with no upcharge for distance from Vancouver proper. Punjabi-language phone support is on the roadmap.",
+      "common_moves": "Townhouse-to-detached upgrades within Surrey, or Newton-to-Burnaby moves when families relocate closer to work. We also handle senior downsizing moves out of Newton family homes into smaller Surrey or Langley condos.",
+      "common_pickup_addresses_hint": "King George Boulevard, 72nd Avenue, Scott Road, 80th Avenue.",
+      "average_move_hours": 6,
+      "active": true,
+      "hero_photo": "north-van-mountains",
+      "nearby": ["burnaby-metrotown", "richmond"],
+      "faqs": [
+        {
+          "q": "Do you charge extra for moves from Surrey to Vancouver?",
+          "a": "No. We bill at $150/hr regardless of where the move is in Metro Vancouver. Transit time across the Pattullo or Alex Fraser is included."
+        },
+        {
+          "q": "Can you do a multigenerational Newton move?",
+          "a": "Yes. Multigen moves are a specialty. We coordinate with multiple household decision-makers and handle religious and ceremonial items per the family's instructions."
+        },
+        {
+          "q": "How long does a 3-bedroom Surrey move usually take?",
+          "a": "Around 6 to 8 hours including loading, transit, and unloading. We finish most Newton moves the same day, even when the destination is across the bridge."
+        }
+      ]
+    },
+    {
+      "slug": "coquitlam-centre",
+      "display_name": "Coquitlam — Town Centre",
+      "city": "Coquitlam",
+      "region": "Tri-Cities",
+      "postal_codes": ["V3K", "V3B"],
+      "tier": 2,
+      "intro": "Coquitlam Town Centre is dense with newer high-rise condos around the SkyTrain stations, and detached neighborhoods spread across the surrounding hills. Inlet Move Co. handles both — $150/hr, $300 minimum, no upcharge for the longer drive into the Tri-Cities. Same-week availability for most weeks.",
+      "common_moves": "Coquitlam-to-Vancouver downtown moves for young professionals, and Coquitlam-to-Coquitlam upsize moves as families grow. We also handle Coquitlam-to-Port Moody short-haul moves at the same hourly rate.",
+      "common_pickup_addresses_hint": "Lougheed Highway, Pinetree Way, Glen Drive, North Road.",
+      "average_move_hours": 5.5,
+      "active": true,
+      "hero_photo": "north-van-mountains",
+      "nearby": ["burnaby-metrotown", "north-vancouver"],
+      "faqs": [
+        {
+          "q": "Is there an extra charge for moves all the way out to Coquitlam?",
+          "a": "No. The $150/hr rate is flat across Metro Vancouver. Transit time from a Vancouver pickup to a Coquitlam destination is part of the hourly bill, not a separate fee."
+        },
+        {
+          "q": "Can you handle high-rise moves around Lincoln Station?",
+          "a": "Yes. The newer Coquitlam Centre high-rises near Lincoln SkyTrain typically have freight elevators that need an advance booking — we coordinate that with your strata or building manager."
+        },
+        {
+          "q": "Do you do moves between Coquitlam and Port Moody or Port Coquitlam?",
+          "a": "Yes. Tri-Cities-internal moves are short and usually run 3-4 hours. Same-week availability is strong for these routes."
+        }
+      ]
     }
   ]
 }
