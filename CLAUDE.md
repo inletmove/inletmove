@@ -7,15 +7,27 @@ spec docs in `_inputs/` before making non-trivial changes.
 
 ## Source of truth, in priority order
 
-1. `_inputs/inlet-mega-claude-code-prompt.md` — the canonical mega prompt.
-   1,004 lines. Dated 2026-04-27. **Wins all conflicts.**
-2. `_inputs/inlet-move-site-spec-v2.md` — the build-ready spec. Use for content
-   structure where the mega prompt doesn't override.
-3. `_inputs/inlet-move-audience-research-v1.md` — persona psychology informing
+1. `_inputs/inlet-astro-migration-addendum.md` — **NEW (2026-04-27).** Supersedes mega
+   prompt §5.1, §5.2, §8 partially. Locks the split-deploy architecture: Astro static
+   on Hostinger for marketing (`inletmove.com`), Next.js on Vercel for quote app
+   (`quote.inletmove.com`), `inletmove.ca` 301 → `.com`. **Read this BEFORE the mega
+   prompt** for the next phase (the migration itself, scoped in phases M1–M8).
+2. `_inputs/inlet-mega-claude-code-prompt.md` — the canonical mega prompt.
+   1,004 lines. Dated 2026-04-27. **Wins all conflicts not explicitly superseded by
+   the addendum above.**
+3. `_inputs/inlet-move-site-spec-v2.md` — the build-ready spec. Use for content
+   structure where neither the addendum nor the mega prompt overrides.
+4. `_inputs/inlet-move-audience-research-v1.md` — persona psychology informing
    copy choices.
-4. `_inputs/inlet-move-personas-6-7-supplement.md` — Mandarin/Cantonese +
+5. `_inputs/inlet-move-personas-6-7-supplement.md` — Mandarin/Cantonese +
    Punjabi/Hindi cultural-community personas.
-5. `_inputs/inlet-move-v8.html` — the structural and visual baseline.
+6. `_inputs/inlet-move-v8.html` — the structural and visual baseline.
+
+> **Predecessor commit:** `e536f08` is the Path B Next.js scaffold. Per the
+> addendum, it is **intact, NOT to be deleted**. The migration restructures it
+> into `apps/quote/` inside a pnpm monorepo, preserving the schema/forms/APIs and
+> moving marketing components to a new Astro app at `apps/web/`. Rollback target
+> is the `pre-inlet-week1-2026-04-27` tag.
 
 If a doc in `_inputs/` conflicts with code in this repo, default to the mega
 prompt and update the doc-or-code in a small follow-up PR. Don't paper over.
@@ -112,14 +124,21 @@ for Next.js `<Image>` calls with AVIF + WebP + JPEG fallbacks.
 | 5 UI mockups (phone, MoverOS dash, bodycam, map, receipt) | Figma exports | `public/images/ui-mockups/` |
 | Bodycam loop | Vancouver videographer staged shoot | `public/video/b-roll/` |
 
-## Things to do in the next session (integration)
+## Things to do in the next session (Astro migration, M1–M8)
 
-See `README.md` "Integration session checklist". Top three:
+The next session is **the Astro migration**, not direct integration of the existing
+Next.js scaffold. Read `_inputs/inlet-astro-migration-addendum.md` end-to-end first.
+Phases M1–M8 are scoped tightly there. Top three on entry:
 
-1. Provision Supabase project, deploy `0001_initial.sql`, run
-   `seed-neighborhoods.sql`.
-2. Wire Twilio + Resend in `app/api/quote/route.ts` (TODOs are in place).
-3. Push to GitHub (`cognitia-cloud/inletmove`), connect Vercel, deploy.
+1. Pre-work tag: `git tag pre-astro-migration-2026-04-27` before any restructuring.
+2. Phase M1 — restructure into pnpm monorepo: `apps/quote/` (existing scaffold),
+   `apps/web/` (new Astro), `packages/{ui,content,types}`, root-level `i18n/`,
+   `content/`, `supabase/`. Verify `apps/quote` still runs after the move.
+3. Phase M2 — scaffold Astro 4.x in `apps/web/` with Tailwind + sitemap + React +
+   Partytown integrations. Port design tokens from `apps/quote/tailwind.config.ts`.
+
+Supabase / Twilio / Resend / GitHub / Vercel / Hostinger wiring all happen during
+or after the migration phases — not before. The addendum has the full sequence.
 
 ## Things explicitly NOT in this scaffold
 
