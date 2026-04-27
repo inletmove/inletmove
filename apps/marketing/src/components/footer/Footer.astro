@@ -1,5 +1,6 @@
 ---
-import Marquee from '../effects/Marquee.astro';
+// v3 footer: dense readable wrap of service-area cities (no marquee).
+// Footer is for trust + nav, not motion theatre. Per v3 brief §3.7.
 const year = new Date().getFullYear();
 const SERVICE_AREA = [
   'Vancouver',
@@ -17,21 +18,12 @@ const SERVICE_AREA = [
   'Burnaby Heights',
   'Coquitlam Centre',
 ];
+
+const lastUpdated = '2026-04-27';
 ---
 
 <footer class="border-t border-line-light bg-inlet-deep text-bone">
-  <Marquee duration={42} ariaLabel="Cities and neighborhoods we serve" class="border-b border-line-darker bg-inlet-navy/40 py-4">
-    {
-      SERVICE_AREA.map((city) => (
-        <span class="mx-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-mist">
-          <span class="h-1 w-1 rounded-full bg-pacific" aria-hidden />
-          {city}
-        </span>
-      ))
-    }
-  </Marquee>
-
-  <div class="mx-auto max-w-container px-6 py-16 md:px-8">
+  <div class="mx-auto max-w-container px-6 py-14 md:px-8 md:py-16">
     <div class="grid gap-10 md:grid-cols-4">
       <div>
         <a
@@ -50,7 +42,18 @@ const SERVICE_AREA = [
       <div>
         <h2 class="mb-3 font-mono text-xs uppercase tracking-widest text-mist-dim">Service area</h2>
         <p class="font-body text-sm leading-relaxed text-mist">
-          Vancouver · Burnaby · Richmond · Surrey · North Vancouver · West Vancouver · Coquitlam · New Westminster
+          {
+            SERVICE_AREA.map((city, i) => (
+              <>
+                <span class="footer-city inline-block transition-opacity duration-200 hover:text-bone">
+                  {city}
+                </span>
+                {i < SERVICE_AREA.length - 1 && (
+                  <span class="mx-1.5 text-mist-dim" aria-hidden>·</span>
+                )}
+              </>
+            ))
+          }
         </p>
         <a
           href="/movers"
@@ -92,7 +95,10 @@ const SERVICE_AREA = [
     <div
       class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line-darker pt-6 text-xs text-mist-dim md:flex-row md:items-center"
     >
-      <p>&copy; {year} Inlet Move Co. All rights reserved.</p>
+      <p>
+        &copy; {year} Inlet Move Co. All rights reserved.
+        <span class="ml-2 inline-block font-mono">Last updated: {lastUpdated}</span>
+      </p>
       <p>
         <a href="/colophon" class="hover:text-mist">
           Powered by MoverOS &middot; Advertised by Demandra
@@ -101,3 +107,12 @@ const SERVICE_AREA = [
     </div>
   </div>
 </footer>
+
+<style>
+  .footer-city {
+    opacity: 0.78;
+  }
+  .footer-city:hover {
+    opacity: 1;
+  }
+</style>

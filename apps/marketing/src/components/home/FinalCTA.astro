@@ -1,17 +1,14 @@
 ---
-import ShimmerButton from '../effects/ShimmerButton.astro';
+// v3 FinalCTA: restrained press-depth ember button, slow gradient mesh
+// background. No ShimmerButton — taste over flash, per v3 brief §3.6.
 ---
 
 <section
   aria-label="Ready to move?"
-  class="relative overflow-hidden bg-paper px-6 py-24 md:px-8 md:py-32"
+  class="relative overflow-hidden bg-paper px-6 py-20 md:px-8 md:py-28"
+  data-section-reveal
 >
-  <div
-    aria-hidden
-    class="absolute inset-0"
-    style="background: radial-gradient(ellipse 70% 50% at 50% 100%, rgba(231, 111, 81, 0.10), transparent 70%), radial-gradient(ellipse 50% 40% at 50% 0%, rgba(31, 122, 140, 0.06), transparent 70%);"
-  >
-  </div>
+  <div aria-hidden class="cta-mesh absolute inset-0 pointer-events-none"></div>
 
   <div class="relative mx-auto max-w-3xl text-center">
     <h2
@@ -22,16 +19,48 @@ import ShimmerButton from '../effects/ShimmerButton.astro';
     <p class="mb-10 font-body text-lg leading-relaxed text-graphite">
       Quote in 60 seconds. Real human follow-up within the hour.
     </p>
-    <div class="flex flex-wrap justify-center gap-4">
-      <ShimmerButton href="/quote" label="Get my quote" ariaLabel="Get my quote in 60 seconds">
-        Get my quote <span aria-hidden>&rarr;</span>
-      </ShimmerButton>
+    <div class="flex flex-col items-stretch gap-4 sm:flex-row sm:flex-wrap sm:items-center sm:justify-center">
+      <a
+        href="/quote"
+        class="cta-press inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md bg-ember px-7 py-3.5 font-body text-base font-semibold text-bone shadow-cta"
+      >
+        <span>Get my quote in 60 seconds</span>
+        <span aria-hidden class="cta-arrow inline-block transition-transform duration-200">&rarr;</span>
+      </a>
       <a
         href="tel:6040000000"
-        class="inline-flex items-center gap-2 rounded-md border border-line-mid bg-paper px-7 py-3.5 font-body text-base font-semibold text-inlet-navy transition hover:bg-bone-warm"
+        class="inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md border border-line-mid bg-paper px-7 py-3.5 font-body text-base font-semibold text-inlet-navy transition hover:bg-bone-warm"
       >
         <span aria-hidden>📞</span> (604) 000-0000
       </a>
     </div>
+    <p class="mt-6 font-mono text-[0.7rem] uppercase tracking-widest text-mist-dim">
+      No site visit · No fuel surcharge · No stair fee
+    </p>
   </div>
 </section>
+
+<style>
+  /* Apple-style press depth: gentle hover lift, firm active depress */
+  .cta-press {
+    transition:
+      transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 200ms cubic-bezier(0.16, 1, 0.3, 1),
+      box-shadow 200ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .cta-press:hover {
+    transform: translateY(-1px) scale(1.02);
+    background-color: #F5A48F; /* ember-warm */
+  }
+  .cta-press:hover .cta-arrow {
+    transform: translateX(4px);
+  }
+  .cta-press:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(231, 111, 81, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .cta-press, .cta-press:hover, .cta-press:active { transform: none; transition: none; }
+    .cta-press:hover .cta-arrow { transform: none; }
+  }
+</style>

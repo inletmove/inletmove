@@ -263,6 +263,7 @@ export default function QuoteForm() {
             id="contact_email"
             name="contact_email"
             type="email"
+            inputMode="email"
             autoComplete="email"
             className={inputClass}
           />
@@ -279,7 +280,7 @@ export default function QuoteForm() {
         </p>
       )}
 
-      <div className="flex items-center justify-between gap-3 border-t border-line-light pt-6">
+      <div className="flex flex-col items-stretch justify-between gap-4 border-t border-line-light pt-6 sm:flex-row sm:items-center">
         <p className="font-mono text-xs text-mist-dim">
           By submitting, you agree to our{' '}
           <a href="/legal/privacy" className="underline-offset-4 hover:underline">
@@ -291,8 +292,8 @@ export default function QuoteForm() {
           type="submit"
           disabled={state.kind === 'submitting'}
           className={cn(
-            'inline-flex items-center gap-2 rounded-md bg-ember px-7 py-3.5 font-body text-base font-semibold text-bone shadow-cta transition-all',
-            'hover:-translate-y-px hover:bg-ember-warm disabled:cursor-not-allowed disabled:opacity-60',
+            'inline-flex min-h-[48px] items-center justify-center gap-2 rounded-md bg-ember px-7 py-3.5 font-body text-base font-semibold text-bone shadow-cta transition-all',
+            'hover:-translate-y-px hover:scale-[1.02] hover:bg-ember-warm active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-60',
           )}
         >
           {state.kind === 'submitting' ? 'Sending…' : 'Get my quote'}

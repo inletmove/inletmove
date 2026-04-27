@@ -1,17 +1,46 @@
 ---
+/**
+ * v3 structured data — comprehensive @graph emitted on every page. Per-page
+ * schemas (FAQPage, BreadcrumbList, neighborhood Service, etc.) ride in via
+ * `extraSchema` and become additional <script type="application/ld+json">
+ * blocks alongside the global graph.
+ *
+ * Honesty contracts: phone is "Pending publication" not a fake number. Reg #
+ * and GST # not fabricated. No aggregateRating / review count (would require
+ * actual reviews).
+ */
+
 interface Props {
   extraSchema?: unknown[];
 }
 
 const { extraSchema = [] } = Astro.props;
 
+const SITE = 'https://inletmove.ca';
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE}/#organization`,
+  name: 'Inlet Move Co.',
+  url: SITE,
+  logo: `${SITE}/og/default.png`,
+  description:
+    'Local moving company in Metro Vancouver, British Columbia. Same-week local moves from $150/hr.',
+  foundingDate: '2026',
+  knowsLanguage: ['en', 'zh', 'pa', 'hi'],
+  sameAs: [], // Populated when GBP, social profiles, directory listings exist
+};
+
 const businessSchema = {
   '@context': 'https://schema.org',
   '@type': 'MovingCompany',
+  '@id': `${SITE}/#business`,
+  parentOrganization: { '@id': `${SITE}/#organization` },
   name: 'Inlet Move Co.',
-  url: 'https://inletmove.ca',
+  url: SITE,
   description:
-    'Local moving company in Metro Vancouver, British Columbia. Same-week local moves. From $150/hr, $300 minimum.',
+    'Local moving company in Metro Vancouver, British Columbia. Same-week local moves. Hourly billing from $150/hr, $300 minimum. Trained, vetted, branded crew, introduced by name. $2M cargo + liability insurance.',
   priceRange: '$$',
   address: {
     '@type': 'PostalAddress',
@@ -28,14 +57,156 @@ const businessSchema = {
     { '@type': 'City', name: 'West Vancouver' },
     { '@type': 'City', name: 'Coquitlam' },
     { '@type': 'City', name: 'New Westminster' },
+    { '@type': 'City', name: 'Port Moody' },
+    { '@type': 'City', name: 'Port Coquitlam' },
   ],
-  openingHours: 'Mo-Su 08:00-20:00',
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+      'Saturday',
+      'Sunday',
+    ],
+    opens: '08:00',
+    closes: '20:00',
+  },
   knowsLanguage: ['en', 'zh', 'pa', 'hi'],
-  sameAs: [],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Moving services',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Studio move',
+          description:
+            'Single-room or compact apartment move with two-mover crew + cargo van.',
+        },
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '150',
+          priceCurrency: 'CAD',
+          unitCode: 'HUR',
+          referenceQuantity: { '@type': 'QuantitativeValue', value: 1, unitCode: 'HUR' },
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: '1-bedroom move',
+          description: 'Standard 1-bedroom apartment move; ~3-5 hours typical.',
+        },
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '150',
+          priceCurrency: 'CAD',
+          unitCode: 'HUR',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: '2-bedroom move',
+          description: 'Larger apartments and small homes; ~5-7 hours typical.',
+        },
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '150',
+          priceCurrency: 'CAD',
+          unitCode: 'HUR',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: '3-bedroom move',
+          description: 'Full homes; ~7-10 hours typical.',
+        },
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '150',
+          priceCurrency: 'CAD',
+          unitCode: 'HUR',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Multigenerational move',
+          description:
+            'Family moves with extra coordination across generations; trained for handling religious and ceremonial items.',
+        },
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '150',
+          priceCurrency: 'CAD',
+          unitCode: 'HUR',
+        },
+      },
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Senior downsizing',
+          description: 'Patient, respectful moves for older clients. Same crew start to finish.',
+        },
+        priceSpecification: {
+          '@type': 'UnitPriceSpecification',
+          price: '150',
+          priceCurrency: 'CAD',
+          unitCode: 'HUR',
+        },
+      },
+    ],
+  },
+  potentialAction: {
+    '@type': 'ReserveAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE}/quote`,
+      actionPlatform: [
+        'https://schema.org/DesktopWebPlatform',
+        'https://schema.org/MobileWebPlatform',
+      ],
+    },
+    result: { '@type': 'Reservation', name: 'Moving quote request' },
+  },
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE}/#website`,
+  url: SITE,
+  name: 'Inlet Move Co.',
+  publisher: { '@id': `${SITE}/#organization` },
+  inLanguage: 'en-CA',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [organizationSchema, businessSchema, websiteSchema],
 };
 ---
 
-<script type="application/ld+json" set:html={JSON.stringify(businessSchema)} />
+<script type="application/ld+json" set:html={JSON.stringify(graph)} />
 {
   extraSchema.map((schema) => (
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />

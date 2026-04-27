@@ -1,4 +1,6 @@
 ---
+import BentoQuoteCounter from './BentoQuoteCounter.tsx';
+
 type Photo = {
   base: string;
   alt: string;
@@ -14,6 +16,8 @@ type Card = {
   /** Either a photo (preferred) or a placeholder label */
   photo?: Photo;
   imageLabel?: string;
+  /** Micro-animation kind — keyed against an inline observer script. */
+  anim?: 'scan' | 'rec' | 'route' | 'counter' | 'grayscale';
 };
 
 const CARDS: Card[] = [
@@ -28,6 +32,7 @@ const CARDS: Card[] = [
       base: '/images/maya/scene-2-photo-scan',
       alt: 'Customer at home holding a smartphone in a bright living room — placeholder editorial photo suggesting the camera-walk feature; UI ships Q3 2026.',
     },
+    anim: 'scan',
   },
   {
     key: 'documentation',
@@ -40,6 +45,7 @@ const CARDS: Card[] = [
       base: '/images/stock/fragile-box',
       alt: 'Hands holding a cardboard box labeled fragile, indicating careful handling during a move.',
     },
+    anim: 'grayscale',
   },
   {
     key: 'bodycam',
@@ -49,6 +55,7 @@ const CARDS: Card[] = [
     body: 'For senior and multigenerational moves. You see what we see. Footage archived 90 days.',
     span: 'sm',
     imageLabel: 'Bodycam UI · pilot Q4 2026 — no live preview yet',
+    anim: 'rec',
   },
   {
     key: 'live_tracking',
@@ -61,6 +68,7 @@ const CARDS: Card[] = [
       base: '/images/stock/cargo-van-urban',
       alt: 'White cargo vans parked on a city street under daylight.',
     },
+    anim: 'route',
   },
   {
     key: 'quote_receipt',
@@ -73,6 +81,7 @@ const CARDS: Card[] = [
       base: '/images/stock/box-bedroom-label',
       alt: 'Cardboard box labeled "Bedroom" placed indoors, ready for moving — itemized billing keeps room-by-room loads transparent.',
     },
+    anim: 'counter',
   },
 ];
 
@@ -86,10 +95,11 @@ const spanClasses: Record<Card['span'], string> = {
 <section
   id="how-it-works"
   aria-label="What you get"
-  class="bg-paper px-6 py-24 md:px-8 md:py-32"
+  class="bg-paper px-6 py-20 md:px-8 md:py-28"
+  data-stagger-section
 >
   <div class="mx-auto max-w-container">
-    <div class="mb-12 max-w-3xl">
+    <div class="mb-10 max-w-3xl" data-stagger-child>
       <p class="mb-3 font-mono text-xs uppercase tracking-widest text-pacific">
         What you actually get
       </p>
@@ -106,9 +116,11 @@ const spanClasses: Record<Card['span'], string> = {
         CARDS.map((card) => (
           <article
             class:list={[
-              'group relative flex flex-col overflow-hidden rounded-xl border border-line-light bg-bone p-7 transition-all hover:-translate-y-1 hover:shadow-lg',
+              'group relative flex flex-col overflow-hidden rounded-xl border border-line-light bg-bone p-6 transition-all duration-500 hover:-translate-y-1 hover:shadow-lg md:p-7',
               spanClasses[card.span],
             ]}
+            data-stagger-child
+            data-anim={card.anim ?? null}
           >
             <div class="mb-4 flex items-center gap-2">
               <span
@@ -122,6 +134,14 @@ const spanClasses: Record<Card['span'], string> = {
                 )}
                 {card.tag}
               </span>
+
+              {card.anim === 'rec' && (
+                <span
+                  class="bento-rec-dot ml-auto inline-flex h-2.5 w-2.5 rounded-full bg-error"
+                  data-rec-dot
+                  aria-hidden
+                />
+              )}
             </div>
 
             <h3 class="mb-3 font-display text-2xl font-medium leading-tight tracking-tight text-inlet-navy display-soft">
@@ -132,29 +152,70 @@ const spanClasses: Record<Card['span'], string> = {
             </p>
 
             {card.photo ? (
-              <picture class="mt-auto block aspect-[16/10] overflow-hidden rounded-md">
-                <source
-                  type="image/avif"
-                  srcset={`${card.photo.base}-1280.avif 1280w, ${card.photo.base}-1920.avif 1920w`}
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
-                <source
-                  type="image/webp"
-                  srcset={`${card.photo.base}-1280.webp 1280w, ${card.photo.base}-1920.webp 1920w`}
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
-                <img
-                  src={`${card.photo.base}-1280.jpg`}
-                  srcset={`${card.photo.base}-1280.jpg 1280w, ${card.photo.base}-1920.jpg 1920w`}
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                  alt={card.photo.alt}
-                  width="1280"
-                  height="800"
-                  loading="lazy"
-                  decoding="async"
-                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-                />
-              </picture>
+              <div
+                class:list={[
+                  'mt-auto relative block aspect-[16/10] overflow-hidden rounded-md',
+                  card.anim === 'scan' && 'scan-line-sweep',
+                ]}
+              >
+                <picture>
+                  <source
+                    type="image/avif"
+                    srcset={`${card.photo.base}-1280.avif 1280w, ${card.photo.base}-1920.avif 1920w`}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                  <source
+                    type="image/webp"
+                    srcset={`${card.photo.base}-1280.webp 1280w, ${card.photo.base}-1920.webp 1920w`}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                  <img
+                    src={`${card.photo.base}-1280.jpg`}
+                    srcset={`${card.photo.base}-1280.jpg 1280w, ${card.photo.base}-1920.jpg 1920w`}
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                    alt={card.photo.alt}
+                    width="1280"
+                    height="800"
+                    loading="lazy"
+                    decoding="async"
+                    class:list={[
+                      'h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]',
+                      card.anim === 'grayscale' ? 'grayscale-reveal' : 'editorial-photo',
+                    ]}
+                  />
+                </picture>
+
+                {card.anim === 'route' && (
+                  <svg
+                    class="pointer-events-none absolute inset-0 h-full w-full"
+                    viewBox="0 0 320 200"
+                    preserveAspectRatio="none"
+                    aria-hidden
+                  >
+                    <defs>
+                      <linearGradient id="route-gradient" x1="0" y1="0" x2="1" y2="0">
+                        <stop offset="0%" stop-color="#1F7A8C" />
+                        <stop offset="100%" stop-color="#E76F51" />
+                      </linearGradient>
+                    </defs>
+                    <path
+                      d="M 30 150 Q 90 60 160 110 T 290 50"
+                      fill="none"
+                      stroke="url(#route-gradient)"
+                      stroke-width="3"
+                      stroke-linecap="round"
+                      stroke-dasharray="6 6"
+                      class="route-path"
+                    />
+                    <circle cx="30" cy="150" r="6" fill="#1F7A8C" stroke="#FAF7F2" stroke-width="2" />
+                    <circle cx="290" cy="50" r="6" fill="#E76F51" stroke="#FAF7F2" stroke-width="2" />
+                  </svg>
+                )}
+
+                {card.anim === 'counter' && (
+                  <BentoQuoteCounter target={1150} prefix="$" label="Sample 2-bed" client:visible />
+                )}
+              </div>
             ) : (
               <div
                 class="mt-auto flex aspect-[16/10] items-center justify-center rounded-md border border-dashed border-line-mid bg-bone-warm/60 p-4 text-center"
@@ -169,3 +230,58 @@ const spanClasses: Record<Card['span'], string> = {
     </div>
   </div>
 </section>
+
+<style>
+  /* Route-line draw animation (SVG stroke-dashoffset) */
+  .route-path {
+    stroke-dashoffset: 800;
+  }
+  .is-playing .route-path {
+    animation: route-draw 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  @keyframes route-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .is-playing .route-path { animation: none; stroke-dashoffset: 0; }
+  }
+</style>
+
+<script>
+  // Bento micro-animation observer. For each card with data-anim, add the
+  // .is-playing class once the card enters the viewport. CSS handles the
+  // actual animation.
+  //
+  // For cards with data-anim="rec", manually retrigger the .rec-pulse
+  // animation by toggling the class.
+  const cards = document.querySelectorAll<HTMLElement>('[data-anim]');
+  if (cards.length > 0) {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const obs = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (!e.isIntersecting) continue;
+          const el = e.target as HTMLElement;
+          el.classList.add('is-playing');
+          el.classList.add('is-visible');
+          // grayscale-reveal class is on the <img>, not the card
+          el.querySelectorAll('.grayscale-reveal').forEach((img) => {
+            (img as HTMLElement).classList.add('is-visible');
+          });
+          if (el.dataset.anim === 'rec' && !reduced) {
+            const dot = el.querySelector<HTMLElement>('[data-rec-dot]');
+            if (dot) {
+              dot.classList.remove('rec-pulse');
+              // Force reflow to restart animation
+              void dot.offsetHeight;
+              dot.classList.add('rec-pulse');
+            }
+          }
+          obs.unobserve(el);
+        }
+      },
+      { rootMargin: '-15%' },
+    );
+    cards.forEach((c) => obs.observe(c));
+  }
+</script>

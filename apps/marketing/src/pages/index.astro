@@ -13,28 +13,52 @@ const title = 'Inlet Move Co. — Vancouver movers, same-week, $150/hr';
 const description =
   'Local moving company in Metro Vancouver. Same-week moves from $150/hr ($300 minimum). Quote in 60 seconds. English, Mandarin, Punjabi, Hindi support.';
 
+// Atomic answers per v3 brief §6.4 — every Q's answer leads with a one-sentence
+// direct answer (parsed from the bolded prefix in copy). Schema text is ≤80 words.
 const homeFaqs = [
   {
-    q: 'How much does a Metro Vancouver move cost?',
-    a: 'Inlet Move Co. bills hourly at $150/hr with a $300 minimum (two hours of two-mover crew). A typical studio runs $450–$600 all-in; a 2-bedroom condo runs $750–$1,200. No fuel surcharge, no stair fee, no weekend upcharge.',
+    q: 'How much does a 1-bedroom move in Vancouver cost?',
+    answerLead:
+      'A 1-bedroom move in Vancouver typically costs $450–$750 with Inlet Move Co.',
+    answerBody:
+      'We bill hourly at $150/hr with a $300 minimum (two hours of two-mover crew). Most 1-bedroom moves run ~3–5 hours. No fuel surcharge, no stair fee, no weekend upcharge. Quote = bill, with a target overage under 5%.',
   },
   {
     q: 'How fast can you move me?',
-    a: 'Same-week is the standard. Most weeks we have slots open 3–5 days out. Weekend slots fill first, so request earlier in the week if you need a Saturday.',
+    answerLead:
+      'Same-week is the standard at Inlet Move Co.',
+    answerBody:
+      'Most weeks we have slots open 3–5 days out. Weekend slots fill first, so request earlier in the week if you need a Saturday. After you submit a 60-second quote request online, a real human texts back within an hour (target).',
   },
   {
     q: 'Do you do multigenerational and senior moves?',
-    a: 'Yes — both are specialties. Crew is trained for handling religious and ceremonial items, coordinating across generations, and pacing the move for senior downsizing.',
+    answerLead:
+      'Yes — multigenerational and senior moves are both specialties.',
+    answerBody:
+      'Crew is trained for handling religious and ceremonial items, coordinating across generations, and pacing the move for senior downsizing. We use the same hourly rate ($150/hr, $300 minimum) regardless of complexity.',
   },
   {
     q: 'What happens if my final bill goes over the quote?',
-    a: 'We aim for under 5% overage from quote to final bill (industry typical is around 22%). The hourly rate doesn\'t change mid-job, and we tell you in real time if a move is running long.',
+    answerLead:
+      'We aim for under 5% overage from quote to final bill — much tighter than the ~22% industry typical.',
+    answerBody:
+      'The hourly rate doesn\'t change mid-job, and we tell you in real time if a move is running long. After the first 30 jobs we will publish measured overage numbers; today the 4.1% target is aspirational.',
   },
   {
     q: 'Where is Inlet Move Co. based?',
-    a: 'Vancouver, BC. We serve all of Metro Vancouver — Vancouver, Burnaby, Richmond, Surrey, North Vancouver, West Vancouver, Coquitlam, and New Westminster — at the same hourly rate.',
+    answerLead:
+      'Inlet Move Co. is based in Vancouver, BC, and serves all of Metro Vancouver.',
+    answerBody:
+      'Service area: Vancouver, Burnaby, Richmond, Surrey, North Vancouver, West Vancouver, Coquitlam, and New Westminster — at the same hourly rate. No upcharge for the longer drive into the Tri-Cities or the Surrey/Newton/Cloverdale corridor.',
   },
 ];
+
+// Build the FAQPage schema with concatenated answer (lead + body), trimmed to ≤80 words.
+function joinAnswer(lead: string, body: string): string {
+  const text = `${lead} ${body}`;
+  const words = text.split(/\s+/);
+  return words.length <= 80 ? text : words.slice(0, 80).join(' ') + '…';
+}
 
 const faqSchema = {
   '@context': 'https://schema.org',
@@ -42,7 +66,7 @@ const faqSchema = {
   mainEntity: homeFaqs.map((f) => ({
     '@type': 'Question',
     name: f.q,
-    acceptedAnswer: { '@type': 'Answer', text: f.a },
+    acceptedAnswer: { '@type': 'Answer', text: joinAnswer(f.answerLead, f.answerBody) },
   })),
 };
 ---
@@ -50,12 +74,28 @@ const faqSchema = {
 <Base title={title} description={description} ogImage="/og/home.png" extraSchema={[faqSchema]}>
   <Nav slot="nav" />
   <Hero />
-  <Bento />
-  <CompareToggle client:visible />
-  <BigNumbers client:visible />
-  <TrustBadges />
 
-  <section aria-labelledby="home-faq" class="bg-paper px-6 py-20 md:px-8 md:py-24">
+  <div data-section-reveal><Bento /></div>
+
+  <div class="mx-auto max-w-container px-6 pt-2 md:px-8" data-section-reveal>
+    <a
+      href="/quote"
+      class="block w-full rounded-lg border border-line-mid bg-bone px-6 py-5 text-center font-body text-base font-semibold text-inlet-navy transition-all hover:-translate-y-px hover:border-pacific hover:bg-paper md:inline-flex md:w-auto md:items-center md:gap-3"
+    >
+      <span>Ready to move?</span>
+      <span class="ml-2 text-ember">Get a quote in 60 seconds &rarr;</span>
+    </a>
+  </div>
+
+  <div data-section-reveal><CompareToggle client:visible /></div>
+  <div data-section-reveal><BigNumbers client:visible /></div>
+  <div data-section-reveal><TrustBadges /></div>
+
+  <section
+    aria-labelledby="home-faq"
+    class="bg-paper px-6 py-20 md:px-8 md:py-24"
+    data-section-reveal
+  >
     <div class="mx-auto max-w-container">
       <div class="mb-10 max-w-2xl">
         <p class="mb-3 font-mono text-xs uppercase tracking-widest text-pacific">
@@ -75,15 +115,29 @@ const faqSchema = {
             <li class="rounded-xl border border-line-light bg-bone p-5">
               <details class="group">
                 <summary class="cursor-pointer list-none font-body font-semibold text-inlet-navy">
-                  <span class="mr-2 inline-block transition-transform group-open:rotate-90 text-ember">›</span>
+                  <span class="mr-2 inline-block text-ember transition-transform group-open:rotate-90">
+                    ›
+                  </span>
                   {f.q}
                 </summary>
-                <p class="mt-3 font-body text-base leading-relaxed text-charcoal">{f.a}</p>
+                <p class="mt-3 font-body text-base leading-relaxed text-charcoal">
+                  <strong class="font-semibold text-inlet-navy">{f.answerLead}</strong>{' '}
+                  {f.answerBody}
+                </p>
               </details>
             </li>
           ))
         }
       </ul>
+
+      <div class="mt-10 text-center">
+        <a
+          href="/quote"
+          class="inline-flex min-h-[48px] items-center gap-2 rounded-md bg-ember px-7 py-3.5 font-body text-base font-semibold text-bone shadow-cta transition-all hover:-translate-y-px hover:scale-[1.02] hover:bg-ember-warm active:scale-[0.98]"
+        >
+          Have a different question? Get a quote and ask <span aria-hidden>&rarr;</span>
+        </a>
+      </div>
     </div>
   </section>
 

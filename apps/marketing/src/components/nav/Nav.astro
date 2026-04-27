@@ -64,7 +64,7 @@ import LangSwitcher from './LangSwitcher.tsx';
     aria-label="Open menu"
     aria-expanded="false"
     aria-controls="nav-mobile-menu"
-    class="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
+    class="-mr-2 flex h-12 w-12 flex-col items-center justify-center gap-1.5 md:hidden"
   >
     <span class="block h-px w-5 bg-current transition-all" data-nav-line="1"></span>
     <span class="block h-px w-5 bg-current transition-all" data-nav-line="2"></span>
@@ -74,12 +74,32 @@ import LangSwitcher from './LangSwitcher.tsx';
   <div
     id="nav-mobile-menu"
     hidden
-    class="absolute inset-x-0 top-full flex flex-col gap-1 border-b border-line-light bg-paper/95 px-6 py-6 backdrop-blur-xl md:hidden"
+    class="absolute inset-x-0 top-full flex flex-col gap-1 border-b border-line-light bg-paper/95 px-6 py-4 backdrop-blur-xl md:hidden"
   >
-    <a href="/quote" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">Get a quote</a>
-    <a href="/#how-it-works" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">How it works</a>
-    <a href="/movers" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">Service area</a>
-    <a href="/about" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">About</a>
+    <a
+      href="/quote"
+      class="flex min-h-[48px] items-center rounded-md px-2 font-body text-base font-semibold text-ember hover:bg-bone-warm"
+    >
+      Get a quote &rarr;
+    </a>
+    <a
+      href="/#how-it-works"
+      class="flex min-h-[48px] items-center rounded-md px-2 font-body text-base text-inlet-navy hover:bg-bone-warm"
+    >
+      How it works
+    </a>
+    <a
+      href="/movers"
+      class="flex min-h-[48px] items-center rounded-md px-2 font-body text-base text-inlet-navy hover:bg-bone-warm"
+    >
+      Service area
+    </a>
+    <a
+      href="/about"
+      class="flex min-h-[48px] items-center rounded-md px-2 font-body text-base text-inlet-navy hover:bg-bone-warm"
+    >
+      About
+    </a>
     <div class="mt-2 border-t border-line-light pt-3">
       <LangSwitcher client:idle />
     </div>
