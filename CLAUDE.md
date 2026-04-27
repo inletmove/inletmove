@@ -6,13 +6,21 @@ canonical spec docs in `_inputs/` (gitignored — local mirror at
 
 ---
 
-## Live state (as of 2026-04-27)
+## Live state (as of 2026-04-27, v3 deployed)
 
-- **Marketing site shipped** at https://inletmove.ca (Astro static on
-  Hostinger). Replaced a default WordPress install on the same hosting
-  plan. Deploy via `pnpm deploy:marketing` (FTPS, ~7s).
+- **v3 final polish LIVE** at https://inletmove.ca. Cinematic hero with
+  scroll-driven phone-fills-form on desktop + smart static auto-cycle on
+  mobile. Universal Apple-easing motion language. Editorial stock photo
+  treatment. Full @graph schema (Organization + MovingCompany + WebSite +
+  per-page WebPage with dateModified). robots.txt explicitly allows GPTBot,
+  ClaudeBot, PerplexityBot, OAI-SearchBot. Sticky mobile CTA. 8 neighborhood
+  pages. Atomic-answer FAQs.
+- **Inlet is on hold for ~2-3 weeks** while user works on the next site.
 - **Quote app** (`apps/quote/`) is intact Next.js scaffold ready for Vercel
   deploy at `quote.inletmove.ca` in v1.1. Not deployed yet.
+- **FTP user** is now `u475505275.inletmove`, chrooted to `/` (which IS
+  public_html). The old `.marketing` user is replaced. Deploy via
+  `pnpm deploy:marketing` (FTPS, ~63s for v3 — bigger payload than v1/v2).
 - **inletmove.com** has NO Hostinger plan attached. When it does, configure
   a 301 .com → .ca at the Hostinger Domains panel, NOT in code.
 - **WordPress files** still on disk at /public_html but web-inaccessible
