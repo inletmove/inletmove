@@ -1,0 +1,88 @@
+---
+// Hand-coded device frame showing a stylized "Step 4 of 6" of the quote flow.
+// v1.5 swaps in a real Figma export at /images/ui-mockups/phone-quote-step4.webp.
+---
+
+<div
+  class="relative z-10 mx-auto h-[580px] w-[280px] rounded-[44px] bg-gradient-to-br from-[#1a1d28] to-[#0a0d18] p-2 shadow-phone transition-transform duration-700 hover:-translate-y-1.5"
+  style="box-shadow: 0 0 0 2px rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.6), 0 8px 24px rgba(31, 122, 140, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);"
+  aria-label="Inlet Move app quote flow, step 4 of 6"
+>
+  <div
+    class="absolute left-1/2 top-2 z-20 h-[26px] w-[100px] -translate-x-1/2 rounded-[14px] bg-black"
+    aria-hidden
+  ></div>
+
+  <div class="relative flex h-full w-full flex-col overflow-hidden rounded-[36px] bg-paper">
+    <div
+      class="flex items-center justify-between px-6 pt-3.5 font-mono text-xs font-semibold text-charcoal"
+    >
+      <span>9:41</span>
+      <span class="inline-flex items-end gap-[3px]">
+        <span class="h-1 w-[3px] rounded-sm bg-charcoal"></span>
+        <span class="h-1.5 w-[3px] rounded-sm bg-charcoal"></span>
+        <span class="h-2 w-[3px] rounded-sm bg-charcoal"></span>
+        <span class="h-2.5 w-[3px] rounded-sm bg-charcoal"></span>
+      </span>
+    </div>
+
+    <div class="flex flex-1 flex-col px-5 pb-5 pt-8">
+      <div class="mb-4 flex items-center justify-between">
+        <span
+          class="font-display text-base font-medium tracking-tight text-inlet-navy display-soft"
+        >
+          inlet move <span class="text-ember">.</span>
+        </span>
+        <span
+          class="font-mono text-[0.625rem] font-medium uppercase tracking-widest text-graphite"
+        >
+          Step 4 / 6
+        </span>
+      </div>
+
+      <div class="mb-6 h-[3px] overflow-hidden rounded-full bg-bone-warm">
+        <div
+          class="h-full rounded-full"
+          style="width: 67%; background: linear-gradient(90deg, #1F7A8C, #E76F51);"
+        ></div>
+      </div>
+
+      <div
+        class="mb-2 font-display text-[1.4rem] font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        When are you moving?
+      </div>
+      <div class="mb-6 font-body text-sm text-graphite">Same-week available.</div>
+
+      <div class="space-y-2">
+        <div
+          class="flex items-center justify-between rounded-md border border-pacific bg-pacific/5 px-3.5 py-3 font-body text-sm font-medium text-inlet-navy"
+        >
+          <span>This Saturday</span>
+          <span class="font-mono text-[0.625rem] text-pacific">SELECTED</span>
+        </div>
+        <div
+          class="flex items-center justify-between rounded-md border border-line-mid px-3.5 py-3 font-body text-sm text-charcoal"
+        >
+          <span>Next Tuesday</span>
+        </div>
+        <div
+          class="flex items-center justify-between rounded-md border border-line-mid px-3.5 py-3 font-body text-sm text-charcoal"
+        >
+          <span>Next Saturday</span>
+        </div>
+        <div
+          class="flex items-center justify-between rounded-md border border-line-mid px-3.5 py-3 font-body text-sm text-charcoal"
+        >
+          <span>Choose a date</span>
+        </div>
+      </div>
+
+      <div
+        class="mt-auto rounded-md bg-ember py-3 text-center font-body text-sm font-semibold text-bone shadow-cta"
+      >
+        Continue &rarr;
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,24 +1,26 @@
 ---
 import Base from '../layouts/Base.astro';
+import Nav from '../components/nav/Nav.astro';
+import Footer from '../components/footer/Footer.astro';
+import Hero from '../components/home/Hero.astro';
+import Bento from '../components/home/Bento.astro';
+import CompareToggle from '../components/home/CompareToggle.tsx';
+import BigNumbers from '../components/home/BigNumbers.tsx';
+import TrustBadges from '../components/home/TrustBadges.astro';
+import FinalCTA from '../components/home/FinalCTA.astro';
 
 const title = 'Inlet Move Co. — Vancouver movers, same-week, $150/hr';
 const description =
-  'Local moving company in Metro Vancouver. Same-week moves from $150/hr ($300 minimum). Quote in 60 seconds. English, Mandarin, Punjabi, Hindi.';
+  'Local moving company in Metro Vancouver. Same-week moves from $150/hr ($300 minimum). Quote in 60 seconds. English, Mandarin, Punjabi, Hindi support.';
 ---
 
 <Base title={title} description={description}>
-  <section class="container py-24">
-    <h1 class="font-display text-display-1 text-inlet-deep">
-      Inlet Move Co.
-    </h1>
-    <p class="mt-6 max-w-prose text-lg text-charcoal/80">
-      Marketing site scaffold ready. Components rendering in Phase 3.
-    </p>
-    <a
-      href="/quote"
-      class="mt-10 inline-flex items-center gap-2 rounded-md bg-ember px-6 py-3 text-bone shadow-cta transition hover:bg-ember-warm"
-    >
-      Get a quote
-    </a>
-  </section>
+  <Nav slot="nav" />
+  <Hero />
+  <Bento />
+  <CompareToggle client:visible />
+  <BigNumbers client:visible />
+  <TrustBadges />
+  <FinalCTA />
+  <Footer slot="footer" />
 </Base>
