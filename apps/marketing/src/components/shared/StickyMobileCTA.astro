@@ -1,0 +1,78 @@
+---
+/**
+ * Sticky bottom CTA — mobile only. Slides in after the user scrolls
+ * past the hero (~500px), hides when within ~200px of the page bottom
+ * (so it doesn't overlap the footer's CTAs).
+ *
+ * Pure Astro + inline JS, no React island. Honors prefers-reduced-motion
+ * (skips the slide; the bar is just visible/hidden).
+ */
+interface Props {
+  href?: string;
+  label?: string;
+}
+const { href = '/quote', label = 'Get a quote in 60 seconds' } = Astro.props;
+---
+
+<div
+  id="sticky-mobile-cta"
+  class="sticky-mobile-cta md:hidden fixed bottom-0 inset-x-0 z-40 px-4 pb-3 pt-3"
+  data-state="hidden"
+  aria-hidden="true"
+>
+  <a
+    href={href}
+    class="block w-full rounded-md bg-ember px-4 py-4 text-center font-body text-base font-semibold text-bone shadow-cta transition-transform duration-200 active:scale-[0.98]"
+  >
+    {label} <span aria-hidden>&rarr;</span>
+  </a>
+</div>
+
+<style>
+  .sticky-mobile-cta {
+    transform: translateY(110%);
+    transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1);
+    background: linear-gradient(180deg, transparent 0%, rgba(5, 8, 16, 0.55) 60%, rgba(5, 8, 16, 0.85) 100%);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .sticky-mobile-cta[data-state="visible"] {
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sticky-mobile-cta { transition: none; }
+  }
+</style>
+
+<script>
+  (() => {
+    const el = document.getElementById('sticky-mobile-cta');
+    if (!el) return;
+
+    // Show after user scrolls past 60% of viewport height; hide near the
+    // page bottom (within 240px) so we don't compete with the footer CTAs.
+    function update() {
+      const showAfter = window.innerHeight * 0.6;
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight;
+      const distanceFromBottom = docHeight - (scrollTop + window.innerHeight);
+
+      const shouldShow = scrollTop > showAfter && distanceFromBottom > 240;
+      el.dataset.state = shouldShow ? 'visible' : 'hidden';
+      el.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
+    }
+
+    let raf = 0;
+    function onScroll() {
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        update();
+        raf = 0;
+      });
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    update();
+  })();
+</script>

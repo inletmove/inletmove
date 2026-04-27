@@ -9,6 +9,8 @@ interface Props {
   noIndex?: boolean;
   /** Optional extra JSON-LD blocks (FAQ, BreadcrumbList, etc.) */
   extraSchema?: unknown[];
+  /** Suppress the mobile sticky CTA on pages that already are the CTA (e.g. /quote, /thanks). */
+  hideStickyCta?: boolean;
 }
 
 const {
@@ -17,10 +19,31 @@ const {
   ogImage = '/og/default.png',
   noIndex = false,
   extraSchema = [],
+  hideStickyCta = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://inletmove.ca').toString();
 const ogImageURL = new URL(ogImage, Astro.site ?? 'https://inletmove.ca').toString();
+
+// dateModified — emitted both as og meta and as a WebPage JSON-LD block.
+// Stamped at build time. Per v3 brief §6.3, freshness signals matter for
+// AI citation ranking.
+const dateModified = new Date().toISOString();
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${canonical}#webpage`,
+  url: canonical,
+  name: title,
+  description,
+  inLanguage: 'en-CA',
+  isPartOf: { '@id': 'https://inletmove.ca/#website' },
+  dateModified,
+};
+
+const allExtraSchema = [...(extraSchema ?? []), webPageSchema];
+
+import StickyMobileCTA from '../components/shared/StickyMobileCTA.astro';
 ---
 
 <!doctype html>
@@ -52,6 +75,8 @@ const ogImageURL = new URL(ogImage, Astro.site ?? 'https://inletmove.ca').toStri
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageURL} />
 
+    <meta property="article:modified_time" content={dateModified} />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -59,7 +84,7 @@ const ogImageURL = new URL(ogImage, Astro.site ?? 'https://inletmove.ca').toStri
       href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,400..700,0..100;1,9..144,400..700,0..100&family=Hanken+Grotesk:wght@300..800&family=JetBrains+Mono:wght@400..600&display=swap"
     />
 
-    <StructuredData extraSchema={extraSchema} />
+    <StructuredData extraSchema={allExtraSchema} />
   </head>
   <body>
     <a href="#main" class="skip-link">Skip to content</a>
@@ -68,5 +93,29 @@ const ogImageURL = new URL(ogImage, Astro.site ?? 'https://inletmove.ca').toStri
       <slot />
     </main>
     <slot name="footer" />
+    {!hideStickyCta && <StickyMobileCTA />}
+
+    <script>
+      // Universal section-reveal observer. Adds .is-visible to any element
+      // with data-section-reveal or data-stagger-section once it crosses
+      // ~15% into the viewport. CSS handles the actual animation.
+      (() => {
+        const targets = document.querySelectorAll<HTMLElement>(
+          '[data-section-reveal], [data-stagger-section]',
+        );
+        if (!targets.length) return;
+        const obs = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              (e.target as HTMLElement).classList.add('is-visible');
+              obs.unobserve(e.target);
+            }
+          },
+          { rootMargin: '-12%' },
+        );
+        targets.forEach((t) => obs.observe(t));
+      })();
+    </script>
   </body>
 </html>

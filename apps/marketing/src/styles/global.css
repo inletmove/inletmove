@@ -66,4 +66,180 @@
   .container-prose {
     @apply mx-auto max-w-prose px-6;
   }
+
+  /* Editorial color grading for stock photography. Subtle desaturation +
+     contrast bump + faint warm cast unifies the palette across photos. */
+  .editorial-photo {
+    filter: saturate(0.92) contrast(1.05) sepia(0.04);
+  }
+
+  /* Optional duotone overlay for one or two key images. Apply alongside
+     `.editorial-photo` on a wrapper that is `relative`. */
+  .duotone-treatment {
+    position: relative;
+  }
+  .duotone-treatment::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(20, 56, 92, 0.18), rgba(231, 111, 81, 0.12));
+    mix-blend-mode: multiply;
+    pointer-events: none;
+  }
+}
+
+/* ============================================================
+   Hero atmospherics — slow aurora drift behind the dark gradient.
+   Disabled under prefers-reduced-motion (handled by base layer rule).
+   ============================================================ */
+.hero-aurora {
+  background:
+    radial-gradient(circle at 20% 30%, rgba(31, 122, 140, 0.12) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(231, 111, 81, 0.08) 0%, transparent 50%);
+  animation: aurora-drift 22s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(20px, -20px) scale(1.05); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-aurora { animation: none; }
+}
+
+/* ============================================================
+   FinalCTA gradient mesh — slow, restrained shift. Apple's signature:
+   visible only on second look.
+   ============================================================ */
+.cta-mesh {
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 100%, rgba(231, 111, 81, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 50% 0%, rgba(31, 122, 140, 0.06) 0%, transparent 70%);
+  animation: cta-mesh-drift 30s ease-in-out infinite alternate;
+}
+
+@keyframes cta-mesh-drift {
+  0%   { background-position: 50% 100%, 50% 0%; }
+  100% { background-position: 55% 95%, 45% 5%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-mesh { animation: none; }
+}
+
+/* ============================================================
+   Bento card scan-line sweep — used on the AI photo inventory card.
+   Plays once on viewport-enter via a JS-applied class.
+   ============================================================ */
+.scan-line-sweep {
+  position: relative;
+  overflow: hidden;
+}
+.scan-line-sweep.is-playing::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 35%,
+    rgba(79, 179, 199, 0.45) 49%,
+    rgba(79, 179, 199, 0.65) 50%,
+    rgba(79, 179, 199, 0.45) 51%,
+    transparent 65%,
+    transparent 100%
+  );
+  background-size: 100% 300%;
+  animation: scan-down 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+@keyframes scan-down {
+  from { background-position: 0 -100%; opacity: 0.9; }
+  to   { background-position: 0 100%; opacity: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scan-line-sweep.is-playing::before { animation: none; opacity: 0; }
+}
+
+/* ============================================================
+   Bodycam REC pulse — small red dot pulses 2x then settles.
+   ============================================================ */
+.rec-pulse {
+  animation: rec-pulse-anim 1.4s ease-out 2;
+  animation-fill-mode: forwards;
+}
+@keyframes rec-pulse-anim {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(192, 57, 43, 0.6); transform: scale(1); }
+  50%      { box-shadow: 0 0 0 8px rgba(192, 57, 43, 0); transform: scale(1.18); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .rec-pulse { animation: none; }
+}
+
+/* ============================================================
+   Photo grayscale → color reveal on viewport-enter.
+   ============================================================ */
+.grayscale-reveal {
+  filter: grayscale(1) saturate(0.92) contrast(1.05) sepia(0.04);
+  transition: filter 800ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.grayscale-reveal.is-visible {
+  filter: grayscale(0) saturate(0.92) contrast(1.05) sepia(0.04);
+}
+@media (prefers-reduced-motion: reduce) {
+  .grayscale-reveal { transition: none; filter: saturate(0.92) contrast(1.05) sepia(0.04); }
+}
+
+/* ============================================================
+   Universal section-reveal pattern. Sections with [data-section-reveal]
+   start hidden + 32px below resting position; observer adds .is-visible
+   when section enters viewport (15% inside).
+   ============================================================ */
+[data-section-reveal] {
+  opacity: 0;
+  transform: translateY(32px);
+  transition:
+    opacity 700ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+[data-section-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-section-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Children inside a stagger container reveal with a per-index delay. */
+[data-stagger-section] [data-stagger-child] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition:
+    opacity 600ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 600ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-stagger-section].is-visible [data-stagger-child] {
+  opacity: 1;
+  transform: translateY(0);
+}
+[data-stagger-section].is-visible [data-stagger-child]:nth-child(1) { transition-delay: 0ms; }
+[data-stagger-section].is-visible [data-stagger-child]:nth-child(2) { transition-delay: 80ms; }
+[data-stagger-section].is-visible [data-stagger-child]:nth-child(3) { transition-delay: 160ms; }
+[data-stagger-section].is-visible [data-stagger-child]:nth-child(4) { transition-delay: 240ms; }
+[data-stagger-section].is-visible [data-stagger-child]:nth-child(5) { transition-delay: 320ms; }
+[data-stagger-section].is-visible [data-stagger-child]:nth-child(6) { transition-delay: 400ms; }
+@media (prefers-reduced-motion: reduce) {
+  [data-stagger-section] [data-stagger-child] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
