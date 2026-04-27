@@ -1,0 +1,76 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/nav/Nav.astro';
+import Footer from '../../components/footer/Footer.astro';
+
+const title = 'Terms — Inlet Move Co.';
+const description = 'Terms of service for Inlet Move Co.';
+const lastUpdated = '2026-04-27';
+---
+
+<Base title={title} description={description}>
+  <Nav slot="nav" />
+
+  <article class="bg-paper px-6 pb-24 pt-32 md:px-8">
+    <div class="mx-auto max-w-prose">
+      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-graphite">Legal</p>
+      <h1
+        class="mb-2 font-display text-3xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        Terms of service.
+      </h1>
+      <p class="mb-8 font-mono text-xs text-graphite">
+        Last updated: {lastUpdated} · [Pending legal review]
+      </p>
+
+      <div class="space-y-5 font-body text-charcoal">
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Pricing
+        </h2>
+        <p>
+          Hourly billing from $150/hr, $300 minimum (2 hours). Hours are billed in 15-minute
+          increments after the first 2 hours. Quotes are good faith estimates; the final bill
+          tracks actual hours worked plus any agreed-upon additional services.
+        </p>
+
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Cancellation
+        </h2>
+        <p>
+          Free cancellation up to 24 hours before the scheduled move. Cancellations within 24 hours
+          are subject to a $150 fee. Same-day cancellations are billed the $300 minimum.
+        </p>
+
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Insurance and damage
+        </h2>
+        <p>
+          Every move is covered by $2M cargo and liability insurance. If something is damaged we
+          repair, replace, or compensate per the actual replacement value. Photo documentation
+          on every job streamlines claims.
+        </p>
+
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Payment
+        </h2>
+        <p>
+          E-transfer or credit card on completion. Invoice emailed within 24 hours.
+        </p>
+
+        <p class="pt-6 text-sm text-graphite">
+          This page is a placeholder. A reviewed terms of service lands before public launch.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</Base>

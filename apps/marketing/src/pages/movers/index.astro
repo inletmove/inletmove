@@ -1,0 +1,95 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/nav/Nav.astro';
+import Footer from '../../components/footer/Footer.astro';
+import data from '../../content/neighborhoods.json';
+
+const title = 'Service area — Vancouver, Burnaby, Richmond & more — Inlet Move Co.';
+const description =
+  'Inlet Move Co. serves Metro Vancouver: Vancouver, Burnaby, Richmond, Surrey, North Van, West Van, Coquitlam, New Westminster. Same-week local moves from $150/hr.';
+
+const neighborhoods = data.neighborhoods.filter((n) => n.active);
+const cities = [
+  'Vancouver',
+  'Burnaby',
+  'Richmond',
+  'Surrey',
+  'North Vancouver',
+  'West Vancouver',
+  'Coquitlam',
+  'New Westminster',
+];
+---
+
+<Base title={title} description={description}>
+  <Nav slot="nav" />
+
+  <article class="bg-paper px-6 pb-24 pt-32 md:px-8">
+    <div class="mx-auto max-w-container">
+      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-pacific">Service area</p>
+      <h1
+        class="mb-6 font-display text-display-2 font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        Where we
+        <em class="display-italic text-ember">work.</em>
+      </h1>
+      <p class="mb-12 max-w-prose font-body text-lg leading-relaxed text-graphite">
+        Inlet Move Co. covers all of Metro Vancouver. Below are the cities we serve and the
+        neighborhoods we have detailed pages for. If you don't see your neighborhood,
+        <a href="/quote" class="text-pacific underline-offset-4 hover:underline">request a quote</a>
+        — we still come.
+      </p>
+
+      <section class="mb-16">
+        <h2
+          class="mb-5 font-display text-2xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Cities we serve
+        </h2>
+        <ul class="grid grid-cols-2 gap-3 md:grid-cols-4">
+          {
+            cities.map((city) => (
+              <li class="rounded-md border border-line-light bg-bone px-4 py-3 font-body text-sm text-inlet-navy">
+                {city}
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+
+      <section>
+        <h2
+          class="mb-5 font-display text-2xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Featured neighborhoods
+        </h2>
+        <div class="grid gap-4 md:grid-cols-3">
+          {
+            neighborhoods.map((n) => (
+              <a
+                href={`/movers/${n.slug}`}
+                class="group flex flex-col gap-2 rounded-xl border border-line-light bg-bone p-6 transition hover:-translate-y-1 hover:shadow-lg"
+              >
+                <p class="font-mono text-xs uppercase tracking-widest text-pacific">
+                  {n.region}
+                </p>
+                <h3 class="font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft group-hover:text-pacific">
+                  Movers in {n.display_name}
+                </h3>
+                <p class="line-clamp-3 font-body text-sm leading-relaxed text-graphite">
+                  {n.intro}
+                </p>
+                <span class="mt-2 font-mono text-xs text-pacific">Read more &rarr;</span>
+              </a>
+            ))
+          }
+        </div>
+        <p class="mt-6 font-mono text-xs text-mist-dim">
+          Showing {neighborhoods.length} of 35. The full set ships in v1.5.
+        </p>
+      </section>
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</Base>

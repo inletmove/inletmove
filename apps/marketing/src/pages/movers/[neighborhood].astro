@@ -1,0 +1,141 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/nav/Nav.astro';
+import Footer from '../../components/footer/Footer.astro';
+import TrustBadges from '../../components/home/TrustBadges.astro';
+import FinalCTA from '../../components/home/FinalCTA.astro';
+import data from '../../content/neighborhoods.json';
+
+type Neighborhood = (typeof data.neighborhoods)[number];
+
+export function getStaticPaths() {
+  return data.neighborhoods
+    .filter((n) => n.active)
+    .map((n) => ({
+      params: { neighborhood: n.slug },
+      props: { neighborhood: n as Neighborhood },
+    }));
+}
+
+const { neighborhood } = Astro.props as { neighborhood: Neighborhood };
+
+const title = `Movers in ${neighborhood.display_name} — Inlet Move Co.`;
+const description = `Same-week ${neighborhood.display_name} moves from $150/hr ($300 minimum). ${neighborhood.intro.slice(0, 110)}…`;
+
+const localAreaSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  name: 'Inlet Move Co.',
+  url: `https://inletmove.com/movers/${neighborhood.slug}`,
+  areaServed: {
+    '@type': 'City',
+    name: neighborhood.display_name,
+    containedInPlace: {
+      '@type': 'AdministrativeArea',
+      name: neighborhood.city,
+    },
+  },
+  description: neighborhood.intro,
+  priceRange: '$$',
+};
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://inletmove.com/' },
+    { '@type': 'ListItem', position: 2, name: 'Service area', item: 'https://inletmove.com/movers' },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: `Movers in ${neighborhood.display_name}`,
+      item: `https://inletmove.com/movers/${neighborhood.slug}`,
+    },
+  ],
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  extraSchema={[localAreaSchema, breadcrumbSchema]}
+>
+  <Nav slot="nav" />
+
+  <article class="bg-paper px-6 pb-24 pt-32 md:px-8">
+    <div class="mx-auto max-w-3xl">
+      <nav aria-label="Breadcrumb" class="mb-4 font-mono text-xs uppercase tracking-widest text-graphite">
+        <a href="/movers" class="hover:text-pacific">Service area</a>
+        <span class="mx-2 text-mist-dim">/</span>
+        <span class="text-pacific">{neighborhood.region}</span>
+      </nav>
+
+      <h1
+        class="mb-6 font-display text-display-2 font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        Movers in
+        <em class="display-italic text-ember">{neighborhood.display_name}</em>
+      </h1>
+
+      <p class="mb-8 font-body text-lg leading-relaxed text-charcoal">
+        {neighborhood.intro}
+      </p>
+
+      <section class="mb-10 rounded-xl border border-line-light bg-bone p-6">
+        <h2
+          class="mb-3 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Common moves we run in {neighborhood.display_name}
+        </h2>
+        <p class="mb-4 font-body text-base leading-relaxed text-charcoal">
+          {neighborhood.common_moves}
+        </p>
+        <p class="font-mono text-xs uppercase tracking-widest text-graphite">
+          Common pickup areas
+        </p>
+        <p class="font-body text-sm text-graphite">
+          {neighborhood.common_pickup_addresses_hint}
+        </p>
+      </section>
+
+      <section class="mb-10 grid grid-cols-2 gap-4 md:grid-cols-3">
+        <div class="rounded-md border border-line-light bg-bone px-4 py-3">
+          <p class="font-mono text-xs uppercase tracking-widest text-graphite">City</p>
+          <p class="font-body text-sm font-semibold text-inlet-navy">{neighborhood.city}</p>
+        </div>
+        <div class="rounded-md border border-line-light bg-bone px-4 py-3">
+          <p class="font-mono text-xs uppercase tracking-widest text-graphite">Postal codes</p>
+          <p class="font-body text-sm font-semibold text-inlet-navy">
+            {neighborhood.postal_codes.join(' · ')}
+          </p>
+        </div>
+        <div class="rounded-md border border-line-light bg-bone px-4 py-3">
+          <p class="font-mono text-xs uppercase tracking-widest text-graphite">Avg move</p>
+          <p class="font-body text-sm font-semibold text-inlet-navy">
+            ~{neighborhood.average_move_hours}h
+          </p>
+        </div>
+      </section>
+
+      <div class="mb-12 flex flex-wrap gap-3">
+        <a
+          href="/quote"
+          class="inline-flex items-center gap-2 rounded-md bg-ember px-7 py-3.5 font-body text-base font-semibold text-bone shadow-cta transition-all hover:-translate-y-px hover:bg-ember-warm"
+        >
+          Get a quote for {neighborhood.display_name} <span aria-hidden>&rarr;</span>
+        </a>
+        <a
+          href="/movers"
+          class="inline-flex items-center gap-2 rounded-md border border-line-mid bg-paper px-7 py-3.5 font-body text-base font-semibold text-inlet-navy transition hover:bg-bone-warm"
+        >
+          Other neighborhoods
+        </a>
+      </div>
+    </div>
+  </article>
+
+  <TrustBadges />
+  <FinalCTA />
+
+  <Footer slot="footer" />
+</Base>

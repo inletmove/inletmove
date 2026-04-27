@@ -1,0 +1,35 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/nav/Nav.astro';
+import Footer from '../components/footer/Footer.astro';
+
+const title = 'Thanks — Inlet Move Co.';
+const description = 'Quote received. We will text a precise quote within the hour.';
+---
+
+<Base title={title} description={description} noIndex>
+  <Nav slot="nav" />
+
+  <article class="bg-paper px-6 pb-24 pt-32 md:px-8">
+    <div class="mx-auto max-w-2xl text-center">
+      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-success">Received</p>
+      <h1
+        class="mb-6 font-display text-display-2 font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        We've got it.
+      </h1>
+      <p class="mb-8 font-body text-lg leading-relaxed text-charcoal">
+        A real human will text you a precise quote within the hour.
+        If you don't hear from us by then, call <a href="tel:6040000000" class="text-pacific underline-offset-4 hover:underline">(604) 000-0000</a>.
+      </p>
+      <a
+        href="/"
+        class="inline-flex items-center gap-2 rounded-md border border-line-mid bg-paper px-6 py-3 font-body text-sm font-semibold text-inlet-navy transition hover:bg-bone-warm"
+      >
+        Back to home
+      </a>
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</Base>

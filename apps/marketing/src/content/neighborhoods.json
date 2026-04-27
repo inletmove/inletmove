@@ -1,0 +1,47 @@
+{
+  "_meta": {
+    "version": 1,
+    "comment": "v1 ships 3 seeded neighborhoods (Mt Pleasant, Yaletown, Burnaby Metrotown). v1.5 expands to all 35 per spec v2 §1.4. Mirror of apps/quote/content/neighborhoods.json — keep in sync until packages/content/ extraction in v1.1."
+  },
+  "neighborhoods": [
+    {
+      "slug": "mt-pleasant",
+      "display_name": "Mt Pleasant",
+      "city": "Vancouver",
+      "region": "Vancouver East Side",
+      "postal_codes": ["V5T", "V5V"],
+      "tier": 1,
+      "intro": "Mt Pleasant is one of Vancouver's most-moved-into neighborhoods. Inlet Move Co. handles studio and one-bedroom moves between Mt Pleasant and the rest of Metro Vancouver every week. Same-week availability, hourly billing from $150/hr, $300 minimum. Quote in 60 seconds.",
+      "common_moves": "Most Mt Pleasant moves we run are studio and one-bedroom apartments going to Yaletown, Kitsilano, or East Van. Walk-up buildings are common; we handle the stairs without a stair fee.",
+      "common_pickup_addresses_hint": "Apartment buildings along Main Street, Kingsway, and Quebec Street.",
+      "average_move_hours": 3.5,
+      "active": true
+    },
+    {
+      "slug": "yaletown",
+      "display_name": "Yaletown",
+      "city": "Vancouver",
+      "region": "Vancouver Downtown",
+      "postal_codes": ["V6Z", "V6B"],
+      "tier": 2,
+      "intro": "Yaletown moves are typically condo-to-condo with elevator coordination. Inlet Move Co. handles building bookings and elevator pads as part of the standard hourly rate — no concierge fee, no elevator surcharge. Quote in 60 seconds; same-week availability.",
+      "common_moves": "Condo-to-condo within the downtown core, or downtown-to-suburb (North Van, Burnaby) for couples upgrading to larger spaces.",
+      "common_pickup_addresses_hint": "Mainland Street, Pacific Boulevard, Davie Street.",
+      "average_move_hours": 4,
+      "active": true
+    },
+    {
+      "slug": "burnaby-metrotown",
+      "display_name": "Burnaby — Metrotown",
+      "city": "Burnaby",
+      "region": "Central Burnaby",
+      "postal_codes": ["V5H", "V5G"],
+      "tier": 1,
+      "intro": "Metrotown moves are often 2- and 3-bedroom moves into and out of high-rise condos. Inlet Move Co. handles two-mover crews + cargo van for hourly billing from $150/hr, $300 minimum. Multigenerational moves are a specialty — we're trained for households with extended family and ceremonial items.",
+      "common_moves": "Condo-to-condo within Burnaby, or Metrotown-to-Surrey for families upgrading to detached homes.",
+      "common_pickup_addresses_hint": "Kingsway, Willingdon Avenue, Beresford Street, Imperial Street.",
+      "average_move_hours": 5,
+      "active": true
+    }
+  ]
+}
