@@ -13,5 +13,12 @@
     "build:quote": "pnpm --filter inletmove-quote build",
     "build:marketing": "pnpm --filter inletmove-marketing build",
     "build:all": "pnpm -r build"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp",
+      "unrs-resolver"
+    ]
   }
 }
