@@ -1,0 +1,61 @@
+---
+/**
+ * BackgroundBeams — subtle diagonal "light-beam" SVG lines drifting through
+ * a dark hero. Pure SVG; one slow CSS keyframe; honors reduced motion.
+ *
+ * Aceternity's Background Beams reimplemented as a small static SVG so we
+ * don't add a React dep just for this effect.
+ */
+interface Props {
+  opacity?: number;
+  class?: string;
+}
+const { opacity = 0.18, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['bg-beams pointer-events-none absolute inset-0 overflow-hidden', className]}
+  style={`opacity:${opacity};`}
+  aria-hidden="true"
+>
+  <svg
+    class="bg-beams__svg h-full w-full"
+    viewBox="0 0 1200 800"
+    preserveAspectRatio="xMidYMid slice"
+    fill="none"
+  >
+    <defs>
+      <linearGradient id="beam-grad-1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#1F7A8C" stop-opacity="0" />
+        <stop offset="50%" stop-color="#1F7A8C" stop-opacity="1" />
+        <stop offset="100%" stop-color="#E76F51" stop-opacity="0" />
+      </linearGradient>
+      <linearGradient id="beam-grad-2" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#4FB3C7" stop-opacity="0" />
+        <stop offset="50%" stop-color="#4FB3C7" stop-opacity="0.7" />
+        <stop offset="100%" stop-color="#4FB3C7" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    <g class="bg-beams__group">
+      <path d="M -200 100 Q 600 200 1400 50" stroke="url(#beam-grad-1)" stroke-width="1.4" />
+      <path d="M -200 220 Q 600 320 1400 180" stroke="url(#beam-grad-2)" stroke-width="1" />
+      <path d="M -200 360 Q 600 460 1400 320" stroke="url(#beam-grad-1)" stroke-width="0.9" />
+      <path d="M -200 520 Q 600 620 1400 480" stroke="url(#beam-grad-2)" stroke-width="1.1" />
+      <path d="M -200 700 Q 600 800 1400 660" stroke="url(#beam-grad-1)" stroke-width="0.8" />
+    </g>
+  </svg>
+</div>
+
+<style>
+  .bg-beams__group {
+    transform-origin: center;
+    animation: bg-beams-drift 28s ease-in-out infinite alternate;
+  }
+  @keyframes bg-beams-drift {
+    from { transform: translateY(-12px); }
+    to   { transform: translateY(12px); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .bg-beams__group { animation: none; }
+  }
+</style>

@@ -1,8 +1,36 @@
 ---
+import Marquee from '../effects/Marquee.astro';
 const year = new Date().getFullYear();
+const SERVICE_AREA = [
+  'Vancouver',
+  'Burnaby',
+  'Richmond',
+  'Surrey',
+  'North Vancouver',
+  'West Vancouver',
+  'Coquitlam',
+  'New Westminster',
+  'Yaletown',
+  'Mt Pleasant',
+  'Kitsilano',
+  'Metrotown',
+  'Burnaby Heights',
+  'Coquitlam Centre',
+];
 ---
 
 <footer class="border-t border-line-light bg-inlet-deep text-bone">
+  <Marquee duration={42} ariaLabel="Cities and neighborhoods we serve" class="border-b border-line-darker bg-inlet-navy/40 py-4">
+    {
+      SERVICE_AREA.map((city) => (
+        <span class="mx-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-mist">
+          <span class="h-1 w-1 rounded-full bg-pacific" aria-hidden />
+          {city}
+        </span>
+      ))
+    }
+  </Marquee>
+
   <div class="mx-auto max-w-container px-6 py-16 md:px-8">
     <div class="grid gap-10 md:grid-cols-4">
       <div>

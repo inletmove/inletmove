@@ -1,0 +1,66 @@
+---
+/**
+ * Marquee — pure-CSS infinite horizontal scroll. Pauses on hover; freezes
+ * under prefers-reduced-motion. Doubles its content for a seamless loop.
+ *
+ * Slot pattern: pass items as children; this component duplicates them
+ * (via display:contents + clones) into a track that animates left.
+ *
+ * Used: footer service-area strip.
+ */
+interface Props {
+  duration?: number;
+  pauseOnHover?: boolean;
+  class?: string;
+  ariaLabel?: string;
+}
+const {
+  duration = 36,
+  pauseOnHover = true,
+  class: className = '',
+  ariaLabel = 'Service area marquee',
+} = Astro.props;
+---
+
+<div
+  class:list={['marquee group', pauseOnHover && 'marquee--pause-on-hover', className]}
+  role="region"
+  aria-label={ariaLabel}
+  style={`--marquee-duration:${duration}s;`}
+>
+  <div class="marquee__track">
+    <div class="marquee__group"><slot /></div>
+    <div class="marquee__group" aria-hidden="true"><slot /></div>
+  </div>
+</div>
+
+<style>
+  .marquee {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+            mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee__track {
+    display: flex;
+    flex-shrink: 0;
+    animation: marquee-x var(--marquee-duration) linear infinite;
+    will-change: transform;
+  }
+  .marquee__group {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+  }
+  .marquee--pause-on-hover:hover .marquee__track {
+    animation-play-state: paused;
+  }
+  @keyframes marquee-x {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee__track { animation: none; }
+  }
+</style>

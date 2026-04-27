@@ -1,0 +1,31 @@
+---
+/**
+ * Spotlight — large soft radial spotlight for a dark hero. Pure CSS.
+ * Shapes a wide ellipse of light at a configurable position.
+ *
+ * Props let you place it anywhere over the hero. Default: top-left.
+ */
+interface Props {
+  x?: string;
+  y?: string;
+  size?: string;
+  color?: string;
+  opacity?: number;
+  class?: string;
+}
+const {
+  x = '20%',
+  y = '15%',
+  size = '50% 40%',
+  color = 'rgba(31, 122, 140, 0.35)',
+  opacity = 0.7,
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class:list={['spotlight pointer-events-none absolute inset-0', className]}
+  aria-hidden="true"
+  style={`background: radial-gradient(ellipse ${size} at ${x} ${y}, ${color}, transparent 70%); opacity:${opacity};`}
+>
+</div>

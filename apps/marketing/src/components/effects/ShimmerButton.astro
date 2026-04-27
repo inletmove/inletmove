@@ -1,0 +1,46 @@
+---
+/**
+ * ShimmerButton — anchor-styled CTA with a slow shimmer band. Pure CSS.
+ * Renders an <a> element so it's accessible by default.
+ *
+ * Used: FinalCTA primary action.
+ */
+interface Props {
+  href: string;
+  label: string;
+  class?: string;
+  ariaLabel?: string;
+}
+const { href, label, class: className = '', ariaLabel } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={['shimmer-btn group relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-md bg-ember px-7 py-3.5 font-body text-base font-semibold text-bone shadow-cta transition-all hover:-translate-y-px hover:scale-[1.03] hover:bg-ember-warm', className]}
+  aria-label={ariaLabel ?? label}
+>
+  <span class="relative z-10"><slot>{label}</slot></span>
+  <span class="shimmer-btn__sweep pointer-events-none absolute inset-0" aria-hidden="true"></span>
+</a>
+
+<style>
+  .shimmer-btn__sweep {
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      transparent 35%,
+      rgba(255, 255, 255, 0.18) 50%,
+      transparent 65%,
+      transparent 100%
+    );
+    transform: translateX(-100%);
+    animation: shimmer-sweep 3.6s ease-in-out infinite;
+  }
+  @keyframes shimmer-sweep {
+    0%, 60% { transform: translateX(-100%); }
+    100%    { transform: translateX(100%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .shimmer-btn__sweep { animation: none; opacity: 0; }
+  }
+</style>

@@ -1,0 +1,94 @@
+---
+/**
+ * BorderBeam — animated conic-gradient beam tracing a rounded border.
+ * Pure CSS; respects prefers-reduced-motion (animation freezes via global rule).
+ *
+ * Used: phone mockup glow on the hero, optional accent on bento cards.
+ */
+interface Props {
+  duration?: number;
+  size?: number;
+  colorFrom?: string;
+  colorTo?: string;
+  borderRadius?: string;
+  borderWidth?: number;
+  delay?: number;
+  class?: string;
+}
+const {
+  duration = 12,
+  size = 220,
+  colorFrom = '#1F7A8C',
+  colorTo = '#E76F51',
+  borderRadius = 'inherit',
+  borderWidth = 1.5,
+  delay = 0,
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class:list={['border-beam pointer-events-none absolute inset-0', className]}
+  style={`--bb-duration:${duration}s;--bb-size:${size}px;--bb-from:${colorFrom};--bb-to:${colorTo};--bb-radius:${borderRadius};--bb-width:${borderWidth}px;--bb-delay:${delay}s;`}
+  aria-hidden="true"
+>
+</div>
+
+<style>
+  .border-beam {
+    border-radius: var(--bb-radius);
+    /* Mask the rectangular gradient into just a border ring */
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    padding: var(--bb-width);
+    background:
+      conic-gradient(
+        from 0deg at var(--x, 50%) var(--y, 50%),
+        transparent 0deg,
+        var(--bb-from) 30deg,
+        var(--bb-to) 60deg,
+        transparent 90deg
+      );
+    background-size: var(--bb-size) var(--bb-size);
+    animation: bb-rotate var(--bb-duration) linear infinite;
+    animation-delay: var(--bb-delay);
+    opacity: 0.6;
+  }
+
+  @keyframes bb-rotate {
+    0% {
+      --x: 0%;  --y: 0%;
+    }
+    25% {
+      --x: 100%; --y: 0%;
+    }
+    50% {
+      --x: 100%; --y: 100%;
+    }
+    75% {
+      --x: 0%;   --y: 100%;
+    }
+    100% {
+      --x: 0%;   --y: 0%;
+    }
+  }
+  /* Older browsers without @property fall back to a rotation-style trick */
+  @supports not (background: conic-gradient(from 0deg at var(--x, 50%) var(--y, 50%), red, blue)) {
+    .border-beam {
+      background: conic-gradient(
+        from 0deg,
+        transparent 0deg,
+        var(--bb-from) 80deg,
+        var(--bb-to) 120deg,
+        transparent 200deg
+      );
+      animation: bb-spin var(--bb-duration) linear infinite;
+    }
+    @keyframes bb-spin {
+      to { transform: rotate(360deg); }
+    }
+  }
+</style>

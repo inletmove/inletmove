@@ -1,0 +1,58 @@
+---
+/**
+ * Sparkles — small twinkling dot accents around a child element. Pure CSS.
+ * Use sparingly — meant for the "Currently booking" status badge.
+ *
+ * Renders 6 absolute-positioned dots at fixed positions with staggered
+ * twinkle animations. Children render in a relative container above them.
+ */
+interface Props {
+  color?: string;
+  count?: number;
+  class?: string;
+}
+const { color = '#4D8B6E', count = 6, class: className = '' } = Astro.props;
+const dots = Array.from({ length: count }).map((_, i) => ({
+  i,
+  // Pseudo-random but deterministic positions/sizes/delays
+  x: 4 + ((i * 17) % 92),
+  y: 6 + ((i * 23) % 88),
+  s: 1 + (i % 3) * 0.5,
+  d: (i * 0.31) % 1.8,
+}));
+---
+
+<span class:list={['sparkles relative inline-flex', className]} style={`--spark:${color};`}>
+  <slot />
+  <span class="sparkles__layer pointer-events-none absolute inset-0" aria-hidden="true">
+    {
+      dots.map((d) => (
+        <span
+          class="sparkles__dot"
+          style={`left:${d.x}%;top:${d.y}%;--sz:${d.s}px;--dl:${d.d}s;`}
+        />
+      ))
+    }
+  </span>
+</span>
+
+<style>
+  .sparkles__dot {
+    position: absolute;
+    width: var(--sz, 1.5px);
+    height: var(--sz, 1.5px);
+    border-radius: 9999px;
+    background: var(--spark);
+    box-shadow: 0 0 6px var(--spark);
+    opacity: 0;
+    animation: spark-twinkle 2.6s ease-in-out infinite;
+    animation-delay: var(--dl, 0s);
+  }
+  @keyframes spark-twinkle {
+    0%, 100% { opacity: 0; transform: scale(0.4); }
+    50%      { opacity: 0.95; transform: scale(1.1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sparkles__dot { animation: none; opacity: 0.4; }
+  }
+</style>

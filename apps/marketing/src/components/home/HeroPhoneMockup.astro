@@ -1,4 +1,5 @@
 ---
+import BorderBeam from '../effects/BorderBeam.astro';
 // Hand-coded device frame showing a stylized "Step 4 of 6" of the quote flow.
 // v1.5 swaps in a real Figma export at /images/ui-mockups/phone-quote-step4.webp.
 ---
@@ -8,6 +9,7 @@
   style="box-shadow: 0 0 0 2px rgba(255,255,255,0.04), 0 30px 80px rgba(0,0,0,0.6), 0 8px 24px rgba(31, 122, 140, 0.2), inset 0 1px 0 rgba(255,255,255,0.05);"
   aria-label="Inlet Move app quote flow, step 4 of 6"
 >
+  <BorderBeam duration={14} colorFrom="#1F7A8C" colorTo="#E76F51" borderWidth={1.5} />
   <div
     class="absolute left-1/2 top-2 z-20 h-[26px] w-[100px] -translate-x-1/2 rounded-[14px] bg-black"
     aria-hidden

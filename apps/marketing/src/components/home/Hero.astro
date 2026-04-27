@@ -3,6 +3,9 @@ import HeroPhoneMockup from './HeroPhoneMockup.astro';
 import HeroChips from './HeroChips.astro';
 import HeroCounters from './HeroCounters.astro';
 import LiveBookingFeed from './LiveBookingFeed.tsx';
+import BackgroundBeams from '../effects/BackgroundBeams.astro';
+import Spotlight from '../effects/Spotlight.astro';
+import Sparkles from '../effects/Sparkles.astro';
 ---
 
 <section
@@ -14,19 +17,23 @@ import LiveBookingFeed from './LiveBookingFeed.tsx';
     class="absolute inset-0"
     style="background: radial-gradient(ellipse 80% 60% at 30% 30%, rgba(31, 122, 140, 0.18), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(231, 111, 81, 0.06), transparent 70%), linear-gradient(180deg, #050810 0%, #0E1F36 100%);"
   ></div>
+  <BackgroundBeams opacity={0.16} />
+  <Spotlight x="22%" y="18%" size="55% 45%" color="rgba(31, 122, 140, 0.32)" opacity={0.6} />
 
   <div
     class="relative z-10 mx-auto grid max-w-container items-center gap-12 md:min-h-[80vh] md:grid-cols-[1.05fr_1fr]"
   >
     <div>
-      <span
-        class="mb-7 inline-flex items-center gap-2.5 rounded-full border border-success/30 bg-success/10 px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wider text-success"
-      >
+      <Sparkles class="mb-7" color="#4D8B6E" count={8}>
         <span
-          class="h-1.5 w-1.5 animate-live-pulse rounded-full bg-success shadow-[0_0_10px_rgba(77,139,110,0.8)]"
-        ></span>
-        Currently booking same-week local moves
-      </span>
+          class="inline-flex items-center gap-2.5 rounded-full border border-success/30 bg-success/10 px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wider text-success"
+        >
+          <span
+            class="h-1.5 w-1.5 animate-live-pulse rounded-full bg-success shadow-[0_0_10px_rgba(77,139,110,0.8)]"
+          ></span>
+          Currently booking same-week local moves
+        </span>
+      </Sparkles>
 
       <h1 class="mb-6 font-display font-medium text-bone display-soft text-display-1">
         Moving in Metro Vancouver,
