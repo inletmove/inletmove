@@ -83,5 +83,70 @@ const description =
     </div>
   </article>
 
+  <section
+    aria-labelledby="customer-journey"
+    class="border-t border-line-light bg-bone px-6 py-20 md:px-8 md:py-28"
+  >
+    <div class="mx-auto max-w-container">
+      <div class="mb-10 max-w-2xl">
+        <p class="mb-3 font-mono text-xs uppercase tracking-widest text-pacific">
+          What it feels like
+        </p>
+        <h2
+          id="customer-journey"
+          class="font-display text-display-2 font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Five moments of a move
+          <em class="display-italic text-ember">done well.</em>
+        </h2>
+        <p class="mt-4 font-body text-base leading-relaxed text-graphite">
+          From the first quote to the last unpacked box. The photos below are
+          editorial placeholders — real Vancouver customer photography lands
+          Q2 2026, and an AI-illustrated companion sequence drops alongside it.
+        </p>
+      </div>
+
+      <ol class="grid gap-6 md:grid-cols-3 lg:grid-cols-5">
+        {
+          [
+            { base: '/images/maya/scene-1-form', step: 'Step 1', title: 'Request a quote', desc: 'Open the site, answer six questions, get a number in under a minute.' },
+            { base: '/images/maya/scene-2-photo-scan', step: 'Step 2', title: 'Photo scan', desc: 'Walk your home with the camera (Q3 2026). We identify items, estimate volume.' },
+            { base: '/images/maya/scene-3-quote-received', step: 'Step 3', title: 'Confirmed', desc: 'A real human follows up within the hour to confirm the date and the crew.' },
+            { base: '/images/maya/scene-4-move-day', step: 'Step 4', title: 'Move day', desc: 'Two trained, branded movers arrive in a cargo van. Photo documentation runs throughout.' },
+            { base: '/images/maya/scene-5-settled', step: 'Step 5', title: 'Settled', desc: 'Quote = bill, with a target overage under 5%. You unpack, we follow up in 48h.' },
+          ].map((scene) => (
+            <li class="flex flex-col">
+              <picture class="mb-4 block aspect-[4/5] overflow-hidden rounded-lg">
+                <source type="image/avif" srcset={`${scene.base}-1280.avif 1280w, ${scene.base}-1920.avif 1920w`} sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 100vw" />
+                <source type="image/webp" srcset={`${scene.base}-1280.webp 1280w, ${scene.base}-1920.webp 1920w`} sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 100vw" />
+                <img
+                  src={`${scene.base}-1280.jpg`}
+                  srcset={`${scene.base}-1280.jpg 1280w, ${scene.base}-1920.jpg 1920w`}
+                  sizes="(min-width: 1024px) 20vw, (min-width: 768px) 33vw, 100vw"
+                  alt={`Editorial placeholder photo for "${scene.title}" — AI-generated Maya character lands in a follow-up session.`}
+                  width="1280"
+                  height="1600"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-700 hover:scale-[1.03]"
+                />
+              </picture>
+              <p class="mb-1 font-mono text-[0.6875rem] uppercase tracking-widest text-pacific">{scene.step}</p>
+              <h3 class="mb-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft">
+                {scene.title}
+              </h3>
+              <p class="font-body text-sm leading-relaxed text-graphite">{scene.desc}</p>
+            </li>
+          ))
+        }
+      </ol>
+
+      <p class="mt-8 font-mono text-[0.7rem] text-mist-dim">
+        Editorial placeholder photos sourced from Pexels (public CDN, no attribution required).
+        Replaced with real customer photography in Q2 2026.
+      </p>
+    </div>
+  </section>
+
   <Footer slot="footer" />
 </Base>

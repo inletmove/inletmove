@@ -1,4 +1,9 @@
 ---
+type Photo = {
+  base: string;
+  alt: string;
+};
+
 type Card = {
   key: string;
   tag: string;
@@ -6,7 +11,9 @@ type Card = {
   title: string;
   body: string;
   span: 'sm' | 'md' | 'lg';
-  imageLabel: string;
+  /** Either a photo (preferred) or a placeholder label */
+  photo?: Photo;
+  imageLabel?: string;
 };
 
 const CARDS: Card[] = [
@@ -17,7 +24,10 @@ const CARDS: Card[] = [
     title: 'AI photo inventory',
     body: 'Walk your home with the camera. We identify items, estimate volume, and price the move — without a site visit.',
     span: 'lg',
-    imageLabel: 'AI inventory UI mockup · Figma export Week 3',
+    photo: {
+      base: '/images/maya/scene-2-photo-scan',
+      alt: 'Customer at home holding a smartphone in a bright living room — placeholder editorial photo suggesting the camera-walk feature; UI ships Q3 2026.',
+    },
   },
   {
     key: 'documentation',
@@ -26,7 +36,10 @@ const CARDS: Card[] = [
     title: 'Photo documentation',
     body: 'Every job gets photo records. Fragile items, before-and-after, load-out. If anything is questioned, there is proof.',
     span: 'md',
-    imageLabel: 'Crew with phone · photo Week 2',
+    photo: {
+      base: '/images/stock/fragile-box',
+      alt: 'Hands holding a cardboard box labeled fragile, indicating careful handling during a move.',
+    },
   },
   {
     key: 'bodycam',
@@ -35,7 +48,7 @@ const CARDS: Card[] = [
     title: 'Bodycam ops',
     body: 'For senior and multigenerational moves. You see what we see. Footage archived 90 days.',
     span: 'sm',
-    imageLabel: 'Bodycam viewfinder · Figma export Week 3',
+    imageLabel: 'Bodycam UI · pilot Q4 2026 — no live preview yet',
   },
   {
     key: 'live_tracking',
@@ -44,7 +57,10 @@ const CARDS: Card[] = [
     title: 'Live crew tracking',
     body: 'Watch the truck en route. SMS updates today; live map by Q3 2026.',
     span: 'sm',
-    imageLabel: 'Map mockup · Figma export Week 3',
+    photo: {
+      base: '/images/stock/cargo-van-urban',
+      alt: 'White cargo vans parked on a city street under daylight.',
+    },
   },
   {
     key: 'quote_receipt',
@@ -53,7 +69,10 @@ const CARDS: Card[] = [
     title: 'Itemized quote',
     body: 'Hourly billing. No fuel surcharge, no stair fee, no weekend upcharge. Quote = bill.',
     span: 'md',
-    imageLabel: 'Receipt mockup · Figma export Week 3',
+    photo: {
+      base: '/images/stock/box-bedroom-label',
+      alt: 'Cardboard box labeled "Bedroom" placed indoors, ready for moving — itemized billing keeps room-by-room loads transparent.',
+    },
   },
 ];
 
@@ -112,12 +131,38 @@ const spanClasses: Record<Card['span'], string> = {
               {card.body}
             </p>
 
-            <div
-              class="mt-auto flex aspect-[16/10] items-center justify-center rounded-md border border-dashed border-line-mid bg-bone-warm/60 p-4 text-center"
-              aria-label={card.imageLabel}
-            >
-              <span class="font-mono text-xs text-mist-dim">[ {card.imageLabel} ]</span>
-            </div>
+            {card.photo ? (
+              <picture class="mt-auto block aspect-[16/10] overflow-hidden rounded-md">
+                <source
+                  type="image/avif"
+                  srcset={`${card.photo.base}-1280.avif 1280w, ${card.photo.base}-1920.avif 1920w`}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+                <source
+                  type="image/webp"
+                  srcset={`${card.photo.base}-1280.webp 1280w, ${card.photo.base}-1920.webp 1920w`}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                />
+                <img
+                  src={`${card.photo.base}-1280.jpg`}
+                  srcset={`${card.photo.base}-1280.jpg 1280w, ${card.photo.base}-1920.jpg 1920w`}
+                  sizes="(min-width: 768px) 50vw, 100vw"
+                  alt={card.photo.alt}
+                  width="1280"
+                  height="800"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.03]"
+                />
+              </picture>
+            ) : (
+              <div
+                class="mt-auto flex aspect-[16/10] items-center justify-center rounded-md border border-dashed border-line-mid bg-bone-warm/60 p-4 text-center"
+                aria-label={card.imageLabel}
+              >
+                <span class="font-mono text-xs text-mist-dim">[ {card.imageLabel} ]</span>
+              </div>
+            )}
           </article>
         ))
       }
