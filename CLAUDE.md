@@ -1,12 +1,30 @@
 # CLAUDE.md — Inlet Move Co. project guide
 
-For future Claude Code sessions working in this repo. Read this and the canonical
-spec docs in `_inputs/` before making non-trivial changes.
+For future Claude Code sessions working in this repo. Read this and the
+canonical spec docs in `_inputs/` (gitignored — local mirror at
+`C:\Users\smrai\inlet move\_inputs\`) before non-trivial changes.
 
 ---
 
+## Live state (as of 2026-04-27)
+
+- **Marketing site shipped** at https://inletmove.ca (Astro static on
+  Hostinger). Replaced a default WordPress install on the same hosting
+  plan. Deploy via `pnpm deploy:marketing` (FTPS, ~7s).
+- **Quote app** (`apps/quote/`) is intact Next.js scaffold ready for Vercel
+  deploy at `quote.inletmove.ca` in v1.1. Not deployed yet.
+- **inletmove.com** has NO Hostinger plan attached. When it does, configure
+  a 301 .com → .ca at the Hostinger Domains panel, NOT in code.
+- **WordPress files** still on disk at /public_html but web-inaccessible
+  via the .htaccess 410-Gone rules. Cleanup is hygiene, not blocking.
+- **Resend not yet configured** — quote form submissions log to
+  `/home/u475505275/domains/inletmove.ca/private-logs/quotes-YYYY-MM.log`
+  on the server until RESEND_API_KEY + FEROZ_NOTIFY_EMAIL are set in
+  Hostinger hPanel → Advanced → PHP Configuration.
+
 ## Source of truth, in priority order
 
+<<<<<<< HEAD
 1. `_inputs/inlet-astro-migration-addendum.md` — **NEW (2026-04-27).** Supersedes mega
    prompt §5.1, §5.2, §8 partially. Locks the split-deploy architecture: Astro static
    on Hostinger for marketing (`inletmove.com`), Next.js on Vercel for quote app
@@ -28,102 +46,115 @@ spec docs in `_inputs/` before making non-trivial changes.
 > into `apps/quote/` inside a pnpm monorepo, preserving the schema/forms/APIs and
 > moving marketing components to a new Astro app at `apps/web/`. Rollback target
 > is the `pre-inlet-week1-2026-04-27` tag.
+=======
+1. `_inputs/inlet-astro-migration-addendum.md` — split-deploy architecture
+   (supersedes the mega prompt for stack + project structure + Week 1
+   deliverables).
+2. `_inputs/inlet-mega-claude-code-prompt.md` — canonical product brief
+   (1004 lines, 2026-04-27). Wins on content/copy/honesty contracts and
+   anything not explicitly superseded by the addendum.
+3. `_inputs/inlet-move-site-spec-v2.md` — content + structure.
+4. `_inputs/inlet-move-audience-research-v1.md` — persona psychology.
+5. `_inputs/inlet-move-personas-6-7-supplement.md` — Mandarin/Cantonese +
+   Punjabi/Hindi cultural-community personas.
+6. `_inputs/inlet-move-v8.html` — visual baseline.
+>>>>>>> claude/wizardly-kapitsa-275685
 
-If a doc in `_inputs/` conflicts with code in this repo, default to the mega
-prompt and update the doc-or-code in a small follow-up PR. Don't paper over.
+If a doc conflicts with code, default to the addendum / mega prompt and
+update the code-or-doc in a follow-up PR. Don't paper over.
 
 ## Decisions already made (do not relitigate)
 
-- **Stack** — Next.js 14 App Router · TS strict · Tailwind · Framer Motion · GSAP
-  (lazy) · Supabase · Vercel · Resend · Twilio · Google Places.
-- **Body font** — Hanken Grotesk (mega prompt + v8). Spec v2's "Inter" is
-  superseded.
-- **Lead table** — `quotes` (mega prompt §6), with reserved `movros_*` columns
-  for v1.1 handoff. Spec v2's `leads` name is superseded.
-- **Layout** — v8 baseline: Hero (phone mockup + chips + counters + live feed) →
-  StoryScroll (5 Maya scenes, NOT pinned) → Bento (5 cards) → CompareToggle →
-  BigNumbers → TrustBadges → FinalCTA → Footer. Spec v2's 8-frame cinematic
-  pin-and-scrub plan is superseded — see mega prompt §2.3 (v7 was rejected
-  because pinning without real assets felt broken).
-- **i18n** — `i18n/{en,zh,pa,hi}.json`. en wired in Week 1. zh/pa/hi are stubs;
-  `<LangSwitcher>` renders them as disabled with "(Coming soon)". Real
-  translations land Week 3 with native-speaker review.
+- **Stack**:
+  - `apps/marketing/` — Astro 4.16, Tailwind 3.4, React islands (LIVE)
+  - `apps/quote/` — Next.js 14 + Supabase + Twilio + Resend (deferred to
+    Vercel deploy)
+- **Canonical domain** — inletmove.ca (NOT .com). Pivot decided at deploy
+  time because .com has no Hostinger plan. See addendum + project memory.
+- **Body font** — Hanken Grotesk. Display: Fraunces. Mono: JetBrains Mono.
+- **Quote table** — `quotes` (mega prompt §6), with reserved `movros_*`
+  columns for v1.1 handoff.
+- **Layout** — v8 baseline (Hero → Bento → CompareToggle → BigNumbers →
+  TrustBadges → FinalCTA → Footer). NO StoryScroll cinematic for v1
+  (deferred until real Maya photography lands).
+- **i18n** — only English wired. zh/pa/hi disabled in `<LangSwitcher>`
+  with "Coming soon".
 
 ## Operating rules (mega prompt §9 — non-negotiable)
 
-1. **Single focused Claude Code session per phase.** No parallel sessions in
-   this repo. The MoverOS PM2/PM1 collision pattern is what we're avoiding.
-2. **Git tag for rollback after every phase.** Pre-work tag exists at
-   `pre-inlet-week1-2026-04-27`. End of next phase: `week1-foundation-2026-05-02`.
-   End of Week 3 launch: `v1.0-launch-2026-05-23`.
+1. **Single focused Claude Code session per phase.** No parallel sessions.
+2. **Git tag for rollback after every phase.** Current chain:
+   `pre-inlet-week1-2026-04-27`, `pre-astro-migration-2026-04-27`,
+   `astro-marketing-v1-build-2026-04-27`,
+   `astro-marketing-v1-deployed-2026-04-27`. Next: `v1.0-launch-2026-05-23`.
 3. **Execution report at end of each session.** Path:
-   `~/sync/cognitia-state/inlet-{phase}/{phase}-report.md`. Sections: attempted,
-   completed (with evidence), deferred (with reason), broken/unknown (audit
-   list), next session's first task.
-4. **Evidence-first labeling.** When reporting status, label:
-   `[VERIFIED]` (I ran it), `[INFERRED]` (I expect it works but didn't run),
-   `[UNKNOWN]` (needs audit). No claim is unlabeled.
-5. **Honesty contracts on copy.** See README.md "Honesty contracts" section.
-   When in doubt, surface to Feroz before writing.
-6. **No refactoring while building.** Leave TODOs; refactor in a dedicated
-   session post-launch.
+   `C:\Users\smrai\sync\cognitia-state\inlet-{phase}\{phase}-report.md`.
+   See `inlet-marketing-v1\build-report.md` for the latest.
+4. **Evidence-first labeling.** `[VERIFIED]` (I ran it), `[INFERRED]` (I
+   expect it works but didn't run), `[UNKNOWN]` (needs audit). No claim
+   unlabeled.
+5. **Honesty contracts on copy** are load-bearing (brief §6):
+   - Never claim "owner-operated, same crew every move".
+   - Use "Trained, vetted, branded crew · introduced by name" instead.
+   - Prefix unmeasured metrics with "Target" (Inlet has no operating
+     history yet — 11min/4.1%/98% are aspirations).
+   - "AI photo inventory" → "Coming Q3 2026" badge.
+   - "Bodycam ops" → "Pilot Q4 2026" (NEVER "Bodycam Live · Recording").
+   - Trust badges with `[Pending verification]` for BC Reg #, GST #,
+     insurance certificate URL.
+6. **No refactoring while building.** Leave TODOs.
 7. **No new dependencies without surfacing first.** Stack is locked.
 
-## Architecture notes
-
-### Component philosophy
-
-- **Server components by default.** Client only when it needs state, effects,
-  or browser APIs (Hero, LiveBookingFeed, CompareToggle, BigNumbers, StoryScroll,
-  Nav, LangSwitcher, QuoteForm).
-- **`useTranslations` is a factory function**, not a hook. Safe in server and
-  client components. Reads from `i18n/<locale>.json` synchronously.
-- **`Button`** is a small primitive in `components/ui/Button.tsx`. Use it for
-  CTAs; don't write inline `<button>` for branded actions.
-
-### Data flow for the quote form
+## Repo layout
 
 ```
-QuoteForm.tsx (client)
-  ↓ react-hook-form + zod (quoteSchema in components/quote/schema.ts)
-  ↓ POST /api/quote
-app/api/quote/route.ts (server, node runtime)
-  ↓ quoteServerSchema (extends quoteSchema with attribution fields)
-  ↓ if Supabase configured: insert into quotes; else: log + synthetic UUID
-  ↓ TODO: Twilio SMS to FEROZ_NOTIFY_PHONE (integration session)
-  ↓ TODO: Resend confirmation email to contact_email (integration session)
-  → returns { ok: true, id }
+/                                 ← pnpm workspace root
+├── apps/
+│   ├── marketing/                ← Astro 4.16, LIVE on inletmove.ca
+│   │   ├── src/
+│   │   │   ├── pages/            ← index, quote, thanks, about, colophon,
+│   │   │   │                       movers/, legal/{privacy,terms}
+│   │   │   ├── components/       ← home/, nav/, footer/, quote/, shared/
+│   │   │   ├── layouts/Base.astro
+│   │   │   ├── content/neighborhoods.json (3 seeded)
+│   │   │   ├── lib/quote-handler.ts (interface contract docs)
+│   │   │   └── styles/global.css
+│   │   ├── public/
+│   │   │   ├── .htaccess         ← Apache config (forces index.html,
+│   │   │   │                       410-Gones /wp-* paths, security headers)
+│   │   │   ├── quote-handler.php ← v1 form endpoint (Resend or file log)
+│   │   │   ├── llms.txt, robots.txt, sitemap.xml, favicon.svg, og/default.svg
+│   │   ├── astro.config.mjs      ← site: 'https://inletmove.ca'
+│   │   └── tailwind.config.ts    ← v8 design tokens
+│   └── quote/                    ← Next.js 14, deferred
+│       └── (former root-level scaffold, e536f08 history preserved via git mv)
+├── scripts/
+│   └── deploy-marketing.mjs      ← Node-based FTPS deploy
+├── _inputs/                      ← canonical specs (gitignored)
+├── pnpm-workspace.yaml
+└── package.json                  ← workspace root, pnpm onlyBuiltDependencies allowlist
 ```
 
-### Live booking feed
+## Network-boundary abstraction (Path B-with-modification)
 
-- `components/home/LiveBookingFeed.tsx` (client) reads from `/api/feed` every 30s.
-- `app/api/feed/route.ts` reads from the masked `live_quote_feed` Supabase view
-  (no PII — neighborhood + size + price + minutes-ago only). View grant:
-  `select on public.live_quote_feed to anon`.
-- Falls back to seed data if Supabase isn't configured or returns empty.
+Marketing form posts to `import.meta.env.PUBLIC_QUOTE_ENDPOINT`:
 
-### StoryScroll — why NOT pinned
+- **v1**: `PUBLIC_QUOTE_ENDPOINT=/quote-handler.php` (Hostinger PHP shim)
+- **v1.1**: `PUBLIC_QUOTE_ENDPOINT=https://quote.inletmove.ca/api/quote`
+  (Vercel/Next.js)
 
-Per mega prompt §5.3 critical execution note: v7 demo failed because pinned
-sections without real assets feel broken. The fix: each Maya scene is its own
-100vh section. Image and text crossfade independently using
-`useScroll({ target, offset: ['start end', 'end start'] })`. The user is
-genuinely scrolling, so the page never feels stuck. Real photography (Maya AI
-+ Vancouver crew shots, Week 3) carries the cinematic weight.
+**Form code does not change.** Single env-var swap.
 
-## Asset placeholders (Week 1 → Week 3)
+Field names are snake_case across the boundary — locked. See
+`apps/marketing/src/lib/quote-handler.ts` for the binding interface
+contract. If you add a field, update all 4 sites: form, PHP shim, future
+Next endpoint, Supabase migration.
 
-Every placeholder is a captioned div, NOT a fake image. Week 3 swaps the divs
-for Next.js `<Image>` calls with AVIF + WebP + JPEG fallbacks.
+## How to deploy the marketing site
 
-| Placeholder | Replaced by | Path |
-|---|---|---|
-| 5 Maya scenes | Nano Banana / Flux 1.1 Pro AI generation, retoucher pass | `public/images/maya/scene-{1-5}-*.jpg` |
-| Crew + van + hands-on-boxes | Vancouver photographer (~$300-500) | `public/images/crew/`, `public/images/van/` |
-| 5 UI mockups (phone, MoverOS dash, bodycam, map, receipt) | Figma exports | `public/images/ui-mockups/` |
-| Bodycam loop | Vancouver videographer staged shoot | `public/video/b-roll/` |
+Pre-reqs: `apps/marketing/.env.local` exists (gitignored) with FTP creds.
 
+<<<<<<< HEAD
 ## Things to do in the next session (Astro migration, M1–M8)
 
 The next session is **the Astro migration**, not direct integration of the existing
@@ -153,12 +184,35 @@ Per Path B / mega prompt §8 deferrals:
 - Customer login / dashboard (lives in MoverOS)
 - Live chat / chatbot (no, ever — phone is the channel)
 - AI-generated humans in customer-facing photos (real photography only)
+=======
+```bash
+pnpm --filter inletmove-marketing build   # ~1.4s, 11 pages
+pnpm deploy:marketing                      # FTPS to Hostinger, ~7s
+```
+
+Verify: `curl -I https://inletmove.ca/`
+>>>>>>> claude/wizardly-kapitsa-275685
 
 ## Cross-project context
 
-- **MoverOS** lives in a separate repo. Its Supabase project is
-  `moveros-prod` — do NOT reuse. The `movros_*` columns on this repo's `quotes`
-  table are the integration handoff seam.
-- **Demandra** is the in-house ads/SEO/content arm. The "Advertised by Demandra"
-  footer link goes to `/colophon`. No public marketing for Demandra.
-- **Cognitia Cloud** is the holding company. Never appears on the public site.
+- **MoverOS** (separate repo). Its Supabase project is `moveros-prod` —
+  do NOT reuse. The `movros_*` columns on this repo's `quotes` table are
+  the integration handoff seam.
+- **Demandra** is the in-house ads/SEO/content arm. Footer link
+  "Advertised by Demandra" goes to `/colophon`. No public marketing.
+- **Cognitia Cloud** is the holding company. Never appears on the public
+  site.
+
+## Things explicitly NOT in the v1 scaffold
+
+Per Path B / mega prompt §8 deferrals:
+
+- AI Photo Inventory backend (Q3 2026)
+- Bodycam UI (Q4 2026)
+- Live crew tracking UI (Q3 2026)
+- Stripe payments (v1.1)
+- Live multi-language toggle (zh/pa/hi disabled in switcher)
+- Customer login / dashboard (lives in MoverOS)
+- Live chat / chatbot (no, ever — phone is the channel)
+- AI-generated humans in customer-facing photos (real photography only)
+- StoryScroll cinematic Maya section (deferred until real photography)

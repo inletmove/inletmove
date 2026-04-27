@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#050810"/>
+      <stop offset="100%" stop-color="#0E1F36"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="240" cy="200" r="180" fill="#1F7A8C" opacity="0.18"/>
+  <circle cx="980" cy="500" r="140" fill="#E76F51" opacity="0.12"/>
+  <text x="80" y="280" font-family="Georgia, serif" font-size="84" font-weight="500" fill="#F4F1ED">
+    Inlet Move<tspan fill="#E76F51">.</tspan>
+  </text>
+  <text x="80" y="350" font-family="Georgia, serif" font-size="56" font-style="italic" fill="#4FB3C7">
+    Vancouver movers, with care.
+  </text>
+  <text x="80" y="500" font-family="monospace" font-size="28" fill="#B8BCC2">
+    SAME-WEEK · $150/HR · $300 MIN
+  </text>
+  <text x="80" y="555" font-family="monospace" font-size="22" fill="#6B7080">
+    inletmove.ca
+  </text>
+</svg>

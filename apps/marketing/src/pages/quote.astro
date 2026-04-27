@@ -1,0 +1,39 @@
+---
+import Base from '../layouts/Base.astro';
+import Nav from '../components/nav/Nav.astro';
+import Footer from '../components/footer/Footer.astro';
+import QuoteForm from '../components/quote/QuoteForm.tsx';
+
+const title = 'Get a quote in 60 seconds — Inlet Move Co.';
+const description =
+  'Tell us about your move. Hourly billing from $150/hr, $300 minimum. Same-week availability. We text a precise quote within the hour.';
+---
+
+<Base title={title} description={description}>
+  <Nav slot="nav" />
+
+  <article class="bg-paper px-6 pb-24 pt-32 md:px-8">
+    <div class="mx-auto max-w-3xl">
+      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-pacific">Quote</p>
+      <h1
+        class="mb-4 font-display text-display-2 font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        Get your quote in
+        <em class="display-italic text-ember">60 seconds.</em>
+      </h1>
+      <p class="mb-10 font-body text-lg leading-relaxed text-graphite">
+        Six questions. No login. No site visit. We text a precise quote within the hour.
+      </p>
+
+      <div class="rounded-xl border border-line-light bg-bone p-6 md:p-10">
+        <QuoteForm client:load />
+      </div>
+
+      <p class="mt-8 font-mono text-xs text-mist-dim">
+        Trouble with the form? Call us at <a href="tel:6040000000" class="underline-offset-4 hover:underline">(604) 000-0000</a> or email <a href="mailto:hello@inletmove.ca" class="underline-offset-4 hover:underline">hello@inletmove.ca</a>.
+      </p>
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</Base>

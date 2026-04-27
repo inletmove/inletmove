@@ -1,0 +1,79 @@
+---
+import Base from '../../layouts/Base.astro';
+import Nav from '../../components/nav/Nav.astro';
+import Footer from '../../components/footer/Footer.astro';
+
+const title = 'Privacy — Inlet Move Co.';
+const description = 'Privacy policy for Inlet Move Co.';
+const lastUpdated = '2026-04-27';
+---
+
+<Base title={title} description={description}>
+  <Nav slot="nav" />
+
+  <article class="bg-paper px-6 pb-24 pt-32 md:px-8">
+    <div class="mx-auto max-w-prose">
+      <p class="mb-3 font-mono text-xs uppercase tracking-widest text-graphite">Legal</p>
+      <h1
+        class="mb-2 font-display text-3xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+      >
+        Privacy policy.
+      </h1>
+      <p class="mb-8 font-mono text-xs text-graphite">
+        Last updated: {lastUpdated} · [Pending legal review]
+      </p>
+
+      <div class="space-y-5 font-body text-charcoal">
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          What we collect
+        </h2>
+        <p>
+          When you request a quote we collect your name, phone number, optionally email, and the
+          details of your move (size, addresses, preferred date, notes). When you visit the site
+          we collect minimal analytics (page views, referrer) to understand traffic.
+        </p>
+
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          How we use it
+        </h2>
+        <p>
+          We use your contact details only to text or email you the quote you requested, and to
+          coordinate the move if you book. We do not sell or share your information with third
+          parties for marketing.
+        </p>
+
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          How long we keep it
+        </h2>
+        <p>
+          Quote requests that do not convert into bookings are deleted after 12 months.
+          Booking and invoice records are retained for 7 years per BC business records requirements.
+        </p>
+
+        <h2
+          class="pt-2 font-display text-xl font-medium leading-tight tracking-tight text-inlet-navy display-soft"
+        >
+          Your rights
+        </h2>
+        <p>
+          You can ask us for a copy of the data we hold about you, or to delete it, by emailing
+          <a href="mailto:privacy@inletmove.ca" class="text-pacific underline-offset-4 hover:underline"
+            >privacy@inletmove.ca</a
+          >. We will respond within 30 days.
+        </p>
+
+        <p class="pt-6 text-sm text-graphite">
+          This page is a placeholder. A reviewed privacy policy lands before public launch.
+        </p>
+      </div>
+    </div>
+  </article>
+
+  <Footer slot="footer" />
+</Base>

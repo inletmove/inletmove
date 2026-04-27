@@ -1,0 +1,80 @@
+---
+import HeroPhoneMockup from './HeroPhoneMockup.astro';
+import HeroChips from './HeroChips.astro';
+import HeroCounters from './HeroCounters.astro';
+import LiveBookingFeed from './LiveBookingFeed.tsx';
+---
+
+<section
+  aria-label="Hero"
+  class="relative min-h-screen overflow-hidden bg-black px-6 pb-16 pt-28 md:px-8 md:pt-32"
+>
+  <div
+    aria-hidden
+    class="absolute inset-0"
+    style="background: radial-gradient(ellipse 80% 60% at 30% 30%, rgba(31, 122, 140, 0.18), transparent 70%), radial-gradient(ellipse 60% 40% at 80% 80%, rgba(231, 111, 81, 0.06), transparent 70%), linear-gradient(180deg, #050810 0%, #0E1F36 100%);"
+  ></div>
+
+  <div
+    class="relative z-10 mx-auto grid max-w-container items-center gap-12 md:min-h-[80vh] md:grid-cols-[1.05fr_1fr]"
+  >
+    <div>
+      <span
+        class="mb-7 inline-flex items-center gap-2.5 rounded-full border border-success/30 bg-success/10 px-4 py-1.5 font-mono text-xs font-medium uppercase tracking-wider text-success"
+      >
+        <span
+          class="h-1.5 w-1.5 animate-live-pulse rounded-full bg-success shadow-[0_0_10px_rgba(77,139,110,0.8)]"
+        ></span>
+        Currently booking same-week local moves
+      </span>
+
+      <h1 class="mb-6 font-display font-medium text-bone display-soft text-display-1">
+        Moving in Metro Vancouver,
+        <em class="display-italic bg-gradient-to-br from-ember-warm to-ember bg-clip-text text-transparent">
+          with care.
+        </em>
+      </h1>
+
+      <p class="mb-9 max-w-prose font-body text-[1.0625rem] leading-relaxed text-mist">
+        Two movers + cargo van. From <strong class="font-medium text-bone">$150/hr</strong>,
+        <strong class="font-medium text-bone">$300 minimum</strong>. Same-week local moves
+        across Metro Vancouver.
+      </p>
+
+      <div class="mb-9 flex flex-wrap gap-4">
+        <a
+          href="/quote"
+          class="inline-flex items-center gap-2 rounded-md bg-ember px-6 py-3 font-body text-base font-semibold text-bone shadow-cta transition-all hover:-translate-y-px hover:bg-ember-warm"
+        >
+          Get your quote in 60 seconds <span aria-hidden>&rarr;</span>
+        </a>
+        <a
+          href="tel:6040000000"
+          class="inline-flex items-center gap-2 rounded-md border border-line-darker bg-white/5 px-6 py-3 font-body text-base font-semibold text-bone transition hover:bg-white/10"
+        >
+          <span aria-hidden>📞</span> (604) 000-0000
+        </a>
+      </div>
+
+      <p class="mb-9 font-body text-sm text-mist-dim">
+        Real humans. Vancouver-based. Trained, vetted, branded crew &middot; introduced by name.
+      </p>
+
+      <HeroCounters />
+
+      <div class="mt-6">
+        <LiveBookingFeed client:visible />
+      </div>
+    </div>
+
+    <div class="relative flex items-center justify-center">
+      <div
+        aria-hidden
+        class="absolute h-[90%] w-[90%] rounded-full"
+        style="background: radial-gradient(circle, rgba(31, 122, 140, 0.25) 0%, transparent 60%); filter: blur(40px);"
+      ></div>
+      <HeroPhoneMockup />
+      <HeroChips />
+    </div>
+  </div>
+</section>

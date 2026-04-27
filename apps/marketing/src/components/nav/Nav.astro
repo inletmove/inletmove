@@ -1,0 +1,124 @@
+---
+import LangSwitcher from './LangSwitcher.tsx';
+---
+
+<nav
+  id="primary-nav"
+  class="nav-base nav-dark fixed inset-x-0 top-0 z-[100] flex items-center justify-between px-6 py-4 backdrop-blur-xl backdrop-saturate-150 transition-all duration-300 md:px-8"
+  aria-label="Primary"
+>
+  <a
+    href="/"
+    class="flex items-center gap-2.5 font-display text-[1.2rem] tracking-tight display-soft"
+  >
+    <span>inlet move <span class="text-ember">.</span></span>
+    <span
+      class="hidden items-center gap-1.5 rounded-full bg-success/10 px-2 py-0.5 font-mono text-[0.625rem] font-medium uppercase tracking-wider text-success sm:inline-flex"
+    >
+      <span class="h-1.5 w-1.5 animate-live-pulse rounded-full bg-success"></span>
+      Live
+    </span>
+  </a>
+
+  <ul class="hidden items-center gap-7 md:flex">
+    <li>
+      <a
+        href="/#how-it-works"
+        class="font-body text-sm font-medium opacity-80 hover:opacity-100"
+      >
+        How it works
+      </a>
+    </li>
+    <li>
+      <a
+        href="/movers"
+        class="font-body text-sm font-medium opacity-80 hover:opacity-100"
+      >
+        Service area
+      </a>
+    </li>
+    <li>
+      <a
+        href="/about"
+        class="font-body text-sm font-medium opacity-80 hover:opacity-100"
+      >
+        About
+      </a>
+    </li>
+    <li>
+      <LangSwitcher client:idle />
+    </li>
+    <li>
+      <a
+        href="/quote"
+        class="rounded-full bg-ember px-4 py-2 font-body text-sm font-semibold text-bone transition-all hover:-translate-y-px hover:bg-ember-warm"
+      >
+        Get a quote &rarr;
+      </a>
+    </li>
+  </ul>
+
+  <button
+    id="nav-mobile-toggle"
+    type="button"
+    aria-label="Open menu"
+    aria-expanded="false"
+    aria-controls="nav-mobile-menu"
+    class="flex h-9 w-9 flex-col items-center justify-center gap-1.5 md:hidden"
+  >
+    <span class="block h-px w-5 bg-current transition-all" data-nav-line="1"></span>
+    <span class="block h-px w-5 bg-current transition-all" data-nav-line="2"></span>
+    <span class="block h-px w-5 bg-current transition-all" data-nav-line="3"></span>
+  </button>
+
+  <div
+    id="nav-mobile-menu"
+    hidden
+    class="absolute inset-x-0 top-full flex flex-col gap-1 border-b border-line-light bg-paper/95 px-6 py-6 backdrop-blur-xl md:hidden"
+  >
+    <a href="/quote" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">Get a quote</a>
+    <a href="/#how-it-works" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">How it works</a>
+    <a href="/movers" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">Service area</a>
+    <a href="/about" class="rounded-md py-2 text-inlet-navy hover:bg-bone-warm">About</a>
+    <div class="mt-2 border-t border-line-light pt-3">
+      <LangSwitcher client:idle />
+    </div>
+  </div>
+</nav>
+
+<style>
+  .nav-base { /* anchor for the JS toggle classes */ }
+  .nav-dark { @apply border-b border-line-dark bg-black/70 text-bone; }
+  .nav-light { @apply border-b border-line-light bg-paper/85 text-inlet-navy; }
+</style>
+
+<script>
+  const nav = document.getElementById('primary-nav');
+  const toggleBtn = document.getElementById('nav-mobile-toggle');
+  const menu = document.getElementById('nav-mobile-menu');
+
+  if (nav) {
+    const onScroll = () => {
+      const past = window.scrollY > window.innerHeight * 0.85;
+      nav.classList.toggle('nav-light', past);
+      nav.classList.toggle('nav-dark', !past);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
+
+  if (toggleBtn && menu) {
+    toggleBtn.addEventListener('click', () => {
+      const open = menu.hasAttribute('hidden') ? false : true;
+      if (open) {
+        menu.setAttribute('hidden', '');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        toggleBtn.setAttribute('aria-label', 'Open menu');
+      } else {
+        menu.removeAttribute('hidden');
+        toggleBtn.setAttribute('aria-expanded', 'true');
+        toggleBtn.setAttribute('aria-label', 'Close menu');
+      }
+    });
+  }
+</script>

@@ -1,0 +1,75 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="border-t border-line-light bg-inlet-deep text-bone">
+  <div class="mx-auto max-w-container px-6 py-16 md:px-8">
+    <div class="grid gap-10 md:grid-cols-4">
+      <div>
+        <a
+          href="/"
+          class="inline-flex items-center gap-2 font-display text-xl font-medium tracking-tight display-soft"
+        >
+          inlet move <span class="text-ember">.</span>
+        </a>
+        <p class="mt-3 font-body text-sm leading-relaxed text-mist">
+          Honest, careful local movers in Metro Vancouver.
+          <br />
+          <span class="font-mono text-xs text-mist-dim">$150/hr · $300 minimum · same-week</span>
+        </p>
+      </div>
+
+      <div>
+        <h2 class="mb-3 font-mono text-xs uppercase tracking-widest text-mist-dim">Service area</h2>
+        <p class="font-body text-sm leading-relaxed text-mist">
+          Vancouver · Burnaby · Richmond · Surrey · North Vancouver · West Vancouver · Coquitlam · New Westminster
+        </p>
+        <a
+          href="/movers"
+          class="mt-3 inline-block font-body text-sm text-teal-glow underline-offset-4 hover:underline"
+        >
+          All neighborhoods &rarr;
+        </a>
+      </div>
+
+      <div>
+        <h2 class="mb-3 font-mono text-xs uppercase tracking-widest text-mist-dim">Company</h2>
+        <ul class="space-y-2 font-body text-sm">
+          <li><a href="/quote" class="text-bone hover:text-ember-warm">Get a quote</a></li>
+          <li><a href="/about" class="text-bone hover:text-ember-warm">About</a></li>
+          <li><a href="/movers" class="text-bone hover:text-ember-warm">Service area</a></li>
+          <li><a href="/legal/privacy" class="text-mist hover:text-bone">Privacy</a></li>
+          <li><a href="/legal/terms" class="text-mist hover:text-bone">Terms</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h2 class="mb-3 font-mono text-xs uppercase tracking-widest text-mist-dim">Contact</h2>
+        <ul class="space-y-2 font-body text-sm">
+          <li>
+            <a href="tel:6040000000" class="font-mono text-bone hover:text-ember-warm">
+              (604) 000-0000
+            </a>
+            <p class="mt-1 font-mono text-[0.65rem] text-mist-dim">Real number lands at launch.</p>
+          </li>
+          <li>
+            <a href="mailto:hello@inletmove.ca" class="text-bone hover:text-ember-warm">
+              hello@inletmove.ca
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div
+      class="mt-12 flex flex-col items-start justify-between gap-4 border-t border-line-darker pt-6 text-xs text-mist-dim md:flex-row md:items-center"
+    >
+      <p>&copy; {year} Inlet Move Co. All rights reserved.</p>
+      <p>
+        <a href="/colophon" class="hover:text-mist">
+          Powered by MoverOS &middot; Advertised by Demandra
+        </a>
+      </p>
+    </div>
+  </div>
+</footer>
