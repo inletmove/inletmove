@@ -12,13 +12,21 @@
     "dev:marketing": "pnpm --filter inletmove-marketing dev",
     "build:quote": "pnpm --filter inletmove-quote build",
     "build:marketing": "pnpm --filter inletmove-marketing build",
-    "build:all": "pnpm -r build"
+    "build:all": "pnpm -r build",
+    "deploy:marketing": "node scripts/deploy-marketing.mjs"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
       "esbuild",
       "sharp",
-      "unrs-resolver"
+      "unrs-resolver",
+      "ssh2",
+      "cpu-features"
     ]
+  },
+  "devDependencies": {
+    "basic-ftp": "^5.3.0",
+    "dotenv": "^17.4.2",
+    "ssh2-sftp-client": "^12.1.1"
   }
 }
