@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://inletmove.ca/pricing.schema.json",
+  "title": "Inlet Move Co. pricing config",
+  "description": "Single source of truth for pricing, phone, claims, and trust flags. Read at Astro build time. Future MoverOS CRM webhook posts validated payloads against this schema before committing.",
+  "type": "object",
+  "required": ["lastUpdated", "source", "currency", "rates", "phone", "claims", "trust", "links", "tiers", "address", "retention", "hours", "terms"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp of last edit. Updated by hand today, by CRM webhook tomorrow."
+    },
+    "source": {
+      "enum": ["manual", "moveros-crm"],
+      "description": "Where this payload originated. 'manual' = hand-edited; 'moveros-crm' = CRM webhook commit."
+    },
+    "currency": {
+      "enum": ["CAD"],
+      "description": "Single-currency for v1. Add 'USD' here only when we expand pricing display."
+    },
+    "rates": {
+      "type": "object",
+      "required": ["hourlyRate", "minimumCharge", "minimumHours"],
+      "additionalProperties": false,
+      "properties": {
+        "hourlyRate": {
+          "type": "integer",
+          "minimum": 50,
+          "maximum": 500,
+          "description": "CAD per hour for two movers + cargo van."
+        },
+        "minimumCharge": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 1000,
+          "description": "Minimum job charge in CAD. Should equal hourlyRate * minimumHours."
+        },
+        "minimumHours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 8,
+          "description": "Minimum billable hours per job."
+        }
+      }
+    },
+    "phone": {
+      "type": "object",
+      "required": ["vanity", "tel", "active"],
+      "additionalProperties": false,
+      "properties": {
+        "vanity": {
+          "type": "string",
+          "minLength": 7,
+          "description": "Display form, e.g. '1-833-MOVE-393'."
+        },
+        "tel": {
+          "type": "string",
+          "pattern": "^\\+[0-9]{8,15}$",
+          "description": "E.164 dialable form for tel: hrefs, e.g. '+18336683393'."
+        },
+        "active": {
+          "type": "boolean",
+          "description": "False = number not yet provisioned; build is gated on this being true."
+        }
+      }
+    },
+    "claims": {
+      "type": "object",
+      "required": [
+        "responseTimeMinutes",
+        "onTimePercent",
+        "overagePercent",
+        "insuranceAmountCAD",
+        "insuranceLabel",
+        "emailResponseHours",
+        "damageResponseLabel"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "responseTimeMinutes": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 240,
+          "description": "Target response time in minutes. Always rendered with 'Target' prefix until verified by 30+ days of measured ops data."
+        },
+        "onTimePercent": {
+          "type": "number",
+          "minimum": 50,
+          "maximum": 100,
+          "description": "Target on-time arrival rate. Same hedging rule as responseTimeMinutes."
+        },
+        "overagePercent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 50,
+          "description": "Target overage from quote to bill. Same hedging rule."
+        },
+        "insuranceAmountCAD": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Coverage amount in CAD. Used only when trust.insuranceBound = true."
+        },
+        "insuranceLabel": {
+          "type": "string",
+          "description": "Verified short-form label, e.g. '$2M cargo + liability'. Body copy renders this when trust.insuranceBound = true; renders the hedged form ('Insurance application in progress') when false."
+        },
+        "emailResponseHours": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 168,
+          "description": "Target email response window in hours during inquiry hours. Renders as '${n} hour(s)' in /contact + /faq."
+        },
+        "damageResponseLabel": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Phrase used in damage-claim response copy (FAQ Q7). e.g. 'as soon as we can' (no fixed window) or 'within two business days' (fixed commitment). Drives the FAQ answer prose."
+        }
+      }
+    },
+    "trust": {
+      "type": "object",
+      "required": ["bcRegistered", "workSafeBCActive", "insuranceBound"],
+      "additionalProperties": false,
+      "properties": {
+        "bcRegistered": {
+          "type": "boolean",
+          "description": "BC business registration verified. Required true to render 'BC-registered' as fact."
+        },
+        "workSafeBCActive": {
+          "type": "boolean",
+          "description": "WorkSafeBC clearance currently active. False = render 'WorkSafeBC application in progress'."
+        },
+        "insuranceBound": {
+          "type": "boolean",
+          "description": "Cargo + liability policy bound and active. False = render 'Insurance application in progress · $2M target coverage'."
+        }
+      }
+    },
+    "links": {
+      "type": "object",
+      "required": ["quote"],
+      "additionalProperties": false,
+      "properties": {
+        "quote": {
+          "type": "string",
+          "format": "uri",
+          "pattern": "^https://",
+          "description": "Public origin of the quote app. v1: https://quote.inletmove.com (Vercel Next.js). All 'Get a quote' CTAs and the JSON-LD ReserveAction read this. Flip the value here to repoint every CTA in one config edit."
+        }
+      }
+    },
+    "address": {
+      "type": "object",
+      "description": "BC-Registry-of-record office address. Emitted as schema.org PostalAddress on the global MovingCompany graph entity, and inlined into /privacy's 'Privacy contact' section.",
+      "required": ["streetAddress", "addressLocality", "addressRegion", "postalCode", "addressCountry"],
+      "additionalProperties": false,
+      "properties": {
+        "streetAddress": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Suite + street. e.g. '122-4675 Imperial Street'."
+        },
+        "addressLocality": {
+          "type": "string",
+          "minLength": 1,
+          "description": "City name. e.g. 'Burnaby'."
+        },
+        "addressRegion": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Two-letter province/state code. e.g. 'BC'."
+        },
+        "postalCode": {
+          "type": "string",
+          "pattern": "^[A-Z][0-9][A-Z] [0-9][A-Z][0-9]$",
+          "description": "Canadian postal code in 'A1A 1A1' format."
+        },
+        "addressCountry": {
+          "type": "string",
+          "pattern": "^[A-Z]{2}$",
+          "description": "Two-letter ISO 3166-1 country code. e.g. 'CA'."
+        }
+      }
+    },
+    "retention": {
+      "type": "object",
+      "description": "Data retention defaults. Drives /privacy's 'How long we keep it' section. Operational records use operationalMonths; photos use photosNote (insurance-claim window); financial records use financialNote (CRA, six years inlined as regulatory fact).",
+      "required": ["operationalMonths", "photosNote", "financialNote"],
+      "additionalProperties": false,
+      "properties": {
+        "operationalMonths": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 240,
+          "description": "Default retention for quote requests, move records, SMS logs. 24 = two years (industry standard, matches insurance claim window)."
+        },
+        "photosNote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Phrase rendered in privacy policy for move-day-photo retention. Decoupled from a fixed number because photo retention is tied to insurance policy terms."
+        },
+        "financialNote": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Phrase rendered for financial records. Default 'per CRA requirements' — the literal six-year duration is inlined in the policy because it's a regulatory fact, not config."
+        }
+      }
+    },
+    "hours": {
+      "type": "object",
+      "description": "Two-tier hours model. inquiries = customer-facing contact channel (24/7 with Maya AI when live; 08:00-20:00 conservative when not). moves = human dispatch hours (fixed 08:00-20:00). Flipping inquiryAgent to null automatically reverts inquiry hours copy to conservative form on next build.",
+      "required": ["inquiries", "inquiryAgent", "movesOpens", "movesCloses", "movesDays", "timezone"],
+      "additionalProperties": false,
+      "properties": {
+        "inquiries": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display label for inquiry hours. '24/7' when AI agent live; otherwise mirror movesOpens-movesCloses."
+        },
+        "inquiryAgent": {
+          "type": ["string", "null"],
+          "description": "Name of the AI inquiry agent. 'Maya' when live; null when not. null triggers conservative-hours fallback in /contact + /faq + Org.contactPoint schema."
+        },
+        "movesOpens": {
+          "type": "string",
+          "pattern": "^[0-2][0-9]:[0-5][0-9]$",
+          "description": "Move dispatch start time, 24-hour HH:MM."
+        },
+        "movesCloses": {
+          "type": "string",
+          "pattern": "^[0-2][0-9]:[0-5][0-9]$",
+          "description": "Move dispatch end time, 24-hour HH:MM."
+        },
+        "movesDays": {
+          "type": "array",
+          "items": { "enum": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"] },
+          "minItems": 1,
+          "maxItems": 7,
+          "uniqueItems": true,
+          "description": "Days of the week move dispatch operates. Currently all 7."
+        },
+        "timezone": {
+          "type": "string",
+          "pattern": "^[A-Z][A-Za-z_]+/[A-Za-z_]+$",
+          "description": "IANA timezone. e.g. 'America/Vancouver'."
+        }
+      }
+    },
+    "tiers": {
+      "type": "object",
+      "description": "Service tier definitions. Each entry's slug is the URL slug for /[slug]-movers (e.g. '2-bedroom' → /2-bedroom-movers). estimatedHours is [low, high] used at build time to render 'X-Y hour, $low-$high typical' price math.",
+      "required": ["studio", "1-bedroom", "2-bedroom", "3-bedroom", "multigenerational", "senior-downsizing"],
+      "additionalProperties": false,
+      "properties": {
+        "studio": { "$ref": "#/$defs/tier" },
+        "1-bedroom": { "$ref": "#/$defs/tier" },
+        "2-bedroom": { "$ref": "#/$defs/tier" },
+        "3-bedroom": { "$ref": "#/$defs/tier" },
+        "multigenerational": { "$ref": "#/$defs/tier" },
+        "senior-downsizing": { "$ref": "#/$defs/tier" }
+      }
+    },
+    "terms": {
+      "type": "object",
+      "description": "Site-wide T&C disclaimers. Rendered by the shared <Terms /> component at home, /services, every tier page, /contact, and the footer (every page). 'compact' is the consolidated form for small-print contexts; 'areaEligibility' and 'scopeDecline' are the split forms.",
+      "required": ["areaEligibility", "scopeDecline", "compact"],
+      "additionalProperties": false,
+      "properties": {
+        "areaEligibility": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Service-area eligibility clause. Includes 'call to confirm' phrasing."
+        },
+        "scopeDecline": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Right-to-decline clause for jobs exceeding standard scope."
+        },
+        "compact": {
+          "type": "string",
+          "minLength": 20,
+          "description": "Consolidated form combining areaEligibility + scopeDecline. Used in single-line small-print contexts (footer, hero CTA underline)."
+        }
+      }
+    }
+  },
+  "$defs": {
+    "tier": {
+      "type": "object",
+      "required": ["label", "estimatedHours"],
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Display name, e.g. 'Studio', '1-bedroom', '3+ bedroom'."
+        },
+        "estimatedHours": {
+          "type": "array",
+          "items": { "type": "integer", "minimum": 1, "maximum": 24 },
+          "minItems": 2,
+          "maxItems": 2,
+          "description": "[low, high] estimate in hours. Multiplied by rates.hourlyRate at build time."
+        }
+      }
+    }
+  }
+}

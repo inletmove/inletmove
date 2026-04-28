@@ -58,6 +58,18 @@ playwright/.cache/
 # Lighthouse
 .lighthouseci/
 
+# Local Lighthouse diagnostic artifacts (v5 perf debugging — 75MB+ of run JSONs)
+.lighthouse-runs/
+
+# Astro build output (explicit per-app, in addition to the global dist/ + .astro/)
+apps/marketing-v5/dist/
+apps/marketing-v5/.astro/
+apps/marketing/dist/
+apps/marketing/.astro/
+
+# Environment files (wildcard form for any environment)
+.env.*.local
+
 # TypeScript
 *.tsbuildinfo
 

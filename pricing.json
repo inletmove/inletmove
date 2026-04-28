@@ -1,0 +1,66 @@
+{
+  "$schema": "./pricing.schema.json",
+  "lastUpdated": "2026-04-28T01:40:00Z",
+  "source": "manual",
+  "currency": "CAD",
+  "rates": {
+    "hourlyRate": 150,
+    "minimumCharge": 300,
+    "minimumHours": 2
+  },
+  "phone": {
+    "vanity": "1-833-MOVE-393",
+    "tel": "+18336683393",
+    "active": true
+  },
+  "claims": {
+    "responseTimeMinutes": 11,
+    "onTimePercent": 98,
+    "overagePercent": 4.1,
+    "insuranceAmountCAD": 2000000,
+    "insuranceLabel": "$2M cargo + liability",
+    "emailResponseHours": 1,
+    "damageResponseLabel": "as soon as we can"
+  },
+  "trust": {
+    "bcRegistered": true,
+    "workSafeBCActive": true,
+    "insuranceBound": true
+  },
+  "links": {
+    "quote": "https://quote.inletmove.com"
+  },
+  "address": {
+    "streetAddress": "122-4675 Imperial Street",
+    "addressLocality": "Burnaby",
+    "addressRegion": "BC",
+    "postalCode": "V5J 1C1",
+    "addressCountry": "CA"
+  },
+  "retention": {
+    "operationalMonths": 24,
+    "photosNote": "for the duration of the relevant insurance claim window",
+    "financialNote": "per CRA requirements"
+  },
+  "hours": {
+    "inquiries": "24/7",
+    "inquiryAgent": "Maya",
+    "movesOpens": "08:00",
+    "movesCloses": "20:00",
+    "movesDays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "timezone": "America/Vancouver"
+  },
+  "tiers": {
+    "studio": { "label": "Studio", "estimatedHours": [3, 4] },
+    "1-bedroom": { "label": "1-bedroom", "estimatedHours": [4, 5] },
+    "2-bedroom": { "label": "2-bedroom", "estimatedHours": [5, 7] },
+    "3-bedroom": { "label": "3+ bedroom", "estimatedHours": [7, 10] },
+    "multigenerational": { "label": "Multigenerational", "estimatedHours": [8, 12] },
+    "senior-downsizing": { "label": "Senior downsizing", "estimatedHours": [4, 8] }
+  },
+  "terms": {
+    "areaEligibility": "Pricing applies to standard local moves within our service area. Call to confirm your area is eligible.",
+    "scopeDecline": "Inlet reserves the right to decline jobs that exceed standard scope.",
+    "compact": "Pricing applies to standard local moves within our service area. Call to confirm eligibility. Inlet reserves the right to decline jobs that exceed standard scope."
+  }
+}
