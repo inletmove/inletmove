@@ -1,0 +1,87 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "inletmove.com" }],
+      "destination": "https://inletmove.ca/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.inletmove.ca" }],
+      "destination": "https://inletmove.ca/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "www.inletmove.com" }],
+      "destination": "https://inletmove.ca/$1",
+      "permanent": true
+    },
+
+    { "source": "/colophon", "destination": "/about", "permanent": true },
+    { "source": "/quote", "destination": "https://quote.inletmove.ca", "permanent": true },
+    { "source": "/thanks", "destination": "/", "permanent": true },
+    { "source": "/legal/privacy", "destination": "/privacy", "permanent": true },
+    { "source": "/legal/terms", "destination": "/faq", "permanent": true },
+    { "source": "/movers", "destination": "/service-area", "permanent": true },
+    { "source": "/movers/burnaby-metrotown", "destination": "/burnaby-movers", "permanent": true },
+    { "source": "/movers/coquitlam-centre", "destination": "/coquitlam-movers", "permanent": true },
+    { "source": "/movers/kitsilano", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/movers/mt-pleasant", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/movers/north-vancouver", "destination": "/north-vancouver-movers", "permanent": true },
+    { "source": "/movers/richmond", "destination": "/richmond-movers", "permanent": true },
+    { "source": "/movers/surrey-newton", "destination": "/surrey-movers", "permanent": true },
+    { "source": "/movers/yaletown", "destination": "/vancouver-movers", "permanent": true },
+
+    { "source": "/port-moody-movers", "destination": "/coquitlam-movers", "permanent": true },
+    { "source": "/port-coquitlam-movers", "destination": "/coquitlam-movers", "permanent": true },
+    { "source": "/tri-cities-movers", "destination": "/coquitlam-movers", "permanent": true },
+    { "source": "/new-west-movers", "destination": "/new-westminster-movers", "permanent": true },
+    { "source": "/sapperton-movers", "destination": "/new-westminster-movers", "permanent": true },
+    { "source": "/queens-park-movers", "destination": "/new-westminster-movers", "permanent": true },
+    { "source": "/lions-bay-movers", "destination": "/west-vancouver-movers", "permanent": true },
+    { "source": "/horseshoe-bay-movers", "destination": "/west-vancouver-movers", "permanent": true },
+    { "source": "/british-properties-movers", "destination": "/west-vancouver-movers", "permanent": true },
+    { "source": "/ambleside-movers", "destination": "/west-vancouver-movers", "permanent": true },
+
+    { "source": "/delta-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/tsawwassen-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/ladner-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/langley-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/pitt-meadows-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/maple-ridge-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/anmore-movers", "destination": "/service-area", "permanent": true },
+    { "source": "/belcarra-movers", "destination": "/service-area", "permanent": true },
+
+    { "source": "/yaletown-movers", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/mt-pleasant-movers", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/kitsilano-movers", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/west-end-movers", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/east-van-movers", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/strathcona-movers", "destination": "/vancouver-movers", "permanent": true },
+    { "source": "/metrotown-movers", "destination": "/burnaby-movers", "permanent": true },
+    { "source": "/brentwood-movers", "destination": "/burnaby-movers", "permanent": true },
+    { "source": "/lougheed-movers", "destination": "/burnaby-movers", "permanent": true },
+    { "source": "/steveston-movers", "destination": "/richmond-movers", "permanent": true },
+    { "source": "/newton-movers", "destination": "/surrey-movers", "permanent": true },
+    { "source": "/whalley-movers", "destination": "/surrey-movers", "permanent": true },
+    { "source": "/cloverdale-movers", "destination": "/surrey-movers", "permanent": true },
+    { "source": "/guildford-movers", "destination": "/surrey-movers", "permanent": true },
+    { "source": "/lonsdale-movers", "destination": "/north-vancouver-movers", "permanent": true },
+    { "source": "/lynn-valley-movers", "destination": "/north-vancouver-movers", "permanent": true },
+    { "source": "/deep-cove-movers", "destination": "/north-vancouver-movers", "permanent": true },
+    { "source": "/maillardville-movers", "destination": "/coquitlam-movers", "permanent": true },
+    { "source": "/burquitlam-movers", "destination": "/coquitlam-movers", "permanent": true },
+    { "source": "/westwood-plateau-movers", "destination": "/coquitlam-movers", "permanent": true },
+
+    { "source": "/4-bedroom-movers", "destination": "/3-bedroom-movers", "permanent": true },
+    { "source": "/5-bedroom-movers", "destination": "/3-bedroom-movers", "permanent": true },
+    { "source": "/one-bedroom-movers", "destination": "/1-bedroom-movers", "permanent": true },
+    { "source": "/two-bedroom-movers", "destination": "/2-bedroom-movers", "permanent": true },
+    { "source": "/three-bedroom-movers", "destination": "/3-bedroom-movers", "permanent": true },
+
+    { "source": "/local-movers", "destination": "/services", "permanent": true }
+  ]
+}

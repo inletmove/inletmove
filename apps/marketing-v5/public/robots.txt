@@ -1,0 +1,86 @@
+# Inlet Move Co. — robots.txt
+# All public content open to crawlers. AI crawlers explicitly allow-listed
+# below — Inlet's GEO strategy benefits from AI training corpora and
+# AI-search retrieval indexing /llms.txt + /llms-full.txt.
+
+User-agent: *
+Allow: /
+
+# Standard search engines — explicit even though * Allow: / covers them.
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
+
+# Anthropic — Claude family of crawlers
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-User
+Allow: /
+
+User-agent: Claude-SearchBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+# OpenAI — GPT family of crawlers
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+# Google — AI-training-specific UA (separate from Googlebot for search)
+User-agent: Google-Extended
+Allow: /
+
+# Perplexity
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-User
+Allow: /
+
+# Apple — AI-training-specific UA (separate from Applebot for search)
+User-agent: Applebot-Extended
+Allow: /
+
+# Cohere
+User-agent: cohere-ai
+Allow: /
+
+# Amazon
+User-agent: Amazonbot
+Allow: /
+
+# Meta
+User-agent: Meta-ExternalAgent
+Allow: /
+
+# ByteDance
+User-agent: Bytespider
+Allow: /
+
+# Common Crawl — feeds many AI training corpora
+User-agent: CCBot
+Allow: /
+
+Sitemap: https://inletmove.ca/sitemap-index.xml
+
+# Informal LLM-guidance pointer — read by some AI crawlers / agents
+# alongside Sitemap. The /llms.txt is the compact citation reference;
+# /llms-full.txt has per-page brand sentences, FAQ Q&A, and the
+# operational atlas. See https://llmstxt.org for spec.
+LLM-Guidance: https://inletmove.ca/llms.txt
