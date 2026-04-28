@@ -1,0 +1,213 @@
+---
+// /services — tier index page. Resolves the "Service tiers" parent in
+// the BreadcrumbList chain and gives Google + AI agents a hub to crawl
+// from to all 6 /[tier]-movers pages. Hub-and-spoke internal linking.
+//
+// Card grid is inline here rather than extracted to a shared CardGrid
+// component — the 8-city /service-area index will likely want its own
+// shape (neighbourhood text vs hours+price), so deferring abstraction
+// until the second use case lands.
+
+import Base from '../layouts/Base.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate, type TierSlug } from '../lib/pricing';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/services';
+
+const tierSlugs: TierSlug[] = [
+  'studio',
+  '1-bedroom',
+  '2-bedroom',
+  '3-bedroom',
+  'multigenerational',
+  'senior-downsizing',
+];
+
+const tierBlurbs: Record<TierSlug, string> = {
+  studio:
+    'Single-room or compact apartment. The lightest move on the menu — usually one trip, no stairs, no fuss.',
+  '1-bedroom':
+    'Standard 1-bedroom apartment — the most-moved configuration in Metro Vancouver. Couples, first apartments, downsizes from larger.',
+  '2-bedroom':
+    'Larger apartments and small homes. Couples, roommates, growing families. Often involves a piano, a sectional, or both.',
+  '3-bedroom':
+    'Full homes — three bedrooms or more. Typical move for families relocating across the metro. Stairs and split levels common.',
+  multigenerational:
+    'Family moves with extra coordination. Multiple stops, careful handling of religious and ceremonial items, sometimes a parent moving in with adult children.',
+  'senior-downsizing':
+    'Patient, respectful moves for older clients. Same crew start to finish, slower pace if needed, optional bodycam pilot for accountability.',
+};
+
+const tiers = tierSlugs.map((slug) => ({
+  estimate: tierEstimate(slug),
+  blurb: tierBlurbs[slug],
+  href: `/${slug}-movers`,
+}));
+
+const studio = tierEstimate('studio');
+const threeBd = tierEstimate('3-bedroom');
+
+const title = 'Moving service tiers — Inlet Move Co.';
+const description = `Six tiers from studio (${studio.rangeLabel}) to 3+ bedroom homes (${threeBd.rangeLabel}). Hourly billing, two movers + cargo van, same-week local moves across Metro Vancouver.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${SITE}${PATH}` },
+  ],
+};
+
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${SITE}${PATH}#tier-list`,
+  name: 'Inlet Move Co. service tiers',
+  description: 'Six service tiers offered by Inlet Move Co. for local moves in Metro Vancouver.',
+  itemListOrder: 'https://schema.org/ItemListOrderAscending',
+  numberOfItems: tiers.length,
+  itemListElement: tiers.map((t, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'Service',
+      name: `${t.estimate.label} move`,
+      url: `${SITE}${t.href}`,
+      provider: { '@id': `${SITE}/#business` },
+    },
+  })),
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, itemListSchema]}
+>
+  <Chapter
+    num="01"
+    label="Service tiers"
+    titleHtml="Six ways to <em>move</em>."
+    headingLevel="h1"
+    id="tiers"
+  >
+    <p class="services-intro reveal">
+      One hourly rate (<strong>${PRICING.rates.hourlyRate}/hr</strong> for two movers and a cargo van),
+      one minimum (<strong>${PRICING.rates.minimumCharge}</strong>),
+      one promise: quote = bill. Pick the tier that matches your home — the math is the same.
+    </p>
+
+    <ul class="tier-list reveal-stagger">
+      {tiers.map((t) => (
+        <li>
+          <a class="tier-row" href={t.href}>
+            <span class="tier-name"><em>{t.estimate.label}</em></span>
+            <span class="tier-meta">{t.estimate.hoursLabel} · {t.estimate.rangeLabel}</span>
+            <span class="tier-blurb">{t.blurb}</span>
+            <span class="tier-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Trust num="02" />
+  <FinalCTA num="03" />
+</Base>
+
+<style>
+  .services-intro {
+    max-width: 64ch;
+    margin: 4rem 0 0;
+    font-size: 1.15rem;
+    color: var(--fg-2);
+    line-height: 1.55;
+  }
+  .services-intro strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .tier-list {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+  }
+  .tier-list li:last-child .tier-row {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .tier-row {
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1.2fr 1.4fr 2.4fr auto;
+    gap: 2rem;
+    align-items: baseline;
+    padding: 1.75rem 0;
+    transition: padding 500ms var(--ease);
+    text-decoration: none;
+    color: inherit;
+  }
+  .tier-row:hover { padding-left: 1.5rem; }
+
+  .tier-name {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3.2vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+  .tier-name em {
+    font-style: italic;
+    transition: color 400ms var(--ease);
+  }
+  .tier-row:hover .tier-name em { color: var(--accent); }
+
+  .tier-meta {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    color: var(--fg-2);
+  }
+  .tier-blurb {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--fg-2);
+    line-height: 1.5;
+    max-width: 48ch;
+  }
+  .tier-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .tier-row:hover .tier-arrow {
+    transform: translateX(8px);
+    color: var(--accent);
+  }
+
+  @media (max-width: 1024px) {
+    .tier-row {
+      grid-template-columns: 1fr 1.5fr auto;
+      gap: 1.25rem 2rem;
+    }
+    .tier-blurb { grid-column: 1 / -1; max-width: none; }
+  }
+  @media (max-width: 768px) {
+    .tier-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 1.5rem 0;
+    }
+    .tier-arrow { display: none; }
+  }
+</style>

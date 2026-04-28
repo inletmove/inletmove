@@ -1,0 +1,167 @@
+---
+/**
+ * Footer — every page. Brand attribution row ("Powered by MoverOS ·
+ * Advertised by Demandra") is hardcoded; per directive, those are brand
+ * facts not config-driven. Trust assertions in the copyright line route
+ * through trustCopy() so they hedge if any flag flips.
+ *
+ * Service-tier and city links target /studio-movers, /vancouver-movers,
+ * etc. Those pages land in Step E; until then the links 404 in dev.
+ */
+
+import { PRICING, trustCopy } from '../../lib/pricing';
+import Terms from './Terms.astro';
+
+const trust = trustCopy();
+
+const services = [
+  { href: '/studio-movers', label: 'Studio moves' },
+  { href: '/1-bedroom-movers', label: '1-bedroom' },
+  { href: '/2-bedroom-movers', label: '2-bedroom' },
+  { href: '/3-bedroom-movers', label: '3+ bedroom' },
+  { href: '/multigenerational-movers', label: 'Multigenerational' },
+  { href: '/senior-downsizing-movers', label: 'Senior downsizing' },
+];
+
+const cities = [
+  { href: '/vancouver-movers', label: 'Vancouver' },
+  { href: '/burnaby-movers', label: 'Burnaby' },
+  { href: '/richmond-movers', label: 'Richmond' },
+  { href: '/surrey-movers', label: 'Surrey' },
+  { href: '/north-vancouver-movers', label: 'North Vancouver' },
+  { href: '/coquitlam-movers', label: 'Coquitlam' },
+];
+
+const inletLinks = [
+  { href: '/about', label: 'About' },
+  { href: '/faq', label: 'FAQ' },
+  { href: '/faq#insurance', label: 'Insurance' },
+  { href: '/privacy', label: 'Privacy' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<footer class="footer">
+  <div class="footer-brand">
+    <a href="/" class="logo">inlet move<span class="dot">.</span></a>
+    <p class="blurb">
+      A moving company in Metro Vancouver. Local moves, real humans, branded
+      crew. Same-week availability.
+    </p>
+  </div>
+
+  <div>
+    <h4>Service</h4>
+    <ul>
+      {services.map((s) => <li><a href={s.href}>{s.label}</a></li>)}
+    </ul>
+  </div>
+
+  <div>
+    <h4>Area</h4>
+    <ul>
+      {cities.map((c) => <li><a href={c.href}>{c.label}</a></li>)}
+    </ul>
+  </div>
+
+  <div>
+    <h4>Inlet</h4>
+    <ul>
+      {inletLinks.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      {PRICING.phone.active && (
+        <li><a href={`tel:${PRICING.phone.tel}`}>{PRICING.phone.vanity}</a></li>
+      )}
+    </ul>
+  </div>
+
+  <div class="footer-bottom">
+    <span>© 2026 Inlet Move Co. · {trust.bcRegistered} · {trust.workSafeBC}</span>
+    <span class="footer-llms"><a href="/llms.txt">AI-readable site map</a></span>
+    <span class="powered">Powered by MoverOS · Advertised by <em>Demandra</em></span>
+  </div>
+
+  <Terms variant="footer" />
+</footer>
+
+<style>
+  .footer {
+    padding: 5rem 5vw 2rem;
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 4rem;
+    font-size: 0.9rem;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .footer {
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      padding: 4rem 1.25rem 2rem;
+    }
+  }
+  .footer h4 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+    font-weight: 500;
+  }
+  .footer ul { list-style: none; }
+  .footer li { margin-bottom: 0.625rem; }
+  .footer a {
+    color: var(--fg-2);
+    text-decoration: none;
+    transition: color 250ms var(--ease);
+  }
+  .footer a:hover { color: var(--fg); }
+
+  .footer-brand .logo {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    display: block;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .footer-brand .logo .dot { color: var(--accent); }
+  .footer-brand .blurb {
+    max-width: 32ch;
+    color: var(--fg-2);
+    font-size: 0.95rem;
+    line-height: 1.55;
+  }
+
+  .footer-bottom {
+    grid-column: 1 / -1;
+    margin-top: 5rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line-2);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    letter-spacing: 0.06em;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  .footer-bottom .powered em {
+    color: var(--accent);
+    font-style: italic;
+    font-family: var(--serif);
+  }
+  .footer-bottom .footer-llms a {
+    color: var(--fg-3);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color 250ms var(--ease);
+  }
+  .footer-bottom .footer-llms a:hover { color: var(--fg); }
+</style>

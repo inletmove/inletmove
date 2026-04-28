@@ -1,0 +1,193 @@
+---
+/**
+ * Chapter 04 — Service area. 8 cities matching v5's areaServed in
+ * StructuredData. Each row links to /[city]-movers; those pages land in
+ * Step E. Neighborhood blurbs are brand copy, hand-curated per city.
+ */
+
+const cities = [
+  {
+    href: '/vancouver-movers',
+    name: 'Vancouver',
+    neighbourhoods: 'Downtown · West End · Mt Pleasant · Kitsilano · East Van',
+  },
+  {
+    href: '/burnaby-movers',
+    name: 'Burnaby',
+    neighbourhoods: 'Metrotown · Brentwood · Lougheed · Highgate',
+  },
+  {
+    href: '/richmond-movers',
+    name: 'Richmond',
+    neighbourhoods: 'Steveston · City Centre · Brighouse',
+  },
+  {
+    href: '/surrey-movers',
+    name: 'Surrey',
+    neighbourhoods: 'Newton · Guildford · Cloverdale',
+  },
+  {
+    href: '/north-vancouver-movers',
+    name: 'North Vancouver',
+    neighbourhoods: 'Lonsdale · Lower Lonsdale · Lynn Valley',
+  },
+  {
+    href: '/coquitlam-movers',
+    name: 'Coquitlam',
+    neighbourhoods: 'Coquitlam Centre · Burquitlam',
+  },
+  {
+    href: '/new-westminster-movers',
+    name: 'New Westminster',
+    neighbourhoods: 'Downtown · Sapperton · Queensborough',
+  },
+  {
+    href: '/west-vancouver-movers',
+    name: 'West Vancouver',
+    neighbourhoods: 'Ambleside · Dundarave · British Properties',
+  },
+];
+---
+
+<section class="chapter" id="area">
+  <div class="chapter-header reveal">
+    <div class="ch-num">[ 04 ]</div>
+    <div class="ch-label">Service area</div>
+  </div>
+
+  <h2 class="huge reveal">Across <em>Metro</em><br />Vancouver.</h2>
+
+  <ul class="cities reveal-stagger">
+    {cities.map((c) => (
+      <li>
+        <a class="city-row" href={c.href}>
+          <span class="city-name"><em>{c.name}</em></span>
+          <span class="neighbourhoods">{c.neighbourhoods}</span>
+          <span class="city-arrow" aria-hidden="true">→</span>
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .chapter {
+    min-height: 100vh;
+    padding: 12rem 5vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  @media (max-width: 768px) {
+    .chapter { padding: 7rem 1.5rem; }
+  }
+
+  .chapter-header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 3rem;
+    align-items: baseline;
+    margin-bottom: 5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .chapter-header {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .ch-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+  }
+  .ch-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+
+  h2.huge {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+  }
+  h2.huge em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    h2.huge { font-size: clamp(2.5rem, 11vw, 4rem); }
+  }
+
+  .cities {
+    list-style: none;
+    margin-top: 4rem;
+    padding: 0;
+  }
+  .cities li:last-child .city-row {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .city-row {
+    border-top: 1px solid var(--line);
+    display: grid;
+    grid-template-columns: 1fr 2fr auto;
+    gap: 2rem;
+    align-items: baseline;
+    padding: 1.5rem 0;
+    transition: padding 500ms var(--ease);
+    text-decoration: none;
+    color: inherit;
+  }
+  .city-row:hover { padding-left: 1.5rem; }
+
+  .city-name {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3.2vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.025em;
+  }
+  .city-name em {
+    font-style: italic;
+    transition: color 400ms var(--ease);
+  }
+  .city-row:hover .city-name em { color: var(--accent); }
+
+  .neighbourhoods {
+    font-family: var(--sans);
+    font-size: 0.85rem;
+    color: var(--fg-3);
+  }
+
+  .city-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .city-row:hover .city-arrow {
+    transform: translateX(8px);
+    color: var(--accent);
+  }
+
+  @media (max-width: 768px) {
+    .city-row {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 1.25rem 0;
+    }
+    .city-arrow { display: none; }
+  }
+</style>

@@ -1,0 +1,40 @@
+---
+/**
+ * Home — composition only. Section components carry their own styles +
+ * any section-specific JS (Hero owns the scroll-scrub video). Every
+ * value that can flip via config (price, phone, claims, trust, quote
+ * URL) routes through PRICING + trustCopy() inside the components, not
+ * here.
+ */
+
+import Base from '../layouts/Base.astro';
+import { PRICING } from '../lib/pricing';
+
+import Hero from '../components/sections/Hero.astro';
+import Promise from '../components/sections/Promise.astro';
+import Journey from '../components/sections/Journey.astro';
+import Features from '../components/sections/Features.astro';
+import ServiceArea from '../components/sections/ServiceArea.astro';
+import Interstitial from '../components/sections/Interstitial.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+
+const title = 'Inlet Move — Moving in Metro Vancouver, with care.';
+const description = `Two movers + cargo van. From $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum. Same-week local moves across Metro Vancouver.`;
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath="/"
+  ogType="website"
+>
+  <Hero />
+  <Promise />
+  <Journey />
+  <Features />
+  <ServiceArea />
+  <Interstitial />
+  <Trust />
+  <FinalCTA />
+</Base>

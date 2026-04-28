@@ -1,0 +1,265 @@
+---
+// v5 base layout — every page goes through here.
+//
+// Responsibilities:
+//   - head: title, description, canonical, OG and Twitter meta, fonts,
+//     tokens.css + global.css, StructuredData graph + per-page extra
+//   - body: grain SVG overlay, custom cursor, scroll progress, Header,
+//     slot, Footer, Vercel Analytics + Speed Insights, global JS for
+//     reveals, cursor, magnetic CTAs, scroll progress, reduced motion
+//
+// Page-specific scripts (e.g. Hero scroll-scrub) ship from the relevant
+// component, not from here.
+//
+// Twitter handle (at-prefix inletmove) is a placeholder until Feroz
+// confirms. Build report flags this for review before public launch.
+//
+// Note: avoid backticks inside frontmatter JSDoc comments — Vite's dep
+// scanner mis-tokenizes them as template-literal delimiters and bombs
+// the dev server startup. Plain // comments only in this file.
+
+// Self-hosted fonts via fontsource. Drops the 3.2 s render-block from
+// fonts.googleapis.com that Lighthouse flagged in Step C. Variable axes
+// for Fraunces (opsz, soft, ital) and Inter; static for JetBrains Mono.
+// Each fontsource CSS file declares font-display: swap by default.
+import '@fontsource-variable/fraunces';
+import '@fontsource-variable/fraunces/wght-italic.css';
+import '@fontsource-variable/inter';
+import '@fontsource/jetbrains-mono/400.css';
+import '@fontsource/jetbrains-mono/500.css';
+
+// Path 4 — Fraunces preload for text-LCP recovery on home (hero h1 +
+// sticky-header wordmark are both Fraunces; both font-load gated). Only
+// the latin-wght variants in active use on hero rendering: regular
+// (titles, wordmark) + italic (<em> emphasis inside h1). Latin-ext,
+// vietnamese, and the body fonts (Inter, JetBrains Mono) are NOT
+// preloaded — they paint after LCP, font-swap is acceptable. Preloading
+// only the critical 2 keeps the request budget tight.
+//
+// ?url query → Vite asset pipeline emits the hashed _assets/ URL,
+// matching the URL the @font-face rules emitted by fontsource use.
+// Same hash, same cache, no extra fetch.
+import frauncesNormalUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-normal.woff2?url';
+import frauncesItalicUrl from '@fontsource-variable/fraunces/files/fraunces-latin-wght-italic.woff2?url';
+
+import '../styles/tokens.css';
+import '../styles/global.css';
+import StructuredData from '../components/shared/StructuredData.astro';
+import Header from '../components/shared/Header.astro';
+import Footer from '../components/shared/Footer.astro';
+
+// Vercel Analytics + Speed Insights are mounted via inline script tags at
+// the bottom of body. The Astro SDK packages export .astro components from
+// dist/astro/component.ts — Vite's dep scanner can't tokenize those as JS,
+// breaking dev startup. Inline tags match the script the SDK would render;
+// Vercel edge auto-serves /_vercel/insights/script.js and the speed-insights
+// equivalent once deployed. No-op locally; first-party only; no cookie
+// banner needed.
+
+interface Props {
+  title: string;
+  description: string;
+  canonicalPath?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  extraSchema?: unknown[];
+}
+
+const {
+  title,
+  description,
+  canonicalPath = '/',
+  ogImage = '/assets/og-image.webp',
+  ogType = 'website',
+  extraSchema = [],
+} = Astro.props;
+
+const SITE = 'https://inletmove.ca';
+const canonical = new URL(canonicalPath, SITE).toString();
+const ogImageUrl = ogImage.startsWith('http')
+  ? ogImage
+  : new URL(ogImage, SITE).toString();
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0a0a0a" />
+
+    <link rel="preload" href={frauncesNormalUrl} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={frauncesItalicUrl} as="font" type="font/woff2" crossorigin />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:site_name" content="Inlet Move Co." />
+    <meta property="og:locale" content="en_CA" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@inletmove" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <StructuredData extraSchema={extraSchema} />
+  </head>
+
+  <body>
+    <svg class="grain" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <filter id="noiseFilter">
+        <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+        <feColorMatrix values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.6 0" />
+      </filter>
+      <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+    </svg>
+
+    <div class="cursor" id="cursor" aria-hidden="true"></div>
+
+    <div class="progress" aria-hidden="true">
+      <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <Header />
+
+    <main><slot /></main>
+
+    <Footer />
+
+    <script defer is:inline src="/_vercel/insights/script.js"></script>
+    <script defer is:inline src="/_vercel/speed-insights/script.js"></script>
+
+    <script>
+      // Global enhancements: reveal-on-scroll, scroll progress, custom cursor,
+      // magnetic CTAs, smooth scroll, reduced-motion. Each subsystem is in
+      // its own try block so any one failure leaves the rest working and
+      // the page is content-complete without JS.
+      (function () {
+        'use strict';
+        document.documentElement.classList.add('js');
+
+        // Reveal-on-scroll
+        try {
+          const reveals = document.querySelectorAll('.reveal, .reveal-stagger');
+          if ('IntersectionObserver' in window) {
+            const io = new IntersectionObserver(
+              (entries) => {
+                entries.forEach((entry) => {
+                  if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    io.unobserve(entry.target);
+                  }
+                });
+              },
+              { threshold: 0.12, rootMargin: '0px 0px -8% 0px' },
+            );
+            reveals.forEach((el) => io.observe(el));
+          } else {
+            reveals.forEach((el) => el.classList.add('visible'));
+          }
+        } catch {
+          document
+            .querySelectorAll('.reveal, .reveal-stagger')
+            .forEach((el) => el.classList.add('visible'));
+        }
+
+        // Scroll progress bar
+        try {
+          const progressFill = document.getElementById('progressFill');
+          if (progressFill) {
+            const update = () => {
+              const scrolled = window.scrollY || document.documentElement.scrollTop;
+              const total = document.body.scrollHeight - window.innerHeight;
+              const pct = total > 0 ? (scrolled / total) * 100 : 0;
+              progressFill.style.width = pct + '%';
+            };
+            window.addEventListener('scroll', update, { passive: true });
+            update();
+          }
+        } catch {
+          /* progress is decorative */
+        }
+
+        // Custom cursor (fine pointer / desktop only)
+        try {
+          const canCursor =
+            window.matchMedia('(pointer: fine)').matches && window.innerWidth > 768;
+          if (canCursor) {
+            document.documentElement.classList.add('cursor-active');
+            const cursor = document.getElementById('cursor');
+            if (cursor) {
+              cursor.classList.add('active');
+              let mx = 0,
+                my = 0,
+                cx = 0,
+                cy = 0;
+              window.addEventListener('mousemove', (e) => {
+                mx = e.clientX;
+                my = e.clientY;
+              });
+              const loop = () => {
+                cx += (mx - cx) * 0.18;
+                cy += (my - cy) * 0.18;
+                cursor.style.transform = 'translate(' + (cx - 4) + 'px, ' + (cy - 4) + 'px)';
+                requestAnimationFrame(loop);
+              };
+              loop();
+              document
+                .querySelectorAll('a, button, .magnetic, .city-row, .feature-asset')
+                .forEach((el) => {
+                  el.addEventListener('mouseenter', () => cursor.classList.add('large'));
+                  el.addEventListener('mouseleave', () => cursor.classList.remove('large'));
+                });
+            }
+          }
+        } catch {
+          /* default cursor stays */
+        }
+
+        // Magnetic CTAs
+        try {
+          document.querySelectorAll<HTMLElement>('.magnetic').forEach((el) => {
+            el.addEventListener('mousemove', (e) => {
+              const rect = el.getBoundingClientRect();
+              const x = (e as MouseEvent).clientX - rect.left - rect.width / 2;
+              const y = (e as MouseEvent).clientY - rect.top - rect.height / 2;
+              el.style.transform = 'translate(' + x * 0.18 + 'px, ' + y * 0.18 + 'px)';
+            });
+            el.addEventListener('mouseleave', () => {
+              el.style.transform = '';
+            });
+          });
+        } catch {
+          /* CTAs still work, just not magnetic */
+        }
+
+        // Smooth scroll for in-page anchors
+        try {
+          document.documentElement.style.scrollBehavior = 'smooth';
+        } catch {
+          /* default scroll */
+        }
+
+        // Reduced motion: strip the JS layer so reveals show immediately
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          document.documentElement.classList.remove('js');
+          document
+            .querySelectorAll('.reveal, .reveal-stagger')
+            .forEach((el) => el.classList.add('visible'));
+        }
+      })();
+    </script>
+  </body>
+</html>

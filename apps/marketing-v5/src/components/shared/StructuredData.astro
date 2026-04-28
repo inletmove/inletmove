@@ -1,0 +1,230 @@
+---
+/**
+ * v5 structured data — comprehensive @graph emitted on every page. Per-page
+ * schemas (FAQPage, BreadcrumbList, Service, neighborhood-specific
+ * LocalBusiness, etc.) ride in via `extraSchema` and become additional
+ * <script type="application/ld+json"> blocks alongside the global graph.
+ *
+ * Honesty contracts are wired through pricing.json:
+ *   - Trust assertions (BC reg, WorkSafeBC, insurance) flow through
+ *     `trustCopy()` — the SAME resolver consumed by body copy. One source
+ *     of truth, both surfaces, zero drift.
+ *   - Telephone fields are gated on `PRICING.phone.active`. If that flag
+ *     flips false the phone disappears from JSON-LD automatically.
+ *   - All prices read from `PRICING.rates` — no hardcoded $150 in markup.
+ *   - No aggregateRating / review count (would require actual reviews).
+ *   - knowsLanguage narrowed to ['en'] for v5 ship. v3 declared
+ *     ['en','zh','pa','hi'] but Inlet doesn't actually serve customers
+ *     in Mandarin/Cantonese/Punjabi/Hindi today; declaring those would
+ *     be the same honesty-contract violation pattern as unhedged trust
+ *     claims. Flip back when bilingual crew are staffed.
+ */
+
+import { PRICING, trustCopy } from '../../lib/pricing';
+
+interface Props {
+  extraSchema?: unknown[];
+}
+
+const { extraSchema = [] } = Astro.props;
+
+const SITE = 'https://inletmove.ca';
+const trust = trustCopy();
+
+const orgDescription = `Local moving company in Metro Vancouver, British Columbia. Same-week local moves from $${PRICING.rates.hourlyRate}/hr.`;
+
+const businessDescription =
+  `Local moving company in Metro Vancouver, British Columbia. Same-week local moves. ` +
+  `Hourly billing from $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum. ` +
+  `Trained, vetted, branded crew, introduced by name. ` +
+  `${trust.bcRegistered}. ${trust.workSafeBC}. ${trust.insurance}.`;
+
+const phoneFields = PRICING.phone.active
+  ? { telephone: PRICING.phone.tel }
+  : {};
+
+// Two-tier hours model:
+//   - inquiryHoursSpec: 24/7 when Maya AI is live, conservative dispatch
+//     window when not. Used by Org.contactPoint.hoursAvailable + the
+//     "inquiry hours" entry on MovingCompany.openingHoursSpecification.
+//   - moveHoursSpec: fixed dispatch window for human-staffed moves.
+const dayOfWeekFull = [
+  'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday',
+];
+
+const inquiryHoursSpec = {
+  '@type': 'OpeningHoursSpecification',
+  name: 'Inquiry hours',
+  dayOfWeek: dayOfWeekFull,
+  opens: PRICING.hours.inquiryAgent !== null && PRICING.hours.inquiries === '24/7'
+    ? '00:00'
+    : PRICING.hours.movesOpens,
+  closes: PRICING.hours.inquiryAgent !== null && PRICING.hours.inquiries === '24/7'
+    ? '23:59'
+    : PRICING.hours.movesCloses,
+};
+
+const moveHoursSpec = {
+  '@type': 'OpeningHoursSpecification',
+  name: 'Move dispatch hours',
+  dayOfWeek: dayOfWeekFull,
+  opens: PRICING.hours.movesOpens,
+  closes: PRICING.hours.movesCloses,
+};
+
+// Org-level customer-service ContactPoint, hoursAvailable bound to
+// inquiry hours per directive. /contact page emits its own ContactPoint
+// at #contact-point — these are kept as separate entities so the page-
+// level schema can also describe the dispatch channel if needed later.
+const orgContactPoint = {
+  '@type': 'ContactPoint',
+  contactType: 'customer service',
+  ...(PRICING.phone.active ? { telephone: PRICING.phone.tel } : {}),
+  email: 'hello@inletmove.ca',
+  areaServed: { '@type': 'AdministrativeArea', name: 'Metro Vancouver, BC, Canada' },
+  availableLanguage: ['en'],
+  hoursAvailable: inquiryHoursSpec,
+};
+
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE}/#organization`,
+  name: 'Inlet Move Co.',
+  url: SITE,
+  logo: `${SITE}/og/default.png`,
+  description: orgDescription,
+  foundingDate: '2026',
+  knowsLanguage: ['en'],
+  ...phoneFields,
+  contactPoint: orgContactPoint,
+  sameAs: [], // Populated when GBP, social profiles, directory listings exist
+};
+
+const tiers: Array<{ name: string; description: string }> = [
+  {
+    name: 'Studio move',
+    description:
+      'Single-room or compact apartment move with two-mover crew + cargo van.',
+  },
+  {
+    name: '1-bedroom move',
+    description: 'Standard 1-bedroom apartment move; ~3-5 hours typical.',
+  },
+  {
+    name: '2-bedroom move',
+    description: 'Larger apartments and small homes; ~5-7 hours typical.',
+  },
+  {
+    name: '3-bedroom move',
+    description: 'Full homes; ~7-10 hours typical.',
+  },
+  {
+    name: 'Multigenerational move',
+    description:
+      'Family moves with extra coordination across generations; trained for handling religious and ceremonial items.',
+  },
+  {
+    name: 'Senior downsizing',
+    description:
+      'Patient, respectful moves for older clients. Same crew start to finish.',
+  },
+];
+
+const businessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  '@id': `${SITE}/#business`,
+  parentOrganization: { '@id': `${SITE}/#organization` },
+  name: 'Inlet Move Co.',
+  url: SITE,
+  description: businessDescription,
+  priceRange: '$$',
+  ...phoneFields,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: PRICING.address.streetAddress,
+    addressLocality: PRICING.address.addressLocality,
+    addressRegion: PRICING.address.addressRegion,
+    postalCode: PRICING.address.postalCode,
+    addressCountry: PRICING.address.addressCountry,
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Vancouver' },
+    { '@type': 'City', name: 'Burnaby' },
+    { '@type': 'City', name: 'Richmond' },
+    { '@type': 'City', name: 'Surrey' },
+    { '@type': 'City', name: 'North Vancouver' },
+    { '@type': 'City', name: 'West Vancouver' },
+    { '@type': 'City', name: 'Coquitlam' },
+    { '@type': 'City', name: 'New Westminster' },
+  ],
+  openingHoursSpecification: [inquiryHoursSpec, moveHoursSpec],
+  knowsLanguage: ['en'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Moving services',
+    itemListElement: tiers.map((tier) => ({
+      '@type': 'Offer',
+      itemOffered: {
+        '@type': 'Service',
+        name: tier.name,
+        description: tier.description,
+      },
+      priceSpecification: {
+        '@type': 'UnitPriceSpecification',
+        price: String(PRICING.rates.hourlyRate),
+        priceCurrency: PRICING.currency,
+        unitCode: 'HUR',
+        referenceQuantity: {
+          '@type': 'QuantitativeValue',
+          value: 1,
+          unitCode: 'HUR',
+        },
+      },
+    })),
+  },
+  potentialAction: {
+    '@type': 'ReserveAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: PRICING.links.quote,
+      actionPlatform: [
+        'https://schema.org/DesktopWebPlatform',
+        'https://schema.org/MobileWebPlatform',
+      ],
+    },
+    result: { '@type': 'Reservation', name: 'Moving quote request' },
+  },
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE}/#website`,
+  url: SITE,
+  name: 'Inlet Move Co.',
+  publisher: { '@id': `${SITE}/#organization` },
+  inLanguage: 'en-CA',
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE}/?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
+};
+
+const graph = {
+  '@context': 'https://schema.org',
+  '@graph': [organizationSchema, businessSchema, websiteSchema],
+};
+---
+
+<script is:inline type="application/ld+json" set:html={JSON.stringify(graph)} />
+{
+  extraSchema.map((schema) => (
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(schema)} />
+  ))
+}

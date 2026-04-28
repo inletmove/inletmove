@@ -1,0 +1,93 @@
+---
+// LazyVideo — defers <source> src loading until the video approaches the
+// viewport. For below-fold autoplay loops where preload="metadata" is too
+// eager and competes for bandwidth on slow 4G.
+//
+// Pattern:
+//   1. Render <video preload="none"> with <source data-src=...> children.
+//      Browser sees no src on parse → no network fetch.
+//   2. IntersectionObserver with rootMargin "50% 0px" fires when the video
+//      is within half a viewport of the visible area.
+//   3. On intersection, swap data-src → src on every source, call video.load()
+//      to kick off media fetch, unobserve.
+//
+// Reusable across service-tier and city pages in Step E if those gain their
+// own below-fold videos.
+
+interface Source {
+  src: string;
+  type: 'video/webm' | 'video/mp4';
+}
+
+interface Props {
+  sources: Source[];
+  poster: string;
+  ariaLabel?: string;
+  class?: string;
+}
+
+const { sources, poster, ariaLabel, class: className } = Astro.props;
+---
+
+<video
+  class:list={['lazy-video', className]}
+  autoplay
+  loop
+  muted
+  playsinline
+  preload="none"
+  poster={poster}
+  aria-label={ariaLabel}
+  webkit-playsinline
+>
+  {sources.map((s) => <source data-src={s.src} type={s.type} />)}
+</video>
+
+<script>
+  // Defensive: any failure leaves the poster visible — section is
+  // content-complete without JS or without IntersectionObserver.
+  try {
+    const lazyVideos = document.querySelectorAll<HTMLVideoElement>('.lazy-video');
+    if (lazyVideos.length === 0) {
+      // no-op
+    } else if ('IntersectionObserver' in window) {
+      const swap = (video: HTMLVideoElement) => {
+        const sources = video.querySelectorAll<HTMLSourceElement>('source[data-src]');
+        sources.forEach((source) => {
+          const src = source.dataset.src;
+          if (src) {
+            source.src = src;
+            source.removeAttribute('data-src');
+          }
+        });
+        video.load();
+      };
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            swap(entry.target as HTMLVideoElement);
+            io.unobserve(entry.target);
+          });
+        },
+        { rootMargin: '50% 0px', threshold: 0 },
+      );
+      lazyVideos.forEach((v) => io.observe(v));
+    } else {
+      // No IO — load immediately as fallback (legacy browsers)
+      lazyVideos.forEach((video) => {
+        video.querySelectorAll<HTMLSourceElement>('source[data-src]').forEach((source) => {
+          const src = source.dataset.src;
+          if (src) {
+            source.src = src;
+            source.removeAttribute('data-src');
+          }
+        });
+        video.load();
+      });
+    }
+  } catch {
+    /* poster stays visible; nothing else to do */
+  }
+</script>

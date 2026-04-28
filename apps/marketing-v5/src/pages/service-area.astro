@@ -1,0 +1,216 @@
+---
+// /service-area — city index page. Resolves the "Service area" parent in
+// every city-page BreadcrumbList chain and gives Google + AI agents a hub
+// to crawl from to all 8 /[city]-movers pages.
+//
+// Reuses CityHero with city="Service area" — the component's contract is
+// "photo-bg hero with eyebrow + h1 + meta + neighborhood strip", which is
+// what this page needs too. The 80-100 word geography intro lives in
+// Chapter [01], not the hero subtitle (too long for above-fold copy).
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import heroVan from '../assets/hero-van.png';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/service-area';
+
+// 8 cities, in geographic-cluster order: Burrard Inlet south side first,
+// Fraser delta, then North Shore, then east-of-Vancouver. Same neighborhood
+// data the home's ServiceArea section uses.
+const cities = [
+  { name: 'Vancouver',         slug: 'vancouver',         neighborhoods: 'Downtown · West End · Mt Pleasant · Kitsilano · East Van' },
+  { name: 'Burnaby',           slug: 'burnaby',           neighborhoods: 'Metrotown · Brentwood · Lougheed · Highgate' },
+  { name: 'Richmond',          slug: 'richmond',          neighborhoods: 'Steveston · City Centre · Brighouse' },
+  { name: 'North Vancouver',   slug: 'north-vancouver',   neighborhoods: 'Lonsdale · Lower Lonsdale · Lynn Valley' },
+  { name: 'West Vancouver',    slug: 'west-vancouver',    neighborhoods: 'Ambleside · Dundarave · British Properties' },
+  { name: 'Surrey',            slug: 'surrey',            neighborhoods: 'Newton · Guildford · Cloverdale' },
+  { name: 'Coquitlam',         slug: 'coquitlam',         neighborhoods: 'Coquitlam Centre · Burquitlam' },
+  { name: 'New Westminster',   slug: 'new-westminster',   neighborhoods: 'Downtown · Sapperton · Queensborough' },
+];
+
+// 88-word geography paragraph. Editorial tone matched to the city pages.
+// No exclamation, no superlatives, honest scope (explicit non-coverage).
+const geographyIntro =
+  `Metro Vancouver is eight cities arranged around one large body of water. Vancouver and Burnaby sit south of Burrard Inlet; Richmond on the Fraser delta; the North Shore — North Vancouver and West Vancouver — across the inlet under the mountains; Surrey, Coquitlam, and New Westminster east along the Fraser. Inlet moves within those eight cities, between them, and across the bridges that connect them. We don't move to Whistler, to Hope, or interprovincially — local moves only, same hourly rate in any of the eight, same-week availability.`;
+
+const title = 'Service area — eight cities across Metro Vancouver';
+const description = `Inlet moves within eight Metro Vancouver cities — Vancouver, Burnaby, Richmond, Surrey, North Vancouver, Coquitlam, New Westminster, West Vancouver. Same hourly rate, same-week availability across the region.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Service area', item: `${SITE}${PATH}` },
+  ],
+};
+
+// ItemList of the 8 city pages — gives Google explicit hub-spoke
+// signal and lets AI agents enumerate the served cities.
+const itemListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  '@id': `${SITE}${PATH}#city-list`,
+  name: 'Inlet Move Co. service-area cities',
+  description: 'Eight Metro Vancouver cities served by Inlet Move Co.',
+  itemListOrder: 'https://schema.org/ItemListUnordered',
+  numberOfItems: cities.length,
+  itemListElement: cities.map((c, idx) => ({
+    '@type': 'ListItem',
+    position: idx + 1,
+    item: {
+      '@type': 'City',
+      name: c.name,
+      url: `${SITE}/${c.slug}-movers`,
+    },
+  })),
+};
+
+// WebPage schema with dateModified — freshness signal for AI citation
+// ranking per v3 brief §6.3. Stamped at build time.
+const webPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE}${PATH}#webpage`,
+  url: `${SITE}${PATH}`,
+  name: title,
+  description,
+  inLanguage: 'en-CA',
+  isPartOf: { '@id': `${SITE}/#website` },
+  about: { '@id': `${SITE}/#business` },
+  primaryImageOfPage: `${SITE}/assets/og-image.webp`,
+  dateModified: new Date().toISOString(),
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, itemListSchema, webPageSchema]}
+>
+  <CityHero
+    city="Service area"
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a Metro Vancouver street, golden-hour afternoon"
+    neighborhoods={cities.map((c) => c.name).join(' · ')}
+    h1Html="Where Inlet <em>moves</em>."
+    intro="Eight cities across Metro Vancouver, one rate, same-week."
+  />
+
+  <Chapter
+    num="01"
+    label="Geography"
+    titleHtml="Metro Vancouver, in <em>shape</em>."
+    id="geography"
+  >
+    <p class="geography-intro reveal">{geographyIntro}</p>
+  </Chapter>
+
+  <Chapter
+    num="02"
+    label="Eight cities"
+    titleHtml="The full <em>list</em>."
+    id="cities"
+  >
+    <ul class="city-grid reveal-stagger">
+      {cities.map((c) => (
+        <li>
+          <a class="city-card" href={`/${c.slug}-movers`}>
+            <span class="card-name"><em>{c.name}</em></span>
+            <span class="card-neighborhoods">{c.neighborhoods}</span>
+            <span class="card-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Chapter>
+
+  <Trust num="03" />
+  <FinalCTA num="04" />
+</Base>
+
+<style>
+  .geography-intro {
+    max-width: 68ch;
+    margin: 4rem 0 0;
+    font-size: 1.15rem;
+    color: var(--fg);
+    line-height: 1.7;
+  }
+
+  .city-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .city-grid { grid-template-columns: 1fr; }
+  }
+  .city-grid li:nth-last-child(-n+2) .city-card {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .city-grid li:not(:last-child) .city-card { border-bottom: none; }
+    .city-grid li:last-child .city-card { border-bottom: 1px solid var(--line); }
+  }
+
+  .city-card {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    column-gap: 1.5rem;
+    row-gap: 0.5rem;
+    border-top: 1px solid var(--line);
+    padding: 1.75rem 1.5rem 1.75rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .city-card:hover { padding-left: 1.25rem; }
+
+  .card-name {
+    font-family: var(--serif);
+    font-size: clamp(1.65rem, 2.6vw, 2.25rem);
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .card-name em {
+    font-style: italic;
+    transition: color 400ms var(--ease);
+  }
+  .city-card:hover .card-name em { color: var(--accent); }
+
+  .card-neighborhoods {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--fg-3);
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .card-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    font-size: 1.5rem;
+    color: var(--fg-3);
+    grid-column: 2;
+    grid-row: 1 / 3;
+    align-self: center;
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .city-card:hover .card-arrow {
+    transform: translateX(8px);
+    color: var(--accent);
+  }
+</style>

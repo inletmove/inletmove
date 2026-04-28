@@ -1,0 +1,172 @@
+---
+// /multigenerational-movers — service-tier page (4 of 5 remaining tier
+// pages in E7). Same TierHero + Chapter + Trust + FinalCTA scaffold as
+// the prior tier pages. Variations: tier-specific TierHero intro
+// reflecting the largest tier (8–12 hours, two pickups feeding one
+// drop-off or the reverse, more decision-makers in the room),
+// include-grid items 3 and 4 retuned for multigenerational reality —
+// tier-scaled documentation framing acknowledging heirloom items,
+// and "Multi-address moves · Two pickups, one drop-off" replacing
+// prior tiers' lobby-meet / stairwell-paths / multi-zone tells.
+//
+// Photo: crew-portrait.png — operational rationale tied to the tier.
+// Multigenerational moves involve crew + customer-family trust across
+// multiple generations and (often) two origin households; the crew
+// portrait visually carries that operational continuity. Pre-flight
+// measured the q=82 768w webp at 107 KB (AT RISK band — same density
+// as sofa-carry). Path C round-trip applied (original preserved at
+// _originals/crew-portrait-v2.png), heroQuality={75} passed per the
+// E7-2 calibration result that landed sofa-carry at the same setting.
+//
+// crew-portrait is also imported by Trust.astro at the default q=82,
+// producing its own variant set; this TierHero use is a separate
+// q=75 set.
+
+import Base from '../layouts/Base.astro';
+import TierHero from '../components/sections/TierHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate } from '../lib/pricing';
+import crewPortrait from '../assets/crew-portrait.png';
+
+const tier = tierEstimate('multigenerational');
+const SITE = 'https://inletmove.ca';
+const PATH = '/multigenerational-movers';
+
+const title = `Multigenerational household movers in Metro Vancouver — Inlet Move`;
+const description =
+  `Two movers + cargo van. ${tier.label} moves typically take ${tier.hoursLow}–${tier.hoursHigh} hours, ${tier.rangeLabel} total. Same-week local moves across Metro Vancouver.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${SITE}/services` },
+    { '@type': 'ListItem', position: 3, name: 'Multigenerational movers', item: `${SITE}${PATH}` },
+  ],
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${SITE}${PATH}#service`,
+  name: 'Multigenerational household move',
+  serviceType: 'Local moving service',
+  category: 'Residential moving',
+  description:
+    `${tier.label} household moves with a two-mover crew + cargo van. ${tier.hoursLabel} typical, ${tier.rangeLabel} total. Hourly billing, photo-documented, no fuel or stair surcharges. Common Metro Vancouver scenario: combining a North Vancouver home with a Burnaby condo into a Vancouver east-side duplex with three staging zones.`,
+  provider: { '@id': `${SITE}/#business` },
+  areaServed: { '@type': 'AdministrativeArea', name: 'Metro Vancouver, BC, Canada' },
+  url: `${SITE}${PATH}`,
+  offers: {
+    '@type': 'Offer',
+    name: 'Multigenerational household move',
+    priceCurrency: PRICING.currency,
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      minPrice: tier.priceLow,
+      maxPrice: tier.priceHigh,
+      priceCurrency: PRICING.currency,
+      unitText: 'per move',
+    },
+    availability: 'https://schema.org/InStock',
+    url: PRICING.links.quote,
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, serviceSchema]}
+>
+  <TierHero
+    tier={tier}
+    photo={crewPortrait}
+    photoAlt="Inlet Move two-person crew portrait, the same trained pair across the entire multigenerational move"
+    h1Html="Multigenerational household <em>movers</em>."
+    intro="Eight to twelve hour moves, often two pickups feeding one drop-off — or one pickup splitting across two destinations. Usually a second household joining a first; sometimes the reverse, when one household splits to give a younger family more space. The load is larger because the belongings of more than one lifetime are involved, and sequencing matters more here than at any other tier — the destination needs to be livable by dinner. Booked further out than other tiers; these moves are planned. Same crew, same rate, same care — just longer, with more addresses and more decision-makers in the room."
+    heroQuality={75}
+  />
+
+  <Chapter
+    num="01"
+    label="What's included"
+    titleHtml={`${tier.hoursLabel}.<br /><em>${tier.rangeLabel}</em> total.`}
+    id="includes"
+  >
+    <div class="includes-grid reveal-stagger">
+      <div class="include-item">
+        <div class="label">Hourly rate</div>
+        <div class="value">${PRICING.rates.hourlyRate}<em>/hr</em></div>
+        <div class="footnote">Two movers + cargo van. ${PRICING.rates.minimumCharge} minimum ({PRICING.rates.minimumHours} hours).</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Quote = bill</div>
+        <div class="value">No <em>surprises</em></div>
+        <div class="footnote">Target overage under {Math.ceil(PRICING.claims.overagePercent)}%. No fuel, stair, or weekend fees.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Photo documentation</div>
+        <div class="value"><em>Same</em> archive</div>
+        <div class="footnote">Every fragile item, every heirloom piece, every staging zone across two households if relevant. The load grows with the tier; the documentation is identical.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Multi-address moves</div>
+        <div class="value">Two pickups, <em>one</em> drop-off</div>
+        <div class="footnote">Multigenerational moves often combine two origin addresses or split one household across two destinations. We coordinate sequencing so the destination address receives what's needed first — beds and kitchen settle before the rest of the load arrives.</div>
+      </div>
+    </div>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Trust num="02" />
+  <FinalCTA num="03" />
+</Base>
+
+<style>
+  .includes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+  }
+  @media (max-width: 768px) {
+    .includes-grid { grid-template-columns: 1fr; }
+  }
+
+  .include-item {
+    border-top: 1px solid var(--line);
+    padding: 1.75rem 2rem 1.75rem 0;
+  }
+  .include-item .label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.875rem;
+  }
+  .include-item .value {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .include-item .value em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .include-item .footnote {
+    font-size: 0.85rem;
+    color: var(--fg-2);
+    margin-top: 0.5rem;
+    max-width: 38ch;
+  }
+</style>

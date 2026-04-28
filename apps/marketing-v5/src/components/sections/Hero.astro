@@ -1,0 +1,307 @@
+---
+// Hero — full-bleed scroll-scrubbed video of the driving van. Falls back
+// to autoplay loop within 3 seconds if scrub setup doesn't complete.
+// Hero CTA reads from PRICING.links.quote (external quote app).
+//
+// Video is MP4-only (no .webm source): VP9 with -g 1 keyframe-dense
+// encoding ballooned the .webm to 13 MB on Step D. H.264 baseline with
+// -g 1 stayed at 2 MB. Dropping .webm here means all browsers play the
+// MP4 — Chrome/Firefox/Safari all decode H.264 baseline.
+
+import { Image } from 'astro:assets';
+import { PRICING } from '../../lib/pricing';
+import heroVan from '../../assets/hero-van.png';
+---
+
+<section class="hero" id="hero">
+  <div class="hero-bg">
+    <Image
+      src={heroVan}
+      alt=""
+      class="hero-bg-img"
+      widths={[480, 768, 1280, 1920]}
+      sizes="100vw"
+      format="webp"
+      quality={82}
+      loading="eager"
+      fetchpriority="high"
+    />
+    <video
+      class="hero-bg-video"
+      id="heroVideo"
+      src="/assets/video-02-720.mp4"
+      muted
+      playsinline
+      preload="metadata"
+      poster="/assets/hero-van-poster.webp"
+      webkit-playsinline
+    ></video>
+    <div class="hero-bg-overlay"></div>
+  </div>
+
+  {/* Above-the-fold hero elements paint immediately — no .reveal here.
+      The IntersectionObserver pattern is for elements ENTERING viewport
+      on scroll. Initial-paint elements are already in viewport; applying
+      .reveal forced a 1.5s opacity 0→1 transition that gated the home
+      text-LCP at 3.9s (vs the FCP at 1.7s). Path 6 fix: drop .reveal
+      from hero-eyebrow / hero-title / hero-meta. Chapter sections below
+      retain .reveal for their actual scroll-triggered fade-up. */}
+  <div>
+    <div class="hero-eyebrow">[ 00 ] &nbsp;Currently booking same-week local moves</div>
+  </div>
+
+  <h1 class="hero-title">
+    Moving in<br />
+    Metro Vancouver,<br />
+    <em>with care</em>.
+  </h1>
+
+  <div class="hero-meta">
+    <p class="hero-sub">
+      Two movers + cargo van. From <strong>${PRICING.rates.hourlyRate}/hr</strong>,
+      <strong>${PRICING.rates.minimumCharge} minimum</strong>.<br />
+      Real humans. Trained, vetted, branded crew — introduced by name.
+    </p>
+    <a href={PRICING.links.quote} class="cta-button magnetic hero-cta">
+      Get a quote <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <div class="scroll-indicator">
+    Scroll · the van moves with you <span class="scroll-indicator-line"></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    position: relative;
+    padding: 8rem 5vw 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .hero-bg-video,
+  .hero-bg-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    will-change: transform;
+  }
+  .hero-bg-img {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-bg-video {
+    position: relative;
+    z-index: 1;
+  }
+  .hero-bg-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(10, 10, 10, 0.92) 0%,
+        rgba(10, 10, 10, 0.78) 35%,
+        rgba(10, 10, 10, 0.4) 65%,
+        rgba(10, 10, 10, 0.55) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.4) 0%,
+        rgba(10, 10, 10, 0.1) 30%,
+        rgba(10, 10, 10, 0.7) 100%
+      );
+  }
+  .hero > *:not(.hero-bg) { position: relative; z-index: 3; }
+
+  .hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.85); }
+  }
+
+  .hero-title {
+    font-family: var(--serif);
+    font-size: clamp(3.25rem, 11.5vw, 11.5rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 13ch;
+    margin-top: -1rem;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+  .hero-sub {
+    max-width: 36ch;
+    font-size: 1.05rem;
+    color: var(--fg);
+    line-height: 1.55;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  }
+  .hero-sub strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .scroll-indicator {
+    position: absolute;
+    bottom: 2.5rem;
+    right: 5vw;
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    z-index: 4;
+  }
+  .scroll-indicator-line {
+    width: 32px;
+    height: 1px;
+    background: var(--fg-3);
+    position: relative;
+    overflow: hidden;
+  }
+  .scroll-indicator-line::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--accent);
+    transform: translateX(-100%);
+    animation: scroll-line 2.5s ease-in-out infinite;
+  }
+  @keyframes scroll-line {
+    0%, 100% { transform: translateX(-100%); }
+    50% { transform: translateX(100%); }
+  }
+
+  @media (max-width: 768px) {
+    .hero { padding: 7rem 1.5rem 3rem; }
+    .hero-title {
+      font-size: clamp(2.75rem, 13vw, 4.5rem);
+      margin-top: 1rem;
+    }
+    .scroll-indicator { display: none; }
+  }
+</style>
+
+<script>
+  // Hero scroll-scrub: video scrubs forward as the user scrolls down through
+  // the hero section. If `currentTime` writes ever throw, or the video can't
+  // load metadata within 3 seconds, we fall back to a normal autoplay loop
+  // so the hero is never broken — only less interactive.
+  try {
+    const heroVideo = document.getElementById('heroVideo') as HTMLVideoElement | null;
+    const heroSection = document.getElementById('hero');
+    if (!heroVideo || !heroSection) {
+      throw new Error('hero elements missing');
+    }
+
+    let scrubReady = false;
+    let scrubFailed = false;
+
+    const startAutoplayFallback = () => {
+      if (scrubFailed) return;
+      scrubFailed = true;
+      heroVideo.loop = true;
+      heroVideo.play().catch(() => {
+        /* autoplay can be blocked by browser; poster is fine */
+      });
+    };
+
+    heroVideo.addEventListener('loadedmetadata', () => {
+      scrubReady = true;
+      heroVideo.pause();
+      heroVideo.currentTime = 0;
+    });
+
+    setTimeout(() => {
+      if (!scrubReady) startAutoplayFallback();
+    }, 3000);
+
+    let lastTime = -1;
+    const updateHeroScrub = () => {
+      if (!scrubReady || scrubFailed) return;
+      const rect = heroSection.getBoundingClientRect();
+      const total = heroSection.offsetHeight;
+      const scrolled = -rect.top;
+      const progress = Math.max(0, Math.min(1, scrolled / total));
+      if (heroVideo.duration && !isNaN(heroVideo.duration)) {
+        const newTime = progress * heroVideo.duration;
+        if (Math.abs(newTime - lastTime) > 0.02) {
+          try {
+            heroVideo.currentTime = newTime;
+            lastTime = newTime;
+          } catch {
+            startAutoplayFallback();
+          }
+        }
+      }
+    };
+
+    let ticking = false;
+    window.addEventListener(
+      'scroll',
+      () => {
+        if (!ticking) {
+          requestAnimationFrame(() => {
+            updateHeroScrub();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      },
+      { passive: true },
+    );
+
+    // Reduced motion: skip the scrub, never play the video.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      heroVideo.removeAttribute('autoplay');
+      heroVideo.pause();
+    }
+  } catch {
+    /* poster image stays visible; section is content-complete without JS */
+  }
+</script>

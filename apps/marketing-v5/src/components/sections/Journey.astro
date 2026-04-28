@@ -1,0 +1,204 @@
+---
+// Chapter 02 — Journey. Four steps with the sofa-carry image right column.
+// Step (i)'s "Target response" pulls from PRICING.claims.responseTimeMinutes;
+// step (iv)'s "Target overage" pulls from PRICING.claims.overagePercent.
+
+import { Image } from 'astro:assets';
+import { PRICING } from '../../lib/pricing';
+import sofaCarry from '../../assets/sofa-carry.png';
+---
+
+<section class="chapter with-image" id="journey">
+  <div class="chapter-body">
+    <div class="chapter-header reveal">
+      <div class="ch-num">[ 02 ]</div>
+      <div class="ch-label">How it works</div>
+    </div>
+
+    <h2 class="huge reveal">A move,<br />in <em>four moves</em>.</h2>
+
+    <div class="journey-grid reveal-stagger">
+      <div class="step">
+        <span class="step-num">i.</span>
+        <h3>Quote</h3>
+        <p>
+          60-second form. A real human texts back inside an hour. Target
+          response — {PRICING.claims.responseTimeMinutes} minutes.
+        </p>
+      </div>
+      <div class="step">
+        <span class="step-num">ii.</span>
+        <h3>Confirm</h3>
+        <p>We agree on date, time, and itemized estimate. You meet the crew by name.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">iii.</span>
+        <h3>Move day</h3>
+        <p>Two movers, one branded van. Photo-documented before and after. SMS updates.</p>
+      </div>
+      <div class="step">
+        <span class="step-num">iv.</span>
+        <h3>Settled</h3>
+        <p>
+          Quote = bill. Target overage under {Math.ceil(PRICING.claims.overagePercent)}%.
+          Photos archived. Done.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-image sofa-crop reveal">
+    <Image
+      src={sofaCarry}
+      alt="Inlet Move crew carrying a sofa down porch steps"
+      widths={[480, 768, 1280]}
+      sizes="(min-width: 1024px) 41vw, 100vw"
+      format="webp"
+      quality={82}
+      loading="lazy"
+    />
+  </div>
+</section>
+
+<style>
+  .chapter {
+    min-height: 100vh;
+    padding: 12rem 5vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .chapter.with-image {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .chapter.with-image .chapter-body { min-width: 0; }
+  @media (max-width: 1024px) {
+    .chapter.with-image {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+  @media (max-width: 768px) {
+    .chapter.with-image { padding: 7rem 1.5rem; }
+  }
+
+  .chapter-header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 3rem;
+    align-items: baseline;
+    margin-bottom: 5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .chapter-header {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .ch-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+  }
+  .ch-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+
+  h2.huge {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+  }
+  h2.huge em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    h2.huge { font-size: clamp(2.5rem, 11vw, 4rem); }
+  }
+
+  .chapter-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 4 / 5;
+    will-change: transform;
+  }
+  .chapter-image img {
+    width: 100%;
+    height: 105%;
+    object-fit: cover;
+    object-position: center 65%;
+    will-change: transform;
+    filter: saturate(0.92) contrast(1.04);
+  }
+  .chapter-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 80px rgba(10, 10, 10, 0.3);
+    pointer-events: none;
+  }
+  .chapter-image.sofa-crop img {
+    object-position: center 75%;
+    transform: scale(1.15) translateY(8%);
+  }
+
+  .journey-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem 3rem;
+    margin-top: 4rem;
+  }
+  @media (max-width: 768px) {
+    .journey-grid {
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+    }
+  }
+
+  .step {
+    border-top: 1px solid var(--line);
+    padding-top: 1.5rem;
+  }
+  .step-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+  .step h3 {
+    font-family: var(--serif);
+    font-size: clamp(1.65rem, 2.4vw, 2.2rem);
+    font-weight: 400;
+    margin-top: 0.875rem;
+    margin-bottom: 1rem;
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+  .step h3 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .step p {
+    color: var(--fg-2);
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+</style>

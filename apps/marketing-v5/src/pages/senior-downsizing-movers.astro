@@ -1,0 +1,172 @@
+---
+// /senior-downsizing-movers — final tier page (5 of 5 in E7). Same TierHero
+// + Chapter + Trust + FinalCTA scaffold as the prior tier pages. Variations:
+// tier-specific TierHero intro reflecting the widest hours range in the
+// table (4–8 hours; depends on what's kept and what isn't), include-grid
+// items 3 and 4 retuned for senior-downsizing operational reality —
+// tier-scaled documentation framing acknowledging heirloom volume, and
+// "Catalog before move · AI inventory" as the operational tell, tying the
+// AI inventory feature (Coming Q3 2026) to the use case where it makes the
+// most operational sense (cataloging decades of belongings before sorting).
+//
+// Photo: phone-scanning.png — pre-flight measured 27 KB at q=82 768w (well
+// under the 70 KB safe threshold; default heroQuality applies). Visually
+// ties the page to the AI inventory operational tool. Chosen for E7-5
+// specifically per Feroz directive — the AI-inventory feature thematically
+// fits the "decades of belongings to catalog" reality of senior downsizing.
+//
+// Voice constraints (highest stakes for sentimental drift): no "we know how
+// meaningful this is" framing, no claims of emotional support or decision
+// counseling, no premium-tier framing. Operational discipline. Inlet
+// provides moving services; the compassion shows up in operational
+// competence. The "decisions land with the family, not with us" sentence
+// is the lightest possible boundary — Inlet moves what's been decided, it
+// doesn't decide what to keep.
+
+import Base from '../layouts/Base.astro';
+import TierHero from '../components/sections/TierHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate } from '../lib/pricing';
+import phoneScanning from '../assets/phone-scanning.png';
+
+const tier = tierEstimate('senior-downsizing');
+const SITE = 'https://inletmove.ca';
+const PATH = '/senior-downsizing-movers';
+
+const title = `Senior downsizing movers in Metro Vancouver — Inlet Move`;
+const description =
+  `Two movers + cargo van. ${tier.label} moves typically take ${tier.hoursLow}–${tier.hoursHigh} hours, ${tier.rangeLabel} total. Same-week local moves across Metro Vancouver.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${SITE}/services` },
+    { '@type': 'ListItem', position: 3, name: 'Senior downsizing movers', item: `${SITE}${PATH}` },
+  ],
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${SITE}${PATH}#service`,
+  name: 'Senior downsizing move',
+  serviceType: 'Local moving service',
+  category: 'Residential moving',
+  description:
+    `${tier.label} moves with a two-mover crew + cargo van. ${tier.hoursLabel} typical, ${tier.rangeLabel} total. Hourly billing, photo-documented, no fuel or stair surcharges. Common Metro Vancouver scenario: Mt Pleasant heritage home of 40 years downsizing to a 1-bedroom condo in Kerrisdale, with belongings sorted into keep, donate, and family-distribution categories.`,
+  provider: { '@id': `${SITE}/#business` },
+  areaServed: { '@type': 'AdministrativeArea', name: 'Metro Vancouver, BC, Canada' },
+  url: `${SITE}${PATH}`,
+  offers: {
+    '@type': 'Offer',
+    name: 'Senior downsizing move',
+    priceCurrency: PRICING.currency,
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      minPrice: tier.priceLow,
+      maxPrice: tier.priceHigh,
+      priceCurrency: PRICING.currency,
+      unitText: 'per move',
+    },
+    availability: 'https://schema.org/InStock',
+    url: PRICING.links.quote,
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, serviceSchema]}
+>
+  <TierHero
+    tier={tier}
+    photo={phoneScanning}
+    photoAlt="Inlet Move using a phone camera to catalog belongings before move day, the AI inventory tool walkthrough"
+    h1Html="Senior downsizing <em>movers</em>."
+    intro="Four to eight hour moves, the widest range in the tier table — depending on what's kept and what isn't. Usually a long-occupied home being downsized to a one-bedroom condo or a retirement community; sometimes a move into a family home where adult children have made space. Decades of belongings sort into keep, give, donate, discard categories — those decisions land with the family, not with us. The AI inventory tool (Coming Q3 2026) is most useful here, where the volume of items makes pre-cataloging worth the time. Same crew, same rate, same care — the move is just sorted before it's loaded."
+  />
+
+  <Chapter
+    num="01"
+    label="What's included"
+    titleHtml={`${tier.hoursLabel}.<br /><em>${tier.rangeLabel}</em> total.`}
+    id="includes"
+  >
+    <div class="includes-grid reveal-stagger">
+      <div class="include-item">
+        <div class="label">Hourly rate</div>
+        <div class="value">${PRICING.rates.hourlyRate}<em>/hr</em></div>
+        <div class="footnote">Two movers + cargo van. ${PRICING.rates.minimumCharge} minimum ({PRICING.rates.minimumHours} hours).</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Quote = bill</div>
+        <div class="value">No <em>surprises</em></div>
+        <div class="footnote">Target overage under {Math.ceil(PRICING.claims.overagePercent)}%. No fuel, stair, or weekend fees.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Photo documentation</div>
+        <div class="value"><em>Same</em> archive</div>
+        <div class="footnote">Every fragile item, every heirloom piece, every staging zone. Forty years of accumulated belongings get the same documentation as a studio move. The load grows with the tier; the documentation is identical.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Catalog before move</div>
+        <div class="value">AI <em>inventory</em></div>
+        <div class="footnote">We can walk through with the camera before move day to catalog belongings — useful when sorting decades of accumulated items into keep, give, donate, discard. A real human reviews every output. Coming Q3 2026.</div>
+      </div>
+    </div>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Trust num="02" />
+  <FinalCTA num="03" />
+</Base>
+
+<style>
+  .includes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+  }
+  @media (max-width: 768px) {
+    .includes-grid { grid-template-columns: 1fr; }
+  }
+
+  .include-item {
+    border-top: 1px solid var(--line);
+    padding: 1.75rem 2rem 1.75rem 0;
+  }
+  .include-item .label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.875rem;
+  }
+  .include-item .value {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .include-item .value em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .include-item .footnote {
+    font-size: 0.85rem;
+    color: var(--fg-2);
+    margin-top: 0.5rem;
+    max-width: 38ch;
+  }
+</style>

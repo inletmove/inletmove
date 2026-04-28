@@ -1,0 +1,104 @@
+---
+// Chapter — reusable chapter shell for sub-pages. Renders the [ NN ] · LABEL
+// header bar + the editorial h2 with optional <em> emphasis, then slots
+// in the page-specific body. Home page sections (Promise, Journey, etc.)
+// keep their own inline structure since they were locked at Step C; this
+// component is for tier pages, city pages, and about/FAQ from Step E onward.
+//
+// Pass `titleHtml` for inline emphasis (e.g. "5-7 <em>hours</em>"); pass
+// `title` for plain text. Choose one, not both.
+
+interface Props {
+  num: string;
+  label: string;
+  title?: string;
+  titleHtml?: string;
+  id?: string;
+  class?: string;
+  // Index pages (e.g. /services, /service-area, /about) need an h1 in the
+  // first chapter; sub-section chapters and tier-page chapters keep h2.
+  // Default 'h2' preserves the existing tier-page rendering.
+  headingLevel?: 'h1' | 'h2';
+}
+
+const {
+  num,
+  label,
+  title,
+  titleHtml,
+  id,
+  class: className,
+  headingLevel = 'h2',
+} = Astro.props;
+
+const HeadingTag = headingLevel;
+---
+
+<section class:list={['chapter', className]} id={id}>
+  <div class="chapter-header reveal">
+    <div class="ch-num">[ {num} ]</div>
+    <div class="ch-label">{label}</div>
+  </div>
+  {titleHtml
+    ? <HeadingTag class="huge reveal" set:html={titleHtml} />
+    : <HeadingTag class="huge reveal">{title}</HeadingTag>}
+  <slot />
+</section>
+
+<style>
+  .chapter {
+    padding: 12rem 5vw;
+    position: relative;
+  }
+  @media (max-width: 768px) {
+    .chapter { padding: 7rem 1.5rem; }
+  }
+
+  .chapter-header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 3rem;
+    align-items: baseline;
+    margin-bottom: 5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .chapter-header {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .ch-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+  }
+  .ch-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+
+  .chapter :global(.huge) {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+    margin: 0;
+  }
+  .chapter :global(.huge em) {
+    font-style: italic;
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    .chapter :global(.huge) { font-size: clamp(2.5rem, 11vw, 4rem); }
+  }
+</style>

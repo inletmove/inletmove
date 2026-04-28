@@ -1,0 +1,286 @@
+---
+// /new-westminster-movers — sixth city page in E8. Same shape as
+// prior city pages.
+//
+// Photo: hero-van.png reused.
+//
+// Logistics fact chosen: option (a) — heritage stock density and
+// furniture geometry. The framing is "where Vancouver has pockets
+// (West End walk-ups, Mt Pleasant character homes), New West has
+// whole neighborhoods of them" — explicitly cross-references the
+// /vancouver-movers prose to anchor the contrast. Queen's Park is
+// the operational anchor: original doorways narrower than modern
+// furniture, plaster-and-lath, narrow staircases, facade bylaws.
+//
+// Topography (option b — sloping to the Fraser) folded in near the
+// end as a secondary observation; not primary frame.
+//
+// Step F redirects flagged for vercel.json (NOT implemented):
+//   /new-west-movers     → 301 → /new-westminster-movers
+//   /sapperton-movers    → 301 → /new-westminster-movers
+//   /queens-park-movers  → 301 → /new-westminster-movers
+//
+// Nearby cities: Burnaby (north immediate), Coquitlam (northeast),
+// Surrey (south across Pattullo), Richmond (west via Queensborough).
+// All four in 8-city service area.
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate, type TierSlug } from '../lib/pricing';
+import heroVan from '../assets/hero-van.png';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/new-westminster-movers';
+
+const city = {
+  name: 'New Westminster',
+  neighborhoods: ["Queen's Park", 'Sapperton', 'Quayside', 'Uptown'],
+};
+
+const overageThreshold = Math.ceil(PRICING.claims.overagePercent);
+const localDetail =
+  `New Westminster is the smallest of the eight cities by area and the oldest in the region — British Columbia's first capital, briefly, in 1859 — and the heritage stock that survived from that era is concentrated more densely here than anywhere else in Metro Vancouver. Where Vancouver has pockets of pre-war walk-ups and Mt Pleasant character homes, New West has whole neighborhoods of them: Queen's Park is twenty-some blocks of early-1900s single-family on tree-lined streets, with narrow staircases, plaster-and-lath walls, original doorways narrower than modern furniture expects, and facade bylaws that limit what can be attached during a move. Furniture geometry matters here in a way it doesn't anywhere else on the list. Four neighborhoods worth naming: Queen's Park, the heritage centerpiece, where we measure doorway widths from the quote photos before the truck loads; Sapperton on the eastern side, mixed older single-family and recent townhouse infill near the Sapperton SkyTrain station; Downtown and Quayside, the river-facing tower core along the Fraser, where the loading-bay coordination tracks Vancouver's downtown discipline more than Burnaby's mall-side rhythm; Uptown along the Sixth Street corridor, walkable mid-rise mixed-use. The whole city slopes toward the river — a level driveway is the exception, not the rule. Most New West moves run four to seven hours; the rate is the same as anywhere else in Metro Vancouver; the quote we send is the bill you pay; target overage under ${overageThreshold}%.`;
+
+const tierSlugs: TierSlug[] = [
+  'studio',
+  '1-bedroom',
+  '2-bedroom',
+  '3-bedroom',
+  'multigenerational',
+  'senior-downsizing',
+];
+const tiers = tierSlugs.map((slug) => ({
+  estimate: tierEstimate(slug),
+  href: `/${slug}-movers`,
+}));
+
+const nearbyCities = [
+  { name: 'Burnaby', href: '/burnaby-movers' },
+  { name: 'Coquitlam', href: '/coquitlam-movers' },
+  { name: 'Surrey', href: '/surrey-movers' },
+  { name: 'Richmond', href: '/richmond-movers' },
+];
+
+const title = 'Movers in New Westminster — Inlet Move Co.';
+const description = `Local moves across New Westminster — Queen's Park, Sapperton, Quayside, Uptown. Two movers + cargo van, $${PRICING.rates.hourlyRate}/hr, same-week availability across the city.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Service area', item: `${SITE}/service-area` },
+    { '@type': 'ListItem', position: 3, name: city.name, item: `${SITE}${PATH}` },
+  ],
+};
+
+const cityBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  '@id': `${SITE}${PATH}#business`,
+  name: `Inlet Move Co. — ${city.name}`,
+  url: `${SITE}${PATH}`,
+  parentOrganization: { '@id': `${SITE}/#organization` },
+  description: `Local moving company serving ${city.name}, BC. Two movers + cargo van, hourly billing from $${PRICING.rates.hourlyRate}/hr, same-week local moves. Heritage stock density and Queen's Park furniture-geometry care included.`,
+  areaServed: { '@type': 'City', name: `${city.name}, BC, Canada` },
+  knowsLanguage: ['en'],
+  ...(PRICING.phone.active ? { telephone: PRICING.phone.tel } : {}),
+  potentialAction: {
+    '@type': 'ReserveAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: PRICING.links.quote,
+      actionPlatform: [
+        'https://schema.org/DesktopWebPlatform',
+        'https://schema.org/MobileWebPlatform',
+      ],
+    },
+    result: { '@type': 'Reservation', name: 'Moving quote request' },
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, cityBusinessSchema]}
+>
+  <CityHero
+    city={city.name}
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a New Westminster heritage street, golden-hour afternoon"
+    neighborhoods={city.neighborhoods.join(' · ')}
+    h1Html={`Movers in <em>${city.name}</em>.`}
+    intro={`Same-week local moves across ${city.name}.`}
+  />
+
+  <Chapter
+    num="01"
+    label="Local detail"
+    titleHtml={`${city.name}, in <em>particular</em>.`}
+    id="local-detail"
+  >
+    <p class="local-detail reveal">{localDetail}</p>
+  </Chapter>
+
+  <Chapter
+    num="02"
+    label="Service tiers"
+    titleHtml="Pick your <em>tier</em>."
+    id="tiers"
+  >
+    <ul class="tier-grid reveal-stagger">
+      {tiers.map((t) => (
+        <li>
+          <a class="tier-link" href={t.href}>
+            <span class="tier-link-name">{t.estimate.label}</span>
+            <span class="tier-link-meta">{t.estimate.hoursLabel} · {t.estimate.rangeLabel}</span>
+            <span class="tier-link-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Chapter
+    num="03"
+    label="Nearby"
+    titleHtml="Across the <em>region</em>."
+    id="nearby"
+  >
+    <ul class="nearby-grid reveal-stagger">
+      {nearbyCities.map((c) => (
+        <li>
+          <a class="nearby-link" href={c.href}>
+            <em>{c.name}</em>
+            <span class="nearby-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Chapter>
+
+  <Trust num="04" />
+  <FinalCTA num="05" />
+</Base>
+
+<style>
+  .local-detail {
+    max-width: 68ch;
+    margin: 4rem 0 0;
+    font-size: 1.15rem;
+    color: var(--fg);
+    line-height: 1.7;
+  }
+
+  .tier-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .tier-grid { grid-template-columns: 1fr; }
+  }
+  .tier-grid li:nth-last-child(-n+2) .tier-link {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .tier-grid li:not(:last-child) .tier-link { border-bottom: none; }
+    .tier-grid li:last-child .tier-link { border-bottom: 1px solid var(--line); }
+  }
+
+  .tier-link {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto;
+    gap: 1.5rem;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .tier-link:hover { padding-left: 1rem; }
+
+  .tier-link-name {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .tier-link-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--fg-2);
+    letter-spacing: 0.06em;
+  }
+  .tier-link-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .tier-link:hover .tier-link-arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+
+  .nearby-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .nearby-grid { grid-template-columns: 1fr; }
+  }
+  .nearby-grid li:nth-last-child(-n+2) .nearby-link {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .nearby-grid li:not(:last-child) .nearby-link { border-bottom: none; }
+    .nearby-grid li:last-child .nearby-link { border-bottom: 1px solid var(--line); }
+  }
+
+  .nearby-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .nearby-link em {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    transition: color 400ms var(--ease);
+  }
+  .nearby-link:hover { padding-left: 1rem; }
+  .nearby-link:hover em { color: var(--accent); }
+  .nearby-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .nearby-link:hover .nearby-arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+</style>

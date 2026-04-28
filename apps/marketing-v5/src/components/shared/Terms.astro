@@ -1,0 +1,74 @@
+---
+/**
+ * Terms — site-wide T&C disclaimer (area eligibility + scope decline).
+ * Reads PRICING.terms.compact and renders it with "Call to confirm"
+ * automatically upgraded to a tel: link when PRICING.phone.active is
+ * true (the vanity number becomes the anchor text, not "Call to
+ * confirm" itself — reads naturally either way).
+ *
+ * Mounts:
+ *   - home (under hero CTA, variant="inline")
+ *   - /services (bottom of tier-card grid section, variant="block")
+ *   - every tier page (bottom of "What's included" chapter, variant="block")
+ *   - /contact (bottom of "Direct contact" chapter, variant="block")
+ *   - footer (every page, variant="footer" — appended below footer-bottom row)
+ *
+ * The compact text is the canonical site-wide disclaimer; the
+ * areaEligibility and scopeDecline split forms in pricing.json exist
+ * for places that want them rendered separately (none yet).
+ *
+ * Style hooks: mono / 0.7rem / fg-3 / 0.06em letter-spacing / uppercase —
+ * matches the existing small-print pattern in Footer.astro footer-bottom.
+ */
+
+import { PRICING } from '../../lib/pricing';
+
+interface Props {
+  variant?: 'inline' | 'block' | 'footer';
+}
+
+const { variant = 'block' } = Astro.props;
+
+const compact = PRICING.terms.compact;
+const phoneActive = PRICING.phone.active;
+
+const splitMarker = 'Call to confirm';
+const idx = compact.indexOf(splitMarker);
+const before = idx >= 0 ? compact.slice(0, idx) : compact;
+const after  = idx >= 0 ? compact.slice(idx + splitMarker.length) : '';
+---
+
+<p class={`terms-disclaimer terms-${variant}`}>
+  {phoneActive && idx >= 0 ? (
+    <Fragment>{before}Call <a href={`tel:${PRICING.phone.tel}`}>{PRICING.phone.vanity}</a> to confirm{after}</Fragment>
+  ) : compact}
+</p>
+
+<style>
+  .terms-disclaimer {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    line-height: 1.55;
+    max-width: 80ch;
+  }
+  .terms-disclaimer a {
+    color: var(--fg-2);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition: color 250ms var(--ease);
+  }
+  .terms-disclaimer a:hover { color: var(--fg); }
+
+  .terms-inline { margin: 0; }
+  .terms-block  { margin-top: 1.5rem; }
+  .terms-footer {
+    grid-column: 1 / -1;
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line-2);
+  }
+</style>

@@ -1,0 +1,304 @@
+---
+// /contact — operational reference page. Phone, email, quote app, hours,
+// service-area summary. No long-form prose, no marketing voice. Three
+// direct-contact methods rendered as a list, then a "when and where"
+// chapter with hours + area, then Trust + FinalCTA.
+//
+// All values templated from PRICING (phone vanity/tel, links.quote) and
+// the global @graph's openingHoursSpecification (08:00–20:00, 7 days).
+//
+// Email policy: hello@inletmove.ca for general; quote intake routes to
+// PRICING.links.quote (the Vercel Next.js quote app). Privacy-specific
+// contact lives on /privacy and points at privacy@inletmove.ca.
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, isInquiryAgentLive, movesHoursLabel } from '../lib/pricing';
+import heroVan from '../assets/hero-van.png';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/contact';
+
+// Quote URL displayed without protocol for visual cleanliness.
+const quoteHost = PRICING.links.quote.replace(/^https?:\/\//, '');
+
+// Two-tier hours model. agentLive=true → render Maya 24/7 inquiry block
+// + separate move dispatch block. agentLive=false → collapse into a
+// single "Hours of operation" block at conservative dispatch hours.
+const agentLive = isInquiryAgentLive();
+const moveHours = movesHoursLabel();
+
+const title = 'Contact Inlet Move Co. — Metro Vancouver';
+const description = `Reach Inlet by phone (${PRICING.phone.vanity}), email (hello@inletmove.ca), or the 60-second quote form. Real-human response within an hour during operating hours, Monday to Sunday, 08:00–20:00 Pacific.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Contact', item: `${SITE}${PATH}` },
+  ],
+};
+
+const contactPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  '@id': `${SITE}${PATH}#webpage`,
+  url: `${SITE}${PATH}`,
+  name: title,
+  description,
+  inLanguage: 'en-CA',
+  isPartOf: { '@id': `${SITE}/#website` },
+  about: { '@id': `${SITE}/#business` },
+  primaryImageOfPage: `${SITE}/assets/og-image.webp`,
+  dateModified: new Date().toISOString(),
+};
+
+// ContactPoint — customer-facing inquiry channel. hoursAvailable bound
+// to inquiry hours (24/7 when Maya live, conservative dispatch hours
+// when not). Phone fields gate on PRICING.phone.active so an
+// unprovisioned number disappears from JSON-LD without code edits.
+const contactPointSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPoint',
+  '@id': `${SITE}${PATH}#contact-point`,
+  contactType: 'customer service',
+  ...(PRICING.phone.active ? { telephone: PRICING.phone.tel } : {}),
+  email: 'hello@inletmove.ca',
+  areaServed: { '@type': 'AdministrativeArea', name: 'Metro Vancouver, BC, Canada' },
+  availableLanguage: ['en'],
+  hoursAvailable: {
+    '@type': 'OpeningHoursSpecification',
+    name: agentLive ? 'Inquiry hours' : 'Hours of operation',
+    dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    opens: agentLive ? '00:00' : PRICING.hours.movesOpens,
+    closes: agentLive ? '23:59' : PRICING.hours.movesCloses,
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, contactPageSchema, contactPointSchema]}
+>
+  <CityHero
+    city="Contact"
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a Metro Vancouver street"
+    h1Html="How to <em>reach</em> us."
+    intro="Phone, email, or the 60-second quote form."
+    eyebrowText="[ CONTACT ]  Inlet Move Co."
+  />
+
+  <Chapter
+    num="01"
+    label="Direct contact"
+    titleHtml="Three <em>ways</em> in."
+    id="direct"
+  >
+    <ul class="contact-methods reveal-stagger">
+      {PRICING.phone.active && (
+        <li class="contact-method">
+          <span class="method-label">Phone</span>
+          <a class="method-value" href={`tel:${PRICING.phone.tel}`}>{PRICING.phone.vanity}</a>
+          <p class="method-note">A real human texts back within an hour. Target {PRICING.claims.responseTimeMinutes} minutes during operating hours.</p>
+        </li>
+      )}
+
+      <li class="contact-method">
+        <span class="method-label">Email</span>
+        <a class="method-value" href="mailto:hello@inletmove.ca">hello@inletmove.ca</a>
+        <p class="method-note">For non-urgent questions, follow-ups, and after-hours messages. Response within {PRICING.claims.emailResponseHours === 1 ? 'one hour' : `${PRICING.claims.emailResponseHours} hours`} during inquiry hours. Privacy requests go to <a href="/privacy#contact" class="inline-link">privacy@inletmove.ca</a> instead.</p>
+      </li>
+
+      <li class="contact-method">
+        <span class="method-label">Quote form</span>
+        <a class="method-value" href={PRICING.links.quote}>{quoteHost} <span aria-hidden="true">→</span></a>
+        <p class="method-note">Fastest path to a written estimate. Six questions, no login, no credit card required. Most quotes get a confirmed date within the same week.</p>
+      </li>
+    </ul>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Chapter
+    num="02"
+    label="When and where"
+    titleHtml="Hours and <em>area</em>."
+    id="hours"
+  >
+    <div class={`hours-area-grid reveal-stagger ${agentLive ? 'three-block' : 'two-block'}`}>
+      {agentLive ? (
+        <>
+          <div class="ha-block">
+            <h3>Inquiries</h3>
+            <p class="ha-value"><strong>{PRICING.hours.inquiries}</strong></p>
+            <p class="ha-note">{PRICING.hours.inquiryAgent}, our AI assistant, answers calls and texts any hour. For complex requests, a human follows up during move dispatch hours.</p>
+          </div>
+          <div class="ha-block">
+            <h3>Moves dispatched</h3>
+            <p class="ha-value"><strong>{moveHours}</strong></p>
+            <p class="ha-note">Seven days a week. Same-week local moves are typical; Saturday slots fill fastest.</p>
+          </div>
+        </>
+      ) : (
+        <div class="ha-block">
+          <h3>Hours of operation</h3>
+          <p class="ha-value">Monday to Sunday, <strong>{moveHours}</strong></p>
+          <p class="ha-note">Inquiries and move dispatch both run during these hours. Saturdays book out fastest.</p>
+        </div>
+      )}
+      <div class="ha-block">
+        <h3>Service area</h3>
+        <p class="ha-value">Eight cities across <strong>Metro Vancouver</strong>.</p>
+        <p class="ha-note">Vancouver, Burnaby, Richmond, Surrey, North Vancouver, Coquitlam, New Westminster, West Vancouver. See <a href="/service-area" class="inline-link">/service-area</a> for the full list and per-city detail. We do not move outside Metro Vancouver.</p>
+      </div>
+    </div>
+  </Chapter>
+
+  <Trust num="03" />
+  <FinalCTA num="04" />
+</Base>
+
+<style>
+  .contact-methods {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    max-width: 72ch;
+  }
+
+  .contact-method {
+    border-top: 1px solid var(--line);
+    padding: 2.5rem 0;
+    display: grid;
+    grid-template-columns: 8rem 1fr;
+    grid-template-rows: auto auto;
+    column-gap: 2rem;
+    row-gap: 0.75rem;
+    align-items: baseline;
+  }
+  .contact-methods li:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 640px) {
+    .contact-method {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+      padding: 2rem 0;
+    }
+  }
+
+  .method-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .method-value {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3.4vw, 2.75rem);
+    line-height: 1.1;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    color: var(--fg);
+    text-decoration: none;
+    grid-column: 2;
+    grid-row: 1;
+    transition: color 250ms var(--ease);
+  }
+  @media (max-width: 640px) {
+    .method-value { grid-column: 1; grid-row: 2; }
+  }
+  .method-value:hover { color: var(--accent); }
+
+  .method-note {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin: 0;
+    grid-column: 2;
+    grid-row: 2;
+    max-width: 56ch;
+  }
+  @media (max-width: 640px) {
+    .method-note { grid-column: 1; grid-row: 3; }
+  }
+
+  .inline-link {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-soft);
+    text-underline-offset: 3px;
+  }
+  .inline-link:hover {
+    text-decoration-color: var(--accent);
+  }
+
+  .hours-area-grid {
+    display: grid;
+    gap: 4rem 5rem;
+    margin: 4rem 0 0;
+  }
+  .hours-area-grid.two-block {
+    grid-template-columns: 1fr 1fr;
+  }
+  .hours-area-grid.three-block {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (max-width: 1024px) {
+    .hours-area-grid.three-block { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 768px) {
+    .hours-area-grid.two-block,
+    .hours-area-grid.three-block {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
+  .ha-block h3 {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    margin: 0 0 1.25rem;
+    font-weight: 500;
+  }
+
+  .ha-value {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1.2;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    color: var(--fg);
+    margin: 0 0 1rem;
+  }
+  .ha-value strong {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 400;
+  }
+
+  .ha-note {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 44ch;
+  }
+</style>

@@ -1,0 +1,154 @@
+---
+// /faq — highest-stakes prose page. AI agents (ChatGPT, Claude, Perplexity)
+// quote these answers verbatim when users ask about Inlet. Each answer is
+// 2-3 standalone sentences a citation can lift without context.
+//
+// Honesty contracts:
+//   - All prices template via PRICING.rates.* and tierEstimate()
+//   - Phone via PRICING.phone (skipped from this page)
+//   - Quote URL via PRICING.links.quote (host-only display)
+//   - Insurance answer flips form via PRICING.trust.insuranceBound so
+//     "Yes — Inlet carries..." only renders when the policy is actually
+//     bound; otherwise renders an "application in progress" form
+//   - Mover-screening answer mirrors the about page's "trained, vetted"
+//     language (coupled — if /about softens to "briefed", this updates)
+//
+// Schema / visible-text exact match:
+//   The faqs[] array drives BOTH the rendered FAQ list and the FAQPage
+//   schema's acceptedAnswer.text. Single source of truth. Google
+//   penalises mismatch between FAQ schema text and visible prose.
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import { PRICING } from '../lib/pricing';
+import { getFaqs } from '../content/faqs';
+import heroVan from '../assets/hero-van.png';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/faq';
+
+// FAQ data lives in src/content/faqs.ts so /faq and /llms-full.txt
+// stay in sync. Conditional Q4 (Maya AI vs human-only) and Q6
+// (insurance bound vs unbound) are computed inside getFaqs() at
+// build time from PRICING.
+const faqs = getFaqs();
+
+const title = 'FAQ — pricing, insurance, scope · Inlet Move Co.';
+const description = `Common questions about Inlet — pricing, what's included, insurance, claims, scope, booking. Two movers + cargo van, $${PRICING.rates.hourlyRate}/hr, Metro Vancouver local moves only.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'FAQ', item: `${SITE}${PATH}` },
+  ],
+};
+
+// FAQPage schema. Each Question's @id anchors to its rendered <article id>
+// so AI agents (and Google's Rich Results) can deep-link individual answers.
+// acceptedAnswer.text uses the SAME f.answer string that renders in the
+// page body — no string drift possible.
+const faqPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  '@id': `${SITE}${PATH}#faq`,
+  url: `${SITE}${PATH}`,
+  inLanguage: 'en-CA',
+  isPartOf: { '@id': `${SITE}/#website` },
+  about: { '@id': `${SITE}/#business` },
+  mainEntity: faqs.map((f) => ({
+    '@type': 'Question',
+    '@id': `${SITE}${PATH}#${f.id}`,
+    name: f.question,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: f.answer,
+    },
+  })),
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, faqPageSchema]}
+>
+  <CityHero
+    city="FAQ"
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a Metro Vancouver street"
+    h1Html="Frequently <em>asked</em>."
+    intro="The questions customers actually ask, answered once."
+    eyebrowText="[ FAQ ]  Inlet Move Co."
+  />
+
+  <Chapter
+    num="01"
+    label="Frequently asked"
+    titleHtml="Ten common <em>questions</em>."
+    id="questions"
+  >
+    <div class="faq-list reveal-stagger">
+      {faqs.map((f) => (
+        <article class="faq-item" id={f.id}>
+          <h3 class="faq-question">{f.question}</h3>
+          <p class="faq-answer">{f.answer}</p>
+        </article>
+      ))}
+    </div>
+  </Chapter>
+
+  <Trust num="02" />
+  <FinalCTA num="03" />
+</Base>
+
+<style>
+  .faq-list {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+  }
+
+  .faq-item {
+    border-top: 1px solid var(--line);
+    padding: 2.25rem 0;
+    max-width: 72ch;
+  }
+  .faq-list .faq-item:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  .faq-question {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    margin: 0 0 1.25rem;
+    color: var(--fg);
+  }
+  .faq-question::before {
+    content: 'Q · ';
+    font-family: var(--mono);
+    font-size: 0.65em;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    margin-right: 0.5em;
+    vertical-align: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .faq-answer {
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    color: var(--fg-2);
+    line-height: 1.65;
+    margin: 0;
+  }
+</style>

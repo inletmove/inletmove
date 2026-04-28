@@ -1,0 +1,156 @@
+---
+// /2-bedroom-movers — service-tier page (template-defining; the other 5
+// tier pages will reuse the same TierHero + Chapter pattern with their
+// own tier slug + photo + copy).
+//
+// All prices read from PRICING.tiers['2-bedroom'].estimatedHours ×
+// PRICING.rates.hourlyRate via the tierEstimate() helper. Trust + FinalCTA
+// reused unchanged from the home page (verified honest).
+
+import Base from '../layouts/Base.astro';
+import TierHero from '../components/sections/TierHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate } from '../lib/pricing';
+import loadingBoxes from '../assets/loading-boxes.png';
+
+const tier = tierEstimate('2-bedroom');
+const SITE = 'https://inletmove.ca';
+const PATH = '/2-bedroom-movers';
+
+const title = `2-bedroom apartment movers in Metro Vancouver — Inlet Move`;
+const description =
+  `Two movers + cargo van. ${tier.label} moves typically take ${tier.hoursLow}–${tier.hoursHigh} hours, ${tier.rangeLabel} total. Same-week local moves across Metro Vancouver.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Services', item: `${SITE}/services` },
+    { '@type': 'ListItem', position: 3, name: '2-bedroom movers', item: `${SITE}${PATH}` },
+  ],
+};
+
+const serviceSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${SITE}${PATH}#service`,
+  name: '2-bedroom apartment move',
+  serviceType: 'Local moving service',
+  category: 'Residential moving',
+  description:
+    `${tier.label} apartment moves with a two-mover crew + cargo van. ${tier.hoursLabel} typical, ${tier.rangeLabel} total. Hourly billing, photo-documented, no fuel or stair surcharges.`,
+  provider: { '@id': `${SITE}/#business` },
+  areaServed: { '@type': 'AdministrativeArea', name: 'Metro Vancouver, BC, Canada' },
+  url: `${SITE}${PATH}`,
+  offers: {
+    '@type': 'Offer',
+    name: '2-bedroom apartment move',
+    priceCurrency: PRICING.currency,
+    priceSpecification: {
+      '@type': 'PriceSpecification',
+      minPrice: tier.priceLow,
+      maxPrice: tier.priceHigh,
+      priceCurrency: PRICING.currency,
+      unitText: 'per move',
+    },
+    availability: 'https://schema.org/InStock',
+    url: PRICING.links.quote,
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, serviceSchema]}
+>
+  <TierHero
+    tier={tier}
+    photo={loadingBoxes}
+    photoAlt="Inlet Move crew loading boxes from a 2-bedroom apartment into the cargo van"
+    h1Html="2-bedroom apartment <em>movers</em>."
+    intro="Larger apartments and small homes. Branded crew, photo-documented, hourly billing line-by-line. No fuel surcharge, no stair fee, no weekend upcharge."
+  />
+
+  <Chapter
+    num="01"
+    label="What's included"
+    titleHtml={`${tier.hoursLabel}.<br /><em>${tier.rangeLabel}</em> total.`}
+    id="includes"
+  >
+    <div class="includes-grid reveal-stagger">
+      <div class="include-item">
+        <div class="label">Hourly rate</div>
+        <div class="value">${PRICING.rates.hourlyRate}<em>/hr</em></div>
+        <div class="footnote">Two movers + cargo van. ${PRICING.rates.minimumCharge} minimum.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Quote = bill</div>
+        <div class="value">No <em>surprises</em></div>
+        <div class="footnote">Target overage under {Math.ceil(PRICING.claims.overagePercent)}%. No fuel, stair, or weekend fees.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Photo documentation</div>
+        <div class="value"><em>Every</em> job</div>
+        <div class="footnote">Fragile items, before-and-after, load-out. Archived for any insurance claim window.</div>
+      </div>
+      <div class="include-item">
+        <div class="label">Same crew</div>
+        <div class="value">Start to <em>finish</em></div>
+        <div class="footnote">Trained, vetted, branded. Introduced by name on move day.</div>
+      </div>
+    </div>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Trust num="02" />
+  <FinalCTA num="03" />
+</Base>
+
+<style>
+  .includes-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+    margin-top: 4rem;
+  }
+  @media (max-width: 768px) {
+    .includes-grid { grid-template-columns: 1fr; }
+  }
+
+  .include-item {
+    border-top: 1px solid var(--line);
+    padding: 1.75rem 2rem 1.75rem 0;
+  }
+  .include-item .label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.875rem;
+  }
+  .include-item .value {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .include-item .value em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .include-item .footnote {
+    font-size: 0.85rem;
+    color: var(--fg-2);
+    margin-top: 0.5rem;
+    max-width: 38ch;
+  }
+</style>

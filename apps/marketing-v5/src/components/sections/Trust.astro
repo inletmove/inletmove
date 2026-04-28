@@ -1,0 +1,226 @@
+---
+// Chapter 05 — Trust + 4-stat grid + crew portrait.
+//
+// Honesty contract:
+//   - Trust prose composes from trustCopy() — same resolver as
+//     StructuredData.astro. Flag flip propagates to both.
+//   - Stats 1–3 are always "Target" prefixed (aspirations, not measurements).
+//   - Stat 4 ($X cargo+liability) flips its label to "Target coverage" when
+//     insurance isn't bound, so layout stays a 4-up grid in either state.
+
+import { Image } from 'astro:assets';
+import { PRICING, trustCopy } from '../../lib/pricing';
+import crewPortrait from '../../assets/crew-portrait.png';
+
+interface Props {
+  // Chapter number for this section. Default '05' matches the home's
+  // 6-chapter narrative (Promise=01, Journey=02, Features=03, Area=04,
+  // Trust=05, CTA=06). Sub-pages with fewer local chapters override —
+  // e.g. tier pages with one local chapter pass num="02" so the
+  // numbering reads [01]/[02]/[03] across the page instead of jumping
+  // from [01] to [05]. Pattern: every sub-page sets its Trust + FinalCTA
+  // chapter nums to follow the page's local chapter count.
+  num?: string;
+}
+
+const { num = '05' } = Astro.props;
+
+const trust = trustCopy();
+const insuranceMillions = (PRICING.claims.insuranceAmountCAD / 1_000_000).toFixed(0);
+const insuranceStat = {
+  value: `$${insuranceMillions}M`,
+  label: PRICING.trust.insuranceBound ? 'Cargo + liability' : 'Target coverage',
+};
+---
+
+<section class="chapter with-image" id="trust">
+  <div class="chapter-body">
+    <div class="chapter-header reveal">
+      <div class="ch-num">[ {num} ]</div>
+      <div class="ch-label">Why it works</div>
+    </div>
+
+    <h2 class="huge reveal">Real humans,<br /><em>real proof</em>.</h2>
+
+    <p class="trust-text reveal">
+      {trust.bcRegistered}. {trust.workSafeBC}. {trust.insurance}. Trained,
+      vetted, branded crew introduced by name on move day. Photos before,
+      photos after.
+    </p>
+
+    <div class="stats-grid reveal-stagger">
+      <div class="stat">
+        <div class="stat-num">{PRICING.claims.responseTimeMinutes}<em>min</em></div>
+        <div class="stat-label">Target response</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">{PRICING.claims.overagePercent}<em>%</em></div>
+        <div class="stat-label">Target overage</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">{PRICING.claims.onTimePercent}<em>%</em></div>
+        <div class="stat-label">Target on-time</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">{insuranceStat.value}</div>
+        <div class="stat-label">{insuranceStat.label}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="chapter-image reveal">
+    <Image
+      src={crewPortrait}
+      alt="Inlet Move crew beside the cargo van"
+      widths={[480, 768, 1280]}
+      sizes="(min-width: 1024px) 41vw, 100vw"
+      format="webp"
+      quality={82}
+      loading="lazy"
+    />
+  </div>
+</section>
+
+<style>
+  .chapter {
+    min-height: 100vh;
+    padding: 12rem 5vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .chapter.with-image {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 6rem;
+    align-items: center;
+  }
+  .chapter.with-image .chapter-body { min-width: 0; }
+  @media (max-width: 1024px) {
+    .chapter.with-image {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+  @media (max-width: 768px) {
+    .chapter.with-image { padding: 7rem 1.5rem; }
+  }
+
+  .chapter-header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 3rem;
+    align-items: baseline;
+    margin-bottom: 5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .chapter-header {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .ch-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+  }
+  .ch-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+
+  h2.huge {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+  }
+  h2.huge em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    h2.huge { font-size: clamp(2.5rem, 11vw, 4rem); }
+  }
+
+  .chapter-image {
+    position: relative;
+    overflow: hidden;
+    border-radius: 8px;
+    aspect-ratio: 4 / 5;
+    will-change: transform;
+  }
+  .chapter-image img {
+    width: 100%;
+    height: 105%;
+    object-fit: cover;
+    object-position: center 65%;
+    will-change: transform;
+    filter: saturate(0.92) contrast(1.04);
+  }
+  .chapter-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    box-shadow: inset 0 0 80px rgba(10, 10, 10, 0.3);
+    pointer-events: none;
+  }
+
+  .trust-text {
+    max-width: 60ch;
+    margin: 4rem 0 5rem;
+    font-size: 1.15rem;
+    color: var(--fg-2);
+    line-height: 1.55;
+  }
+
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .stats-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem 1rem;
+    }
+  }
+
+  .stat {
+    border-top: 1px solid var(--line);
+    padding: 2rem 1.5rem 2rem 0;
+  }
+  .stat-num {
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 5.5vw, 5rem);
+    line-height: 1;
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.035em;
+  }
+  .stat-num em {
+    font-style: italic;
+    color: var(--accent);
+    font-size: 0.45em;
+    margin-left: 0.15em;
+    font-weight: 300;
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+  }
+</style>

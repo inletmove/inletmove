@@ -1,0 +1,196 @@
+---
+/**
+ * Sticky blurred header. Desktop nav has 5 in-page anchors + 1 external
+ * "Get a quote" link to PRICING.links.quote. Mobile menu has the same 5
+ * anchors + 1 styled-CTA "Get a quote →" link, also external.
+ */
+
+import { PRICING } from '../../lib/pricing';
+
+const navLinks = [
+  { href: '#promise', label: 'What we do' },
+  { href: '#journey', label: 'How it works' },
+  { href: '#features', label: 'What you get' },
+  { href: '#area', label: 'Service area' },
+  { href: '#trust', label: 'Why it works' },
+];
+---
+
+<header class="header">
+  <a href="/" class="logo">inlet move<span class="dot">.</span></a>
+  <nav>
+    {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+    <a href={PRICING.links.quote}>Get a quote</a>
+  </nav>
+  <button class="menu-btn" id="menuBtn" aria-label="Open menu" aria-expanded="false">
+    <span></span><span></span>
+  </button>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+  {navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+  <a href={PRICING.links.quote} class="mm-cta">Get a quote →</a>
+</div>
+
+<style>
+  .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    padding: 1.25rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--fg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(10, 10, 10, 0.55);
+    border-bottom: 1px solid var(--line-2);
+  }
+  .header .logo {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .header .logo .dot { color: var(--accent); }
+
+  .header nav {
+    display: flex;
+    gap: 1.75rem;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+  }
+  .header nav a {
+    color: var(--fg);
+    text-decoration: none;
+    opacity: 0.65;
+    transition: opacity 250ms var(--ease);
+  }
+  .header nav a:hover { opacity: 1; }
+
+  .menu-btn {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 32px;
+    height: 32px;
+    flex-direction: column;
+    justify-content: center;
+    gap: 4px;
+  }
+  .menu-btn span {
+    display: block;
+    width: 22px;
+    height: 1px;
+    background: var(--fg);
+    transition: all 350ms var(--ease);
+  }
+
+  @media (max-width: 768px) {
+    .header { padding: 1rem 1.25rem; }
+    .header nav { display: none; }
+    .menu-btn { display: flex; }
+  }
+
+  .mobile-menu {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 99;
+    padding: 6rem 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 500ms var(--ease);
+  }
+  .mobile-menu.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .mobile-menu a {
+    font-family: var(--serif);
+    font-size: 2.25rem;
+    color: var(--fg);
+    text-decoration: none;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--line);
+    letter-spacing: -0.02em;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 600ms var(--ease), transform 600ms var(--ease);
+  }
+  .mobile-menu.open a {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .mobile-menu.open a:nth-child(1) { transition-delay: 100ms; }
+  .mobile-menu.open a:nth-child(2) { transition-delay: 180ms; }
+  .mobile-menu.open a:nth-child(3) { transition-delay: 260ms; }
+  .mobile-menu.open a:nth-child(4) { transition-delay: 340ms; }
+  .mobile-menu.open a:nth-child(5) { transition-delay: 420ms; }
+  .mobile-menu .mm-cta {
+    margin-top: 2rem;
+    font-family: var(--sans);
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    color: var(--accent);
+    align-self: flex-start;
+    transition-delay: 500ms !important;
+  }
+</style>
+
+<script>
+  // Mobile menu open/close. Uses #menuBtn + #mobileMenu IDs declared above.
+  // Defensive try/catch matches the preview's pattern — content stays usable
+  // even if this fails in some browser.
+  try {
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    let menuOpen = false;
+    if (menuBtn && mobileMenu) {
+      const spans = menuBtn.querySelectorAll('span');
+      const setHamburgerState = (open: boolean) => {
+        if (!spans[0] || !spans[1]) return;
+        if (open) {
+          (spans[0] as HTMLElement).style.transform = 'translateY(2.5px) rotate(45deg)';
+          (spans[1] as HTMLElement).style.transform = 'translateY(-2.5px) rotate(-45deg)';
+        } else {
+          (spans[0] as HTMLElement).style.transform = '';
+          (spans[1] as HTMLElement).style.transform = '';
+        }
+      };
+      menuBtn.addEventListener('click', () => {
+        menuOpen = !menuOpen;
+        mobileMenu.classList.toggle('open', menuOpen);
+        document.body.style.overflow = menuOpen ? 'hidden' : '';
+        menuBtn.setAttribute('aria-expanded', menuOpen ? 'true' : 'false');
+        mobileMenu.setAttribute('aria-hidden', menuOpen ? 'false' : 'true');
+        setHamburgerState(menuOpen);
+      });
+      mobileMenu.addEventListener('click', (e) => {
+        if ((e.target as HTMLElement).tagName === 'A') {
+          menuOpen = false;
+          mobileMenu.classList.remove('open');
+          document.body.style.overflow = '';
+          menuBtn.setAttribute('aria-expanded', 'false');
+          mobileMenu.setAttribute('aria-hidden', 'true');
+          setHamburgerState(false);
+        }
+      });
+    }
+  } catch {
+    /* leave content visible; menu is enhancement */
+  }
+</script>

@@ -1,0 +1,192 @@
+---
+// CityHero — sub-page hero used by /[city]-movers, /service-area, and any
+// other index/about page that needs a photo-bg hero with eyebrow + h1 +
+// meta strip + magnetic CTA. Originally city-only; broadened during E3
+// to cover /about (and ready for /faq/privacy/contact). The neighborhood
+// strip is now optional — pages that don't have one (e.g. /about) skip
+// it entirely.
+//
+// Backwards compatible: city pages pass {city + neighborhoods} and get
+// the original eyebrow ("[ AREA ] · {city} · Metro Vancouver"); /about
+// passes its own eyebrowText override and omits neighborhoods.
+//
+// Kept separate from TierHero because the meta line shape differs
+// (cities span tiers; tiers have a single price-math line).
+
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { PRICING } from '../../lib/pricing';
+
+interface Props {
+  // Required for the default eyebrow rendering. Pages that override the
+  // eyebrow via `eyebrowText` can pass any short label here.
+  city: string;
+  photo: ImageMetadata;
+  photoAlt: string;
+  // Optional. When provided, renders below the meta line as a mono
+  // uppercase strip of names. Skip on pages that don't have a list
+  // (e.g. /about, /faq).
+  neighborhoods?: string;
+  h1Html: string;
+  intro: string;
+  // Optional eyebrow override. Default: "[ AREA ] · {city} · Metro Vancouver".
+  // Pages with different framing pass their own (e.g. "[ ABOUT ] · Inlet Move Co.").
+  eyebrowText?: string;
+}
+
+const { city, photo, photoAlt, neighborhoods, h1Html, intro, eyebrowText } = Astro.props;
+
+//   = non-breaking space, matches the original &nbsp; spacing.
+const eyebrow = eyebrowText ?? `[ AREA ]  ${city} · Metro Vancouver`;
+---
+
+<section class="city-hero">
+  <div class="city-hero-bg">
+    <Image
+      src={photo}
+      alt={photoAlt}
+      class="city-hero-img"
+      widths={[480, 768, 1280, 1920]}
+      sizes="100vw"
+      format="webp"
+      quality={82}
+      loading="eager"
+      fetchpriority="high"
+    />
+    <div class="city-hero-overlay"></div>
+  </div>
+
+  <div class="reveal">
+    <div class="city-hero-eyebrow">{eyebrow}</div>
+  </div>
+
+  <h1 class="city-hero-title reveal" set:html={h1Html} />
+
+  <div class="city-hero-meta reveal">
+    <p class="city-hero-sub">
+      {intro}<br />
+      Two movers + cargo van · <strong>${PRICING.rates.hourlyRate}/hr</strong> · same-week local moves.
+    </p>
+    <a href={PRICING.links.quote} class="cta-button magnetic">
+      Get a quote <span class="arrow">→</span>
+    </a>
+  </div>
+
+  {neighborhoods && (
+    <div class="city-hero-neighborhoods reveal">
+      {neighborhoods}
+    </div>
+  )}
+</section>
+
+<style>
+  .city-hero {
+    min-height: 80vh;
+    position: relative;
+    padding: 9rem 5vw 4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+  }
+  .city-hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .city-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  .city-hero-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      linear-gradient(
+        90deg,
+        rgba(10, 10, 10, 0.92) 0%,
+        rgba(10, 10, 10, 0.78) 35%,
+        rgba(10, 10, 10, 0.4) 65%,
+        rgba(10, 10, 10, 0.55) 100%
+      ),
+      linear-gradient(
+        180deg,
+        rgba(10, 10, 10, 0.5) 0%,
+        rgba(10, 10, 10, 0.15) 30%,
+        rgba(10, 10, 10, 0.7) 100%
+      );
+  }
+  .city-hero > *:not(.city-hero-bg) { position: relative; z-index: 2; }
+
+  .city-hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+  .city-hero-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .city-hero-title {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9.5vw, 9rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+    margin: 0;
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.5);
+  }
+  .city-hero-title :global(em) {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .city-hero-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 4rem;
+    flex-wrap: wrap;
+  }
+  .city-hero-sub {
+    max-width: 44ch;
+    font-size: 1.05rem;
+    color: var(--fg);
+    line-height: 1.55;
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.55);
+  }
+  .city-hero-sub strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .city-hero-neighborhoods {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    border-top: 1px solid var(--line);
+    padding-top: 1.25rem;
+    margin-top: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .city-hero { padding: 7rem 1.5rem 3rem; }
+    .city-hero-title { font-size: clamp(2.5rem, 12vw, 4rem); }
+  }
+</style>

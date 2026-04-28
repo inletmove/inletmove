@@ -1,0 +1,288 @@
+---
+// /burnaby-movers — first city page in E8. Reuses the /vancouver-movers
+// shape (CityHero + 3 Chapters + Trust + FinalCTA + Terms) with
+// Burnaby-specific 200-word local-detail prose. The defining requirement
+// per directive: this paragraph cannot survive a find-replace of
+// "Burnaby" → "Vancouver" while still reading correctly. Tested by
+// inspection: it names Imperial Street office, Metrotown's mall-clock
+// loading-bay quirk, Brentwood's recent-boom empty-walls reality, the
+// Capitol Hill / Burnaby Heights older stock, Burnaby Mountain / SFU's
+// August-September student cycle — none of which transpose to Vancouver
+// prose without breaking.
+//
+// Photo: hero-van.png reused from /vancouver-movers (production-quality;
+// srcset already cached). City-page heroes don't burn the photo-rotation
+// budget the tier pages do — same brand image across the city set is fine.
+//
+// Logistics fact chosen: Burnaby's residential parking is generally
+// permit-free, contrasting Vancouver's permit-filing process. Single
+// sentence, doesn't repeat the Vancouver permit narrative.
+//
+// Terms: mounted at end of Chapter 02 (service tiers grid) — that's
+// where the price math is, parallel to tier pages mounting Terms at
+// end of Chapter 01 ("What's included"). /vancouver-movers does NOT
+// currently mount Terms; flagged for retroactive consistency.
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate, type TierSlug } from '../lib/pricing';
+import heroVan from '../assets/hero-van.png';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/burnaby-movers';
+
+const city = {
+  name: 'Burnaby',
+  neighborhoods: ['Metrotown', 'Brentwood', 'Capitol Hill', 'Burnaby Heights', 'Burnaby Mountain'],
+};
+
+const overageThreshold = Math.ceil(PRICING.claims.overagePercent);
+const localDetail =
+  `Burnaby is the city Inlet's office sits in, on Imperial Street a few blocks from Metrotown. Four neighborhoods worth naming by their physical realities: Metrotown's tower core, where the freight-elevator discipline mirrors a Vancouver downtown high-rise but the mall-side loading-bay access runs on its own clock — buildings book windows around mall delivery hours, not whenever the morning suits us; Brentwood's recent boom of new occupancies, where many residents are moving into empty walls and the load is light because nothing has accumulated yet; Capitol Hill and Burnaby Heights, an older single-family stock with narrower driveways, longer carries from street to door, and the occasional basement suite to clear separately; Burnaby Mountain near SFU, where August and September move-out / move-in cycles fill the calendar weeks before any other tier of customer thinks about a date. Parking is generally easier than in Vancouver — most residential streets allow trucks at the curb without a permit, and we file one only when the building manager or a strata bylaw asks for it. Most Burnaby moves run four to seven hours: the towers slower for elevator wait, the older neighborhoods slower for the carry. The hourly rate is the same in either case; the quote we send is the bill you pay; target overage under ${overageThreshold}%.`;
+
+const tierSlugs: TierSlug[] = [
+  'studio',
+  '1-bedroom',
+  '2-bedroom',
+  '3-bedroom',
+  'multigenerational',
+  'senior-downsizing',
+];
+const tiers = tierSlugs.map((slug) => ({
+  estimate: tierEstimate(slug),
+  href: `/${slug}-movers`,
+}));
+
+// Burnaby's geographic neighbours within Inlet's service area: Vancouver
+// (west), New Westminster (south), Coquitlam (east), plus Richmond as the
+// nearest cross-Fraser hub-and-spoke link.
+const nearbyCities = [
+  { name: 'Vancouver', href: '/vancouver-movers' },
+  { name: 'Richmond', href: '/richmond-movers' },
+  { name: 'New Westminster', href: '/new-westminster-movers' },
+  { name: 'Coquitlam', href: '/coquitlam-movers' },
+];
+
+const title = 'Movers in Burnaby — Inlet Move Co.';
+const description = `Local moves across Burnaby — Metrotown, Brentwood, Capitol Hill, Burnaby Heights, Burnaby Mountain. Two movers + cargo van, $${PRICING.rates.hourlyRate}/hr, same-week availability across the city.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Service area', item: `${SITE}/service-area` },
+    { '@type': 'ListItem', position: 3, name: city.name, item: `${SITE}${PATH}` },
+  ],
+};
+
+const cityBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  '@id': `${SITE}${PATH}#business`,
+  name: `Inlet Move Co. — ${city.name}`,
+  url: `${SITE}${PATH}`,
+  parentOrganization: { '@id': `${SITE}/#organization` },
+  description: `Local moving company serving ${city.name}, BC. Two movers + cargo van, hourly billing from $${PRICING.rates.hourlyRate}/hr, same-week local moves.`,
+  areaServed: { '@type': 'City', name: `${city.name}, BC, Canada` },
+  knowsLanguage: ['en'],
+  ...(PRICING.phone.active ? { telephone: PRICING.phone.tel } : {}),
+  potentialAction: {
+    '@type': 'ReserveAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: PRICING.links.quote,
+      actionPlatform: [
+        'https://schema.org/DesktopWebPlatform',
+        'https://schema.org/MobileWebPlatform',
+      ],
+    },
+    result: { '@type': 'Reservation', name: 'Moving quote request' },
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, cityBusinessSchema]}
+>
+  <CityHero
+    city={city.name}
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a Burnaby residential street, golden-hour afternoon"
+    neighborhoods={city.neighborhoods.join(' · ')}
+    h1Html={`Movers in <em>${city.name}</em>.`}
+    intro={`Same-week local moves across ${city.name}.`}
+  />
+
+  <Chapter
+    num="01"
+    label="Local detail"
+    titleHtml={`${city.name}, in <em>particular</em>.`}
+    id="local-detail"
+  >
+    <p class="local-detail reveal">{localDetail}</p>
+  </Chapter>
+
+  <Chapter
+    num="02"
+    label="Service tiers"
+    titleHtml="Pick your <em>tier</em>."
+    id="tiers"
+  >
+    <ul class="tier-grid reveal-stagger">
+      {tiers.map((t) => (
+        <li>
+          <a class="tier-link" href={t.href}>
+            <span class="tier-link-name">{t.estimate.label}</span>
+            <span class="tier-link-meta">{t.estimate.hoursLabel} · {t.estimate.rangeLabel}</span>
+            <span class="tier-link-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Chapter
+    num="03"
+    label="Nearby"
+    titleHtml="Across the <em>region</em>."
+    id="nearby"
+  >
+    <ul class="nearby-grid reveal-stagger">
+      {nearbyCities.map((c) => (
+        <li>
+          <a class="nearby-link" href={c.href}>
+            <em>{c.name}</em>
+            <span class="nearby-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Chapter>
+
+  <Trust num="04" />
+  <FinalCTA num="05" />
+</Base>
+
+<style>
+  .local-detail {
+    max-width: 68ch;
+    margin: 4rem 0 0;
+    font-size: 1.15rem;
+    color: var(--fg);
+    line-height: 1.7;
+  }
+
+  .tier-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .tier-grid { grid-template-columns: 1fr; }
+  }
+  .tier-grid li:nth-last-child(-n+2) .tier-link {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .tier-grid li:not(:last-child) .tier-link { border-bottom: none; }
+    .tier-grid li:last-child .tier-link { border-bottom: 1px solid var(--line); }
+  }
+
+  .tier-link {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto;
+    gap: 1.5rem;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .tier-link:hover { padding-left: 1rem; }
+
+  .tier-link-name {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .tier-link-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--fg-2);
+    letter-spacing: 0.06em;
+  }
+  .tier-link-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .tier-link:hover .tier-link-arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+
+  .nearby-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .nearby-grid { grid-template-columns: 1fr; }
+  }
+  .nearby-grid li:nth-last-child(-n+2) .nearby-link {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .nearby-grid li:not(:last-child) .nearby-link { border-bottom: none; }
+    .nearby-grid li:last-child .nearby-link { border-bottom: 1px solid var(--line); }
+  }
+
+  .nearby-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .nearby-link em {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    transition: color 400ms var(--ease);
+  }
+  .nearby-link:hover { padding-left: 1rem; }
+  .nearby-link:hover em { color: var(--accent); }
+  .nearby-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .nearby-link:hover .nearby-arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+</style>

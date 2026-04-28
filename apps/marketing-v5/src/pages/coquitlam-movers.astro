@@ -1,0 +1,286 @@
+---
+// /coquitlam-movers — fifth city page in E8. Same shape as prior
+// city pages.
+//
+// Photo: hero-van.png reused.
+//
+// Logistics fact chosen: option (a) primary (Tri-Cities boundary
+// clarification — only Coquitlam is in service area, not Port Moody
+// or Port Coquitlam) + option (e) folded (Evergreen Extension 2016
+// → tower densification along Burquitlam-to-Lougheed corridor).
+// Option (b) Lougheed Town Centre boundary blur appears as a fifth-
+// neighborhood operational fact, not a primary frame. The
+// Tri-Cities clarification frames the OPENING sentence and is the
+// operational consequence of the v5 service-area lock.
+//
+// Step F redirects flagged for vercel.json (NOT implemented here):
+//   /port-moody-movers      → 301 → /coquitlam-movers
+//   /port-coquitlam-movers  → 301 → /coquitlam-movers
+//   /tri-cities-movers      → 301 → /coquitlam-movers
+// Build report logs this for Step F.
+//
+// Nearby cities: Burnaby (west, immediate), New Westminster
+// (southwest, across Fraser via Pattullo or via United Boulevard),
+// Surrey (south across Port Mann), North Vancouver (across Iron
+// Workers Memorial Bridge). All four in 8-city service area.
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import Terms from '../components/shared/Terms.astro';
+import { PRICING, tierEstimate, type TierSlug } from '../lib/pricing';
+import heroVan from '../assets/hero-van.png';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/coquitlam-movers';
+
+const city = {
+  name: 'Coquitlam',
+  neighborhoods: ['Burquitlam', 'Coquitlam Centre', 'Maillardville', 'Westwood Plateau', 'Lougheed Town Centre'],
+};
+
+const overageThreshold = Math.ceil(PRICING.claims.overagePercent);
+const localDetail =
+  `Coquitlam is the largest of the Tri-Cities (Coquitlam, Port Coquitlam, Port Moody), but only Coquitlam itself is in our service area — addresses across the three get conflated regularly, so we confirm the actual city on the quote before the truck heads out. The Evergreen Extension SkyTrain opened in 2016 and changed Coquitlam's load profile noticeably: significant tower development along the Burquitlam-to-Lougheed corridor in the years since, with recent occupancies and lighter loads on average. Five neighborhoods worth naming: Burquitlam, the post-2016 tower density around the SkyTrain station — recent-occupancy moves where the closet builds aren't done filling yet; Coquitlam Centre, the mall-anchored core with mid-rise condos and longer-established detached single-family stock around it; Maillardville, the historic French-Canadian pocket in the southwest, older single-family on narrow streets where the truck stages off the curb more often than in front of the door; Westwood Plateau on the slope of Coquitlam Mountain, character homes with steeper driveways — we stage at street level and carry on the steeper grades; and Lougheed Town Centre, where the boundary with Burnaby runs through buildings on opposite sides of the same intersection — we double-check the city on the lease before the truck heads out. Most Coquitlam moves run four to seven hours; the rate is the same as anywhere else in Metro Vancouver; the quote we send is the bill you pay; target overage under ${overageThreshold}%.`;
+
+const tierSlugs: TierSlug[] = [
+  'studio',
+  '1-bedroom',
+  '2-bedroom',
+  '3-bedroom',
+  'multigenerational',
+  'senior-downsizing',
+];
+const tiers = tierSlugs.map((slug) => ({
+  estimate: tierEstimate(slug),
+  href: `/${slug}-movers`,
+}));
+
+const nearbyCities = [
+  { name: 'Burnaby', href: '/burnaby-movers' },
+  { name: 'New Westminster', href: '/new-westminster-movers' },
+  { name: 'Surrey', href: '/surrey-movers' },
+  { name: 'North Vancouver', href: '/north-vancouver-movers' },
+];
+
+const title = 'Movers in Coquitlam — Inlet Move Co.';
+const description = `Local moves across Coquitlam — Burquitlam, Coquitlam Centre, Maillardville, Westwood Plateau, Lougheed Town Centre. Two movers + cargo van, $${PRICING.rates.hourlyRate}/hr, same-week availability across the city.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Service area', item: `${SITE}/service-area` },
+    { '@type': 'ListItem', position: 3, name: city.name, item: `${SITE}${PATH}` },
+  ],
+};
+
+const cityBusinessSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  '@id': `${SITE}${PATH}#business`,
+  name: `Inlet Move Co. — ${city.name}`,
+  url: `${SITE}${PATH}`,
+  parentOrganization: { '@id': `${SITE}/#organization` },
+  description: `Local moving company serving ${city.name}, BC. Two movers + cargo van, hourly billing from $${PRICING.rates.hourlyRate}/hr, same-week local moves. Coquitlam only — Port Moody and Port Coquitlam are outside our service area.`,
+  areaServed: { '@type': 'City', name: `${city.name}, BC, Canada` },
+  knowsLanguage: ['en'],
+  ...(PRICING.phone.active ? { telephone: PRICING.phone.tel } : {}),
+  potentialAction: {
+    '@type': 'ReserveAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: PRICING.links.quote,
+      actionPlatform: [
+        'https://schema.org/DesktopWebPlatform',
+        'https://schema.org/MobileWebPlatform',
+      ],
+    },
+    result: { '@type': 'Reservation', name: 'Moving quote request' },
+  },
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, cityBusinessSchema]}
+>
+  <CityHero
+    city={city.name}
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a Coquitlam residential street, golden-hour afternoon"
+    neighborhoods={city.neighborhoods.join(' · ')}
+    h1Html={`Movers in <em>${city.name}</em>.`}
+    intro={`Same-week local moves across ${city.name}.`}
+  />
+
+  <Chapter
+    num="01"
+    label="Local detail"
+    titleHtml={`${city.name}, in <em>particular</em>.`}
+    id="local-detail"
+  >
+    <p class="local-detail reveal">{localDetail}</p>
+  </Chapter>
+
+  <Chapter
+    num="02"
+    label="Service tiers"
+    titleHtml="Pick your <em>tier</em>."
+    id="tiers"
+  >
+    <ul class="tier-grid reveal-stagger">
+      {tiers.map((t) => (
+        <li>
+          <a class="tier-link" href={t.href}>
+            <span class="tier-link-name">{t.estimate.label}</span>
+            <span class="tier-link-meta">{t.estimate.hoursLabel} · {t.estimate.rangeLabel}</span>
+            <span class="tier-link-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+    <Terms variant="block" />
+  </Chapter>
+
+  <Chapter
+    num="03"
+    label="Nearby"
+    titleHtml="Across the <em>region</em>."
+    id="nearby"
+  >
+    <ul class="nearby-grid reveal-stagger">
+      {nearbyCities.map((c) => (
+        <li>
+          <a class="nearby-link" href={c.href}>
+            <em>{c.name}</em>
+            <span class="nearby-arrow" aria-hidden="true">→</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  </Chapter>
+
+  <Trust num="04" />
+  <FinalCTA num="05" />
+</Base>
+
+<style>
+  .local-detail {
+    max-width: 68ch;
+    margin: 4rem 0 0;
+    font-size: 1.15rem;
+    color: var(--fg);
+    line-height: 1.7;
+  }
+
+  .tier-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .tier-grid { grid-template-columns: 1fr; }
+  }
+  .tier-grid li:nth-last-child(-n+2) .tier-link {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .tier-grid li:not(:last-child) .tier-link { border-bottom: none; }
+    .tier-grid li:last-child .tier-link { border-bottom: 1px solid var(--line); }
+  }
+
+  .tier-link {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto;
+    gap: 1.5rem;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .tier-link:hover { padding-left: 1rem; }
+
+  .tier-link-name {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .tier-link-meta {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--fg-2);
+    letter-spacing: 0.06em;
+  }
+  .tier-link-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .tier-link:hover .tier-link-arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+
+  .nearby-grid {
+    list-style: none;
+    margin: 4rem 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0;
+  }
+  @media (max-width: 768px) {
+    .nearby-grid { grid-template-columns: 1fr; }
+  }
+  .nearby-grid li:nth-last-child(-n+2) .nearby-link {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .nearby-grid li:not(:last-child) .nearby-link { border-bottom: none; }
+    .nearby-grid li:last-child .nearby-link { border-bottom: 1px solid var(--line); }
+  }
+
+  .nearby-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-top: 1px solid var(--line);
+    padding: 1.5rem 1.25rem 1.5rem 0;
+    text-decoration: none;
+    color: inherit;
+    transition: padding 500ms var(--ease);
+  }
+  .nearby-link em {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    font-style: italic;
+    letter-spacing: -0.02em;
+    transition: color 400ms var(--ease);
+  }
+  .nearby-link:hover { padding-left: 1rem; }
+  .nearby-link:hover em { color: var(--accent); }
+  .nearby-arrow {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-3);
+    transition: transform 500ms var(--ease), color 500ms var(--ease);
+  }
+  .nearby-link:hover .nearby-arrow {
+    transform: translateX(6px);
+    color: var(--accent);
+  }
+</style>

@@ -1,0 +1,267 @@
+---
+// /privacy — PIPEDA + BC PIPA compliant privacy policy. Plain language,
+// scannable, specific to Inlet's actual data practices (move-day photos
+// and SMS are unique to a moving operation; generic SaaS privacy
+// templates don't cover them).
+//
+// Honesty contracts:
+//   - "What we collect" lists exactly the categories Inlet actually
+//     receives at quote stage and on move day. No generic "device
+//     fingerprint", "IP address for security purposes" boilerplate
+//     unless Inlet actually uses it.
+//   - "Who we share it with" reflects current reality: no third-party
+//     marketing, no advertising. MoverOS framed correctly as
+//     internal-architecture, not third-party.
+//   - Effective date is build-time stamped — every deploy refreshes it
+//     even when the policy text hasn't changed. That's a feature: it
+//     proves the policy is currently maintained, not abandoned.
+//
+// Schema: WebPage with CreativeWork-like metadata; schema.org has no
+// dedicated PrivacyPolicy type, so we use WebPage with significantLink
+// pointing at the federal + BC privacy commissioners.
+//
+// FLAGGED FOR FEROZ before final ship:
+//   - privacy@inletmove.ca mailbox must exist and be monitored
+//   - Postal address line currently a placeholder
+//   - 24-month retention default — confirm matches actual MoverOS data
+//     lifecycle policy
+//   - "We do not use Google Analytics, Facebook Pixel..." — confirm
+//     no third-party tracking has crept in via Demandra side
+
+import Base from '../layouts/Base.astro';
+import CityHero from '../components/sections/CityHero.astro';
+import Chapter from '../components/sections/Chapter.astro';
+import Trust from '../components/sections/Trust.astro';
+import FinalCTA from '../components/sections/FinalCTA.astro';
+import heroVan from '../assets/hero-van.png';
+import { PRICING } from '../lib/pricing';
+
+const SITE = 'https://inletmove.ca';
+const PATH = '/privacy';
+
+// Build-time stamped — refreshed on every deploy. en-CA locale gives
+// "April 28, 2026" format.
+const effectiveDate = new Date().toLocaleDateString('en-CA', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+
+const title = 'Privacy policy — Inlet Move Co.';
+const description = `How Inlet collects, uses, retains, and protects your personal information under PIPEDA and BC PIPA. Plain language, scoped to a Metro Vancouver moving company's actual data practices.`;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE}/` },
+    { '@type': 'ListItem', position: 2, name: 'Privacy', item: `${SITE}${PATH}` },
+  ],
+};
+
+// schema.org has no dedicated PrivacyPolicy type. Using WebPage with
+// significantLink to federal + BC privacy commissioners — gives Google
+// and AI agents the authoritative external references the policy cites.
+const privacyPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  '@id': `${SITE}${PATH}#webpage`,
+  url: `${SITE}${PATH}`,
+  name: title,
+  description,
+  inLanguage: 'en-CA',
+  isPartOf: { '@id': `${SITE}/#website` },
+  about: { '@id': `${SITE}/#business` },
+  dateModified: new Date().toISOString(),
+  primaryImageOfPage: `${SITE}/assets/og-image.webp`,
+  significantLink: [
+    'https://www.priv.gc.ca/',
+    'https://www.oipc.bc.ca/',
+  ],
+};
+---
+
+<Base
+  title={title}
+  description={description}
+  canonicalPath={PATH}
+  ogType="website"
+  extraSchema={[breadcrumbSchema, privacyPageSchema]}
+>
+  <CityHero
+    city="Privacy"
+    photo={heroVan}
+    photoAlt="Inlet Move cargo van on a Metro Vancouver street"
+    h1Html="What we keep,<br />what we <em>don't</em>."
+    intro="A privacy policy for a moving company, in plain English."
+    eyebrowText="[ PRIVACY ]  Inlet Move Co."
+  />
+
+  <Chapter
+    num="01"
+    label="Privacy policy"
+    titleHtml="Plain English, <em>specific</em> scope."
+    id="policy"
+  >
+    <p class="effective-date reveal">This policy is effective {effectiveDate}.</p>
+
+    <section class="policy-section reveal" id="what-we-collect">
+      <h3>What we collect</h3>
+      <p>We collect personal information at three moments:</p>
+      <ul>
+        <li><strong>When you request a quote:</strong> your name, the move's origin and destination addresses, your email address, your phone number, and the move date you have in mind.</li>
+        <li><strong>On move day, by our crew:</strong> photos of fragile items, before-and-after rooms, and the load-out and load-in. SMS messages exchanged between you and the crew during the move.</li>
+        <li><strong>From your browser, automatically:</strong> standard server logs (IP address, browser type, referring page) and Vercel's first-party performance metrics (page-load times, layout shifts) — see <a href="#cookies">Cookies and tracking</a> below.</li>
+      </ul>
+      <p>We do not collect: payment card numbers (we don't process payments on this site), social insurance numbers, government-issued ID numbers, banking information, biometric data, or location data outside the addresses you provide for the move.</p>
+    </section>
+
+    <section class="policy-section reveal" id="why-we-collect">
+      <h3>Why we collect it</h3>
+      <p>Operational use only. Specifically:</p>
+      <ul>
+        <li><strong>Name, addresses, phone, email:</strong> to send the written quote, schedule the move, dispatch the crew, and follow up.</li>
+        <li><strong>Move-day photos:</strong> as before-and-after evidence in case of damage claims, and as part of MoverOS's photo-documentation log for that job.</li>
+        <li><strong>SMS messages:</strong> as a crew-to-customer record of arrival times, parking, and on-site adjustments.</li>
+        <li><strong>Server logs and Vercel metrics:</strong> to operate this website, debug issues, and gauge whether pages load quickly enough for visitors on slow connections.</li>
+      </ul>
+      <p>We do not use your information for advertising, behavioural profiling, or sale to third parties.</p>
+    </section>
+
+    <section class="policy-section reveal" id="retention">
+      <h3>How long we keep it</h3>
+      <ul>
+        <li><strong>Quote requests, move records, and SMS logs:</strong> {PRICING.retention.operationalMonths} months from the move date, after which they are deleted from active systems.</li>
+        <li><strong>Move-day photos:</strong> archived {PRICING.retention.photosNote}, even if that is longer than {PRICING.retention.operationalMonths} months.</li>
+        <li><strong>Financial records (invoices, payment confirmations):</strong> retained for six years {PRICING.retention.financialNote}.</li>
+        <li><strong>Server logs:</strong> 90 days, then rotated out.</li>
+        <li><strong>Vercel performance metrics:</strong> aggregated and retained per Vercel's own retention policy.</li>
+      </ul>
+      <p>If you want your operational records deleted earlier, see <a href="#your-rights">Your rights</a> below. (Financial records cannot be deleted before the CRA-required six years.)</p>
+    </section>
+
+    <section class="policy-section reveal" id="who-we-share-with">
+      <h3>Who we share it with</h3>
+      <p>We do not currently share your personal information with any third party for marketing, advertising, or analytics purposes.</p>
+      <p>Inlet uses MoverOS — Cognitia's own moving-company software — to store quote, dispatch, and photo records. MoverOS is not a third party; it is part of the same family of brands as Inlet, accessed only by Inlet's operations team and the crew assigned to your move.</p>
+      <p>This site is hosted on Vercel, which acts as our service provider for hosting, content delivery, and the analytics noted below. Vercel processes data on our behalf only.</p>
+      <p>If we are required to disclose information by Canadian law (court order, lawful warrant, or similar), we will do so. If your insurance claim requires sharing photos or move details with the insurer, we will share only what is needed and only with your knowledge.</p>
+    </section>
+
+    <section class="policy-section reveal" id="your-rights">
+      <h3>Your rights</h3>
+      <p>Under PIPEDA (federal) and BC PIPA (provincial), you have the right to:</p>
+      <ul>
+        <li>Access the personal information we hold about you.</li>
+        <li>Correct any information that is inaccurate or incomplete.</li>
+        <li>Request that we delete your records earlier than the default {PRICING.retention.operationalMonths}-month window.</li>
+        <li>Withdraw consent for any specific processing, subject to operational and legal limits (for example, we cannot delete invoice records the Canada Revenue Agency requires us to retain).</li>
+        <li>Lodge a complaint with the <a href="https://www.priv.gc.ca/" rel="external">Office of the Privacy Commissioner of Canada</a> or the <a href="https://www.oipc.bc.ca/" rel="external">Office of the Information and Privacy Commissioner for BC</a> if you believe we have mishandled your information.</li>
+      </ul>
+      <p>To exercise any of these rights, email <a href="mailto:privacy@inletmove.ca">privacy@inletmove.ca</a> with your name and the move date or quote ID. We will respond within 30 days, as PIPEDA requires.</p>
+    </section>
+
+    <section class="policy-section reveal" id="cookies">
+      <h3>Cookies and tracking</h3>
+      <p>This site uses Vercel Analytics and Vercel Speed Insights, both first-party services that do not set tracking cookies and do not share data with third-party advertisers. They count page views and measure performance metrics; that is the entirety of their function on this site.</p>
+      <p>We do not use Google Analytics, Facebook Pixel, LinkedIn Insight Tag, or any third-party advertising or behavioural-tracking tool.</p>
+      <p>Because no tracking cookies are set, we do not display a cookie consent banner. If we ever add a third-party tracker, we will add a banner at that time.</p>
+      <p>Marketing campaigns operated by Demandra may use platform-specific tracking pixels on third-party platforms (such as LinkedIn, Meta, or Google Ads) that direct visitors to this site. Those campaigns operate on the respective platforms and are governed by their privacy policies, not this one. This site itself remains tracker-free.</p>
+    </section>
+
+    <section class="policy-section reveal" id="contact">
+      <h3>Privacy contact</h3>
+      <p>For privacy-specific questions or to exercise the rights above:</p>
+      <ul>
+        <li>Email: <a href="mailto:privacy@inletmove.ca">privacy@inletmove.ca</a></li>
+        <li>Postal mail: Inlet Move Co., {PRICING.address.streetAddress}, {PRICING.address.addressLocality}, {PRICING.address.addressRegion} {PRICING.address.postalCode}, Canada.</li>
+      </ul>
+      <p>For non-privacy questions, see <a href="/contact">/contact</a>.</p>
+    </section>
+
+    <section class="policy-section reveal" id="updates">
+      <h3>Updates to this policy</h3>
+      <p>If we make material changes to how we collect, use, or share personal information, we will publish the updated policy at this URL with a new effective date and a short summary of what changed at the top of the page for at least 30 days.</p>
+      <p>Minor edits — typo fixes, restructuring without policy change — are published silently. The build-stamped effective date at the top of this page reflects the most recent publish, regardless of whether the change was substantive.</p>
+    </section>
+  </Chapter>
+
+  <Trust num="02" />
+  <FinalCTA num="03" />
+</Base>
+
+<style>
+  .effective-date {
+    font-family: var(--mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+    margin: 4rem 0 0;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .policy-section {
+    max-width: 72ch;
+    padding: 3rem 0;
+    border-bottom: 1px solid var(--line);
+  }
+  .policy-section:last-child {
+    border-bottom: none;
+  }
+
+  .policy-section h3 {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2.1rem);
+    line-height: 1.15;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    margin: 0 0 1.5rem;
+    color: var(--fg);
+  }
+
+  .policy-section p {
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    color: var(--fg-2);
+    line-height: 1.65;
+    margin: 0 0 1.25rem;
+  }
+  .policy-section p:last-child { margin-bottom: 0; }
+
+  .policy-section ul {
+    list-style: none;
+    margin: 1.25rem 0;
+    padding: 0;
+  }
+  .policy-section li {
+    font-family: var(--sans);
+    font-size: 1.05rem;
+    color: var(--fg-2);
+    line-height: 1.65;
+    padding: 0.5rem 0 0.5rem 1.5rem;
+    position: relative;
+  }
+  .policy-section li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .policy-section li strong {
+    color: var(--fg);
+    font-weight: 500;
+  }
+
+  .policy-section a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-soft);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 250ms var(--ease);
+  }
+  .policy-section a:hover {
+    text-decoration-color: var(--accent);
+  }
+</style>

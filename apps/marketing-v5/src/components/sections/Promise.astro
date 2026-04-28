@@ -1,0 +1,138 @@
+---
+/**
+ * Chapter 01 — Promise. Three "promise items": hourly rate, no-surprises
+ * pricing, same-week availability. Hourly + minimum read from PRICING.rates;
+ * other copy is brand prose, not config.
+ */
+
+import { PRICING } from '../../lib/pricing';
+---
+
+<section class="chapter" id="promise">
+  <div class="chapter-header reveal">
+    <div class="ch-num">[ 01 ]</div>
+    <div class="ch-label">What we do</div>
+  </div>
+
+  <h2 class="huge reveal">
+    Two movers.<br />One van.<br /><em>Same week</em>.
+  </h2>
+
+  <div class="promise-detail reveal-stagger">
+    <div class="promise-item">
+      <div class="label">Hourly rate</div>
+      <div class="value">${PRICING.rates.hourlyRate}<em>/hr</em></div>
+      <div class="footnote">Two movers + cargo van. ${PRICING.rates.minimumCharge} minimum.</div>
+    </div>
+    <div class="promise-item">
+      <div class="label">No surprises</div>
+      <div class="value">Quote <em>=</em> bill</div>
+      <div class="footnote">No fuel surcharge, no stair fee, no weekend upcharge.</div>
+    </div>
+    <div class="promise-item">
+      <div class="label">When</div>
+      <div class="value"><em>Same</em> week</div>
+      <div class="footnote">Saturday slots typical. Local moves only.</div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .chapter {
+    min-height: 100vh;
+    padding: 12rem 5vw;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  @media (max-width: 768px) {
+    .chapter { padding: 7rem 1.5rem; }
+  }
+
+  .chapter-header {
+    display: grid;
+    grid-template-columns: 1fr 4fr;
+    gap: 3rem;
+    align-items: baseline;
+    margin-bottom: 5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--line);
+  }
+  @media (max-width: 768px) {
+    .chapter-header {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+      margin-bottom: 3rem;
+    }
+  }
+
+  .ch-num {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    color: var(--fg-3);
+  }
+  .ch-label {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--fg-2);
+  }
+
+  h2.huge {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 9vw, 9rem);
+    line-height: 0.92;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+  }
+  h2.huge em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  @media (max-width: 768px) {
+    h2.huge { font-size: clamp(2.5rem, 11vw, 4rem); }
+  }
+
+  .promise-detail {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    margin-top: 5rem;
+  }
+  @media (max-width: 768px) {
+    .promise-detail { grid-template-columns: 1fr; }
+  }
+
+  .promise-item {
+    border-top: 1px solid var(--line);
+    padding: 1.75rem 2rem 1.75rem 0;
+  }
+  .promise-item .label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--fg-3);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.875rem;
+  }
+  .promise-item .value {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+  }
+  .promise-item .value em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .promise-item .footnote {
+    font-size: 0.85rem;
+    color: var(--fg-2);
+    margin-top: 0.5rem;
+  }
+</style>
