@@ -1,0 +1,73 @@
+/* Design tokens — locked from inlet-v5.1-preview.html.
+   Every component imports these via the Base layout's global stylesheet
+   link; do not redefine values in component <style> blocks. */
+
+:root {
+  /* Surfaces */
+  --bg: #0a0a0a;
+  --bg-2: #050505;
+
+  /* Foreground (warm cream) */
+  --fg: #f4f1ea;
+  --fg-2: rgba(244, 241, 234, 0.6);
+  --fg-3: rgba(244, 241, 234, 0.35);
+  --fg-4: rgba(244, 241, 234, 0.15);
+
+  /* Accent — single ember orange, used for italic emphasis words and
+     interactive accents. Never used for body copy (4.85:1 on bg fails AAA). */
+  --accent: #e76f51;
+  --accent-soft: rgba(231, 111, 81, 0.55);
+
+  /* Hairlines */
+  --line: rgba(244, 241, 234, 0.08);
+  --line-2: rgba(244, 241, 234, 0.04);
+
+  /* Type stacks. Inter is the v5 swap from v3's Hanken Grotesk.
+     "Fraunces Variable" / "Inter Variable" are the family names emitted by
+     @fontsource-variable/* — the Variable suffix carries the variable-axis
+     payload (opsz/wght/SOFT for Fraunces, wght for Inter). Static names
+     trail as fallback in case browsers without variable-font support
+     resolve to a system-installed plain copy. JetBrains Mono is static
+     (no variable axes used). */
+  --serif: 'Fraunces Variable', 'Fraunces', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+  --sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
+
+  /* Universal Apple-style ease for every transition */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Base reset — minimal, no normalize.css */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--sans);
+  font-size: clamp(0.95rem, 1.05vw, 1.1rem);
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+img,
+video {
+  max-width: 100%;
+  display: block;
+}

@@ -1,0 +1,163 @@
+import pricingData from '@pricing';
+
+export interface PricingConfig {
+  $schema?: string;
+  lastUpdated: string;
+  source: 'manual' | 'moveros-crm';
+  currency: 'CAD';
+  rates: {
+    hourlyRate: number;
+    minimumCharge: number;
+    minimumHours: number;
+  };
+  phone: {
+    vanity: string;
+    tel: string;
+    active: boolean;
+  };
+  claims: {
+    responseTimeMinutes: number;
+    onTimePercent: number;
+    overagePercent: number;
+    insuranceAmountCAD: number;
+    insuranceLabel: string;
+    emailResponseHours: number;
+    damageResponseLabel: string;
+  };
+  address: {
+    streetAddress: string;
+    addressLocality: string;
+    addressRegion: string;
+    postalCode: string;
+    addressCountry: string;
+  };
+  retention: {
+    operationalMonths: number;
+    photosNote: string;
+    financialNote: string;
+  };
+  hours: {
+    inquiries: string;
+    inquiryAgent: string | null;
+    movesOpens: string;
+    movesCloses: string;
+    movesDays: string[];
+    timezone: string;
+  };
+  trust: {
+    bcRegistered: boolean;
+    workSafeBCActive: boolean;
+    insuranceBound: boolean;
+  };
+  links: {
+    quote: string;
+  };
+  tiers: {
+    studio: TierConfig;
+    '1-bedroom': TierConfig;
+    '2-bedroom': TierConfig;
+    '3-bedroom': TierConfig;
+    multigenerational: TierConfig;
+    'senior-downsizing': TierConfig;
+  };
+  terms: {
+    areaEligibility: string;
+    scopeDecline: string;
+    compact: string;
+  };
+}
+
+export interface TierConfig {
+  label: string;
+  estimatedHours: [number, number];
+}
+
+export type TierSlug = keyof PricingConfig['tiers'];
+
+export interface TierEstimate {
+  slug: TierSlug;
+  label: string;
+  hoursLow: number;
+  hoursHigh: number;
+  priceLow: number;
+  priceHigh: number;
+  priceLowLabel: string;
+  priceHighLabel: string;
+  rangeLabel: string;
+  hoursLabel: string;
+}
+
+export const PRICING: PricingConfig = pricingData as PricingConfig;
+
+export interface TrustCopy {
+  bcRegistered: string;
+  workSafeBC: string;
+  insurance: string;
+}
+
+/**
+ * Trust copy resolver — the single source of truth for trust assertions
+ * consumed by both body copy and JSON-LD. Each claim hedges independently:
+ * BC reg, WorkSafeBC, and insurance can each flip false without dragging
+ * the others down. Realistic case: insurance lapses during renewal while
+ * BC reg + WorkSafeBC stay active.
+ *
+ * Components compose these three strings at the call site; never inline
+ * the verified or hedged forms in markup.
+ */
+/**
+ * Maya AI-agent live check. When true, "24/7 inquiries" copy renders
+ * across /contact, /faq, and Organization.contactPoint hoursAvailable.
+ * When false, all such copy automatically reverts to the conservative
+ * "movesOpens-movesCloses" hours window — flipping pricing.json.hours
+ * .inquiryAgent to null is the launch-day kill switch.
+ */
+export function isInquiryAgentLive(): boolean {
+  return PRICING.hours.inquiryAgent !== null && PRICING.hours.inquiries === '24/7';
+}
+
+/** "08:00-20:00 PT" formatted move-dispatch window for prose. */
+export function movesHoursLabel(): string {
+  return `${PRICING.hours.movesOpens}-${PRICING.hours.movesCloses} PT`;
+}
+
+/**
+ * Tier price math — derives "$750–$1,050" from hourly rate × estimated hours.
+ * Computed at build time so a hourlyRate change in pricing.json propagates
+ * to every tier page on next build with no per-page edits. Used by
+ * /[tier]-movers pages and by Service-schema priceSpecification ranges.
+ */
+export function tierEstimate(slug: TierSlug): TierEstimate {
+  const tier = PRICING.tiers[slug];
+  const [hoursLow, hoursHigh] = tier.estimatedHours;
+  const priceLow = hoursLow * PRICING.rates.hourlyRate;
+  const priceHigh = hoursHigh * PRICING.rates.hourlyRate;
+  const fmt = (n: number) =>
+    n >= 1000 ? `$${n.toLocaleString('en-CA')}` : `$${n}`;
+  return {
+    slug,
+    label: tier.label,
+    hoursLow,
+    hoursHigh,
+    priceLow,
+    priceHigh,
+    priceLowLabel: fmt(priceLow),
+    priceHighLabel: fmt(priceHigh),
+    rangeLabel: `${fmt(priceLow)}–${fmt(priceHigh)}`,
+    hoursLabel: hoursLow === hoursHigh ? `${hoursLow} hours` : `${hoursLow}–${hoursHigh} hours`,
+  };
+}
+
+export function trustCopy(): TrustCopy {
+  return {
+    bcRegistered: PRICING.trust.bcRegistered
+      ? 'BC-registered'
+      : 'BC registration in progress',
+    workSafeBC: PRICING.trust.workSafeBCActive
+      ? 'WorkSafeBC clearance active'
+      : 'WorkSafeBC application in progress',
+    insurance: PRICING.trust.insuranceBound
+      ? PRICING.claims.insuranceLabel
+      : 'Insurance application in progress · $2M target coverage',
+  };
+}
