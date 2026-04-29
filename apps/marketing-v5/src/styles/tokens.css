@@ -3,9 +3,13 @@
    link; do not redefine values in component <style> blocks. */
 
 :root {
-  /* Surfaces */
-  --bg: #0a0a0a;
-  --bg-2: #050505;
+  /* Surfaces — brightness-lifted from inlet-v5.1-preview source values
+     (#0a0a0a / #050505) per Feroz post-launch feedback. ~9% L-axis lift
+     in OKLCH preserves brand identity (no hue/saturation change, accent
+     untouched) while making the editorial dark feel less heavy. Elevation
+     differential between --bg and --bg-2 preserved at ~Δ0.05 L. */
+  --bg: #1a1a1a;
+  --bg-2: #141414;
 
   /* Foreground (warm cream) */
   --fg: #f4f1ea;
