@@ -28,7 +28,7 @@
     "insuranceBound": true
   },
   "links": {
-    "quote": "https://quote.inletmove.com"
+    "quote": "/quote"
   },
   "address": {
     "streetAddress": "122-4675 Imperial Street",

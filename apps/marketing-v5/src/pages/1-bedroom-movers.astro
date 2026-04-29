@@ -18,7 +18,7 @@ import Chapter from '../components/sections/Chapter.astro';
 import Trust from '../components/sections/Trust.astro';
 import FinalCTA from '../components/sections/FinalCTA.astro';
 import Terms from '../components/shared/Terms.astro';
-import { PRICING, tierEstimate } from '../lib/pricing';
+import { PRICING, tierEstimate, quoteUrlAbsolute } from '../lib/pricing';
 import sofaCarry from '../assets/sofa-carry.png';
 
 const tier = tierEstimate('1-bedroom');
@@ -63,7 +63,7 @@ const serviceSchema = {
       unitText: 'per move',
     },
     availability: 'https://schema.org/InStock',
-    url: PRICING.links.quote,
+    url: quoteUrlAbsolute(),
   },
 };
 ---

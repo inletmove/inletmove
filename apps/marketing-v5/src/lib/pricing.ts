@@ -122,6 +122,38 @@ export function movesHoursLabel(): string {
 }
 
 /**
+ * Quote-link absolute URL — resolves PRICING.links.quote to an absolute
+ * URL suitable for JSON-LD schema contexts (ReserveAction.urlTemplate,
+ * Service.offers.url) where relative paths are technically valid but
+ * search engines and AI crawlers prefer absolute. CTA <a href> can use
+ * PRICING.links.quote directly; browsers handle relative paths natively.
+ *
+ * If links.quote starts with "/" (internal /quote intake form),
+ * prepends the canonical site origin. If it starts with "http",
+ * returns as-is (external quote app deployment).
+ */
+const SITE_ORIGIN = 'https://inletmove.ca';
+export function quoteUrlAbsolute(): string {
+  const v = PRICING.links.quote;
+  if (v.startsWith('http')) return v;
+  if (v.startsWith('/')) return SITE_ORIGIN + v;
+  return SITE_ORIGIN + '/' + v;
+}
+
+/**
+ * Quote-link display string — for prose contexts ("Submit a 60-second
+ * form at X"). Strips protocol from absolute URLs; prepends the canonical
+ * host to relative paths so the displayed text always reads as a
+ * domain.path form.
+ */
+export function quoteLinkDisplay(): string {
+  const v = PRICING.links.quote;
+  if (v.startsWith('http')) return v.replace(/^https?:\/\//, '');
+  if (v.startsWith('/')) return 'inletmove.ca' + v;
+  return 'inletmove.ca/' + v;
+}
+
+/**
  * Tier price math — derives "$750–$1,050" from hourly rate × estimated hours.
  * Computed at build time so a hourlyRate change in pricing.json propagates
  * to every tier page on next build with no per-page edits. Used by

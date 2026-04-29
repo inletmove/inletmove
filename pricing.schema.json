@@ -146,9 +146,8 @@
       "properties": {
         "quote": {
           "type": "string",
-          "format": "uri",
-          "pattern": "^https://",
-          "description": "Public origin of the quote app. v1: https://quote.inletmove.com (Vercel Next.js). All 'Get a quote' CTAs and the JSON-LD ReserveAction read this. Flip the value here to repoint every CTA in one config edit."
+          "pattern": "^(https://|/)",
+          "description": "Quote target — either an absolute URL (e.g. https://quote.inletmove.com for an external Next.js app) or a relative path (e.g. /quote for an inline intake form on this site). All 'Get a quote' CTAs and the JSON-LD ReserveAction read this; the helper quoteUrlAbsolute() in pricing.ts resolves relative paths against the canonical site for schema contexts."
         }
       }
     },

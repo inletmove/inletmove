@@ -21,7 +21,6 @@
     },
 
     { "source": "/colophon", "destination": "/about", "permanent": true },
-    { "source": "/quote", "destination": "https://quote.inletmove.ca", "permanent": true },
     { "source": "/thanks", "destination": "/", "permanent": true },
     { "source": "/legal/privacy", "destination": "/privacy", "permanent": true },
     { "source": "/legal/terms", "destination": "/faq", "permanent": true },

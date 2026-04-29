@@ -17,14 +17,15 @@ import Chapter from '../components/sections/Chapter.astro';
 import Trust from '../components/sections/Trust.astro';
 import FinalCTA from '../components/sections/FinalCTA.astro';
 import Terms from '../components/shared/Terms.astro';
-import { PRICING, isInquiryAgentLive, movesHoursLabel } from '../lib/pricing';
+import { PRICING, isInquiryAgentLive, movesHoursLabel, quoteLinkDisplay } from '../lib/pricing';
 import heroVan from '../assets/hero-van.png';
 
 const SITE = 'https://inletmove.ca';
 const PATH = '/contact';
 
-// Quote URL displayed without protocol for visual cleanliness.
-const quoteHost = PRICING.links.quote.replace(/^https?:\/\//, '');
+// Quote URL display — handles both absolute (external app) and relative
+// (internal /quote intake form) values from PRICING.links.quote.
+const quoteHost = quoteLinkDisplay();
 
 // Two-tier hours model. agentLive=true → render Maya 24/7 inquiry block
 // + separate move dispatch block. agentLive=false → collapse into a
@@ -97,6 +98,37 @@ const contactPointSchema = {
     eyebrowText="[ CONTACT ]  Inlet Move Co."
   />
 
+  {/* Success banner — revealed via inline JS when ?success=1 query param
+      is present (post-quote-form-submission redirect target from
+      Web3Forms). Static-output build can't read query params at compile
+      time; small inline script toggles the .visible class on first load.
+      Banner stays in HTML so screen readers + non-JS clients still get
+      the content if Web3Forms ever swaps to a server-side render. */}
+  <section class="success-banner" id="successBanner" aria-live="polite">
+    <div class="success-inner">
+      <div class="success-eyebrow">[ Submitted ]</div>
+      <h2>We received your request.</h2>
+      <p>A team member will respond within an hour during dispatch hours
+      ({moveHours}). For urgent moves call {PRICING.phone.active && (
+        <a href={`tel:${PRICING.phone.tel}`}>{PRICING.phone.vanity}</a>
+      )} directly.</p>
+    </div>
+  </section>
+
+  <script is:inline>
+    (function () {
+      try {
+        if (new URLSearchParams(window.location.search).get('success') === '1') {
+          var el = document.getElementById('successBanner');
+          if (el) {
+            el.classList.add('visible');
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      } catch (e) { /* no-op */ }
+    })();
+  </script>
+
   <Chapter
     num="01"
     label="Direct contact"
@@ -167,6 +199,51 @@ const contactPointSchema = {
 </Base>
 
 <style>
+  /* Success banner — hidden by default, revealed by inline script when
+     ?success=1 query param is present (Web3Forms post-submit redirect). */
+  .success-banner {
+    display: none;
+    padding: 4rem 5vw 1rem;
+  }
+  .success-banner.visible {
+    display: block;
+  }
+  .success-inner {
+    max-width: 64ch;
+    border-left: 2px solid var(--accent);
+    padding: 1.5rem 0 1.5rem 1.75rem;
+  }
+  .success-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    color: var(--accent);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 0.75rem;
+  }
+  .success-banner h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 400;
+    margin-bottom: 0.75rem;
+  }
+  .success-banner p {
+    color: var(--fg-2);
+    line-height: 1.55;
+    max-width: 56ch;
+  }
+  .success-banner p a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 0.2em;
+  }
+  @media (max-width: 768px) {
+    .success-banner { padding: 3rem 1.25rem 0.5rem; }
+    .success-inner { padding-left: 1rem; }
+  }
+
   .contact-methods {
     list-style: none;
     margin: 4rem 0 0;

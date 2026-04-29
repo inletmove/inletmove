@@ -20,7 +20,7 @@
  *     claims. Flip back when bilingual crew are staffed.
  */
 
-import { PRICING, trustCopy } from '../../lib/pricing';
+import { PRICING, trustCopy, quoteUrlAbsolute } from '../../lib/pricing';
 
 interface Props {
   extraSchema?: unknown[];
@@ -188,7 +188,7 @@ const businessSchema = {
     '@type': 'ReserveAction',
     target: {
       '@type': 'EntryPoint',
-      urlTemplate: PRICING.links.quote,
+      urlTemplate: quoteUrlAbsolute(),
       actionPlatform: [
         'https://schema.org/DesktopWebPlatform',
         'https://schema.org/MobileWebPlatform',

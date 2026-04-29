@@ -15,7 +15,7 @@
  * both update on next build with no further edits.
  */
 
-import { PRICING, tierEstimate, isInquiryAgentLive, movesHoursLabel } from '../lib/pricing';
+import { PRICING, tierEstimate, isInquiryAgentLive, movesHoursLabel, quoteLinkDisplay } from '../lib/pricing';
 
 export interface Faq {
   id: string;
@@ -28,7 +28,7 @@ export function getFaqs(): Faq[] {
   const studio = tierEstimate('studio');
   const threeBd = tierEstimate('3-bedroom');
   const insuranceMillions = (PRICING.claims.insuranceAmountCAD / 1_000_000).toFixed(0);
-  const quoteHost = PRICING.links.quote.replace(/^https?:\/\//, '');
+  const quoteHost = quoteLinkDisplay();
 
   const agentLive = isInquiryAgentLive();
   const moveHours = movesHoursLabel();
