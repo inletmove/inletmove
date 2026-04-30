@@ -115,7 +115,7 @@ html.js .reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.75s; }
 .cta-button {
   font-family: var(--sans);
   font-size: 0.95rem;
-  font-weight: 500;
+  font-weight: 700;
   color: var(--fg);
   text-decoration: none;
   padding: 1.125rem 2rem;

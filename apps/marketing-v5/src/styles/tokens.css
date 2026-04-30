@@ -26,15 +26,17 @@
   --line: rgba(244, 241, 234, 0.08);
   --line-2: rgba(244, 241, 234, 0.04);
 
-  /* Type stacks. Inter is the v5 swap from v3's Hanken Grotesk.
-     "Fraunces Variable" / "Inter Variable" are the family names emitted by
-     @fontsource-variable/* — the Variable suffix carries the variable-axis
-     payload (opsz/wght/SOFT for Fraunces, wght for Inter). Static names
-     trail as fallback in case browsers without variable-font support
-     resolve to a system-installed plain copy. JetBrains Mono is static
-     (no variable axes used). */
+  /* Type stacks. Plus Jakarta Sans is the post-launch swap from Inter
+     (which itself replaced v3's Hanken Grotesk) — geometric character
+     with professional warmth, less generic-AI than Inter on dark surfaces.
+     "Fraunces Variable" / "Plus Jakarta Sans Variable" are the family
+     names emitted by @fontsource-variable/* — the Variable suffix carries
+     the variable-axis payload (opsz/wght/SOFT for Fraunces, wght for
+     Plus Jakarta Sans). Static names trail as fallback in case browsers
+     without variable-font support resolve to a system-installed plain
+     copy. JetBrains Mono is static (no variable axes used). */
   --serif: 'Fraunces Variable', 'Fraunces', 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
-  --sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, 'Courier New', monospace;
 
   /* Universal Apple-style ease for every transition */
