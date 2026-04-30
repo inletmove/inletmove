@@ -119,11 +119,11 @@ html.js .reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.75s; }
    mousemove handler. */
 .cta-button {
   font-family: var(--sans);
-  font-size: 1.1rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--bg);
   text-decoration: none;
-  padding: 1.125rem 2.75rem;
+  padding: 1.25rem 3.25rem;
   background: var(--accent);
   border: 1px solid var(--accent);
   border-radius: 999px;
@@ -134,12 +134,12 @@ html.js .reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.75s; }
   overflow: hidden;
   transition: transform 400ms var(--ease), box-shadow 400ms var(--ease), background 400ms var(--ease);
   will-change: transform;
-  box-shadow: 0 0 24px rgba(231, 111, 81, 0.25);
+  box-shadow: 0 0 32px rgba(231, 111, 81, 0.28);
   min-height: 48px;
 }
 .cta-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 36px rgba(231, 111, 81, 0.45);
+  box-shadow: 0 6px 44px rgba(231, 111, 81, 0.48);
 }
 .cta-button .arrow {
   font-family: var(--serif);
