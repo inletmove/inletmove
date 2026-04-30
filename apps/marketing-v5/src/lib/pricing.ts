@@ -9,6 +9,9 @@ export interface PricingConfig {
     hourlyRate: number;
     minimumCharge: number;
     minimumHours: number;
+    varies: boolean;
+    hourlyRateLabel: string;
+    variabilityNote: string;
   };
   phone: {
     vanity: string;

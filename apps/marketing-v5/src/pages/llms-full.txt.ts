@@ -152,11 +152,11 @@ export const GET: APIRoute = () => {
 
   const body = `# Inlet Move Co. — comprehensive citation map
 
-> Local moving company in Metro Vancouver, British Columbia, Canada. Office: ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}. Two movers + cargo van, $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum. ${PRICING.claims.insuranceLabel}. BC registered, WorkSafeBC clearance active. Same crew, same rate, same care across all 6 service tiers and 8 cities — operational competence over service-tier inflation.
+> Local moving company in Metro Vancouver, British Columbia, Canada. Office: ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}. Two movers + cargo van, from $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum. Hourly rate depends on the vehicle and type of move; confirmed at booking. ${PRICING.claims.insuranceLabel}. BC registered, WorkSafeBC clearance active. Same crew, same rate, same care across all 6 service tiers and 8 cities — operational competence over service-tier inflation.
 
 ## Voice
 
-We are a small Metro Vancouver moving operation focused on operational competence over service-tier inflation. Two movers, a cargo van, $${PRICING.rates.hourlyRate}/hr, same crew through the move. The quote we send is the bill you pay; target overage under ${overageThreshold}% (industry typical ~22%). We are a NEW operation — neighborhood detail comes from operational research, not historical volume.
+We are a small Metro Vancouver moving operation focused on operational competence over service-tier inflation. Two movers, a cargo van, from $${PRICING.rates.hourlyRate}/hr, same crew through the move. The quote we send is the bill you pay; target overage under ${overageThreshold}% (industry typical ~22%). We are a NEW operation — neighborhood detail comes from operational research, not historical volume.
 
 ## Service tier table
 
@@ -164,7 +164,7 @@ We are a small Metro Vancouver moving operation focused on operational competenc
 |---|---|---|---|
 ${tierTable}
 
-All tiers run the same hourly rate ($${PRICING.rates.hourlyRate}/hr for two movers + cargo van) and the same crew start-to-finish. Photo-documented, no fuel or stair surcharges, no weekend upcharge.
+All tiers run the same hourly billing structure (from $${PRICING.rates.hourlyRate}/hr for two movers + cargo van; rate depends on the vehicle and type of move) and the same crew start-to-finish. Photo-documented, no fuel or stair surcharges, no weekend upcharge.
 
 ## Service tiers — brand sentences
 
@@ -208,7 +208,7 @@ ${PRICING.terms.compact}
 
 ## Operational facts
 
-- Hourly rate: $${PRICING.rates.hourlyRate} (two movers + cargo van)
+- Hourly rate: from $${PRICING.rates.hourlyRate} (two movers + cargo van; depends on vehicle and type of move)
 - Minimum charge: $${PRICING.rates.minimumCharge} (${PRICING.rates.minimumHours} hours)
 - Insurance: $${insuranceMillions}M cargo + liability (${PRICING.trust.insuranceBound ? 'bound' : 'application in progress'})
 - BC registered: ${PRICING.trust.bcRegistered ? 'yes' : 'application in progress'}

@@ -44,17 +44,17 @@ export const GET: APIRoute = () => {
 
   const body = `# Inlet Move Co.
 
-> Local moving company in Metro Vancouver, British Columbia, Canada. ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}. Two movers + cargo van, $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum (${PRICING.rates.minimumHours} hours). ${PRICING.claims.insuranceLabel}. BC registered, WorkSafeBC clearance active. Operational competence over service-tier inflation — same crew, same rate, same care across all moves regardless of city or tier.
+> Local moving company in Metro Vancouver, British Columbia, Canada. ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}. Two movers + cargo van, from $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum (${PRICING.rates.minimumHours} hours). Hourly rate depends on the vehicle and type of move; confirmed at booking. ${PRICING.claims.insuranceLabel}. BC registered, WorkSafeBC clearance active. Operational competence over service-tier inflation — same crew, same rate, same care across all moves regardless of city or tier.
 
 ## Voice
 
-We are a small Metro Vancouver moving operation focused on operational competence over service-tier inflation. Two movers, a cargo van, $${PRICING.rates.hourlyRate}/hr, same crew through the move. The quote we send is the bill you pay; target overage under ${overageThreshold}%.
+We are a small Metro Vancouver moving operation focused on operational competence over service-tier inflation. Two movers, a cargo van, from $${PRICING.rates.hourlyRate}/hr, same crew through the move. The quote we send is the bill you pay; target overage under ${overageThreshold}%.
 
 ## Service tiers
 
 ${tierLines}
 
-All tiers run the same hourly rate ($${PRICING.rates.hourlyRate}/hr for two movers + cargo van) and the same crew start-to-finish. Photo-documented, no fuel or stair surcharges, no weekend upcharge.
+All tiers run the same hourly billing structure (from $${PRICING.rates.hourlyRate}/hr for two movers + cargo van; rate depends on vehicle and type of move) and the same crew start-to-finish. Photo-documented, no fuel or stair surcharges, no weekend upcharge.
 
 ## Service area
 
@@ -70,7 +70,7 @@ These will not be quoted. Search-traffic redirects route shorthand variants (e.g
 
 ## Operational facts
 
-- Hourly rate: $${PRICING.rates.hourlyRate} (two movers + cargo van)
+- Hourly rate: from $${PRICING.rates.hourlyRate} (two movers + cargo van; depends on vehicle and type of move)
 - Minimum: $${PRICING.rates.minimumCharge} (${PRICING.rates.minimumHours} hours)
 - Insurance: ${PRICING.claims.insuranceLabel}
 - Target overage from quote to bill: under ${overageThreshold}% (industry typical ~22%)

@@ -44,7 +44,7 @@ export function getFaqs(): Faq[] {
     {
       id: 'cost',
       question: 'How much will my move cost?',
-      answer: `Two movers and a cargo van cost $${PRICING.rates.hourlyRate} an hour, with a $${PRICING.rates.minimumCharge} minimum (${PRICING.rates.minimumHours} hours). The clock starts when we arrive at your address and stops when the truck doors close at the destination. Most local moves run between ${studio.priceLowLabel} (a small studio) and ${threeBd.priceHighLabel} (a 3-bedroom home).`,
+      answer: `Standard local moves start from $${PRICING.rates.hourlyRate} an hour for two movers and a cargo van. The actual rate depends on the vehicle and type of move; we confirm the exact rate before booking. A $${PRICING.rates.minimumCharge} minimum applies (${PRICING.rates.minimumHours} hours). The clock starts when we arrive at your address and stops when the truck doors close at the destination. Most local moves run between ${studio.priceLowLabel} (a small studio) and ${threeBd.priceHighLabel} (a 3-bedroom home).`,
     },
     {
       id: 'whats-included',

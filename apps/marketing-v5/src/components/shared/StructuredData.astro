@@ -176,6 +176,7 @@ const businessSchema = {
         price: String(PRICING.rates.hourlyRate),
         priceCurrency: PRICING.currency,
         unitCode: 'HUR',
+        description: PRICING.rates.variabilityNote,
         referenceQuantity: {
           '@type': 'QuantitativeValue',
           value: 1,
