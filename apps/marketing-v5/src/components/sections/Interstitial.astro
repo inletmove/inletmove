@@ -1,10 +1,11 @@
 ---
 // Cinematic interstitial — full-bleed driving-van video between Service Area
 // and Trust. Below-fold autoplay loop, so it lazy-loads via the shared
-// LazyVideo component (preload="none" + IntersectionObserver). Hero now
-// owns the parked golden-hour shot (video-01); this section took over the
-// driving van (video-02-720.mp4, 4.74 MB H.264 high profile) when the
-// scroll-scrub treatment was retired.
+// LazyVideo component (preload="none" + IntersectionObserver). Hero owns
+// the parked golden-hour shot (video-01); this section runs the new
+// high-quality driving van (video-04-driving-new.mp4, 1080×1080 H.264
+// high profile, 2.66 MB). Replaces the prior video-02-720.mp4 that
+// reached its encoding-quality limit per Feroz feedback.
 
 import LazyVideo from '../shared/LazyVideo.astro';
 ---
@@ -12,9 +13,9 @@ import LazyVideo from '../shared/LazyVideo.astro';
 <section class="interstitial" aria-hidden="true">
   <LazyVideo
     sources={[
-      { src: '/assets/video-02-720.mp4', type: 'video/mp4' },
+      { src: '/assets/video-04-driving-new.mp4', type: 'video/mp4' },
     ]}
-    poster="/assets/hero-van-poster.webp"
+    poster="/assets/video-04-driving-poster.webp"
   />
   <div class="interstitial-caption">
     <div class="left">
