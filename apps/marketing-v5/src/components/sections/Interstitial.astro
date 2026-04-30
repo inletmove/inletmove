@@ -1,10 +1,10 @@
 ---
-// Cinematic interstitial — full-bleed parked-van video between Service Area
+// Cinematic interstitial — full-bleed driving-van video between Service Area
 // and Trust. Below-fold autoplay loop, so it lazy-loads via the shared
-// LazyVideo component (preload="none" + IntersectionObserver). Saves
-// ~880 KB of bandwidth on slow 4G when the user doesn't scroll past Trust.
-// Hero video stays eager (it IS the fold); only this one and any future
-// below-fold autoplay loops get the lazy treatment.
+// LazyVideo component (preload="none" + IntersectionObserver). Hero now
+// owns the parked golden-hour shot (video-01); this section took over the
+// driving van (video-02-720.mp4, 4.74 MB H.264 high profile) when the
+// scroll-scrub treatment was retired.
 
 import LazyVideo from '../shared/LazyVideo.astro';
 ---
@@ -12,17 +12,16 @@ import LazyVideo from '../shared/LazyVideo.astro';
 <section class="interstitial" aria-hidden="true">
   <LazyVideo
     sources={[
-      { src: '/assets/video-01.webm', type: 'video/webm' },
-      { src: '/assets/video-01-720.mp4', type: 'video/mp4' },
+      { src: '/assets/video-02-720.mp4', type: 'video/mp4' },
     ]}
     poster="/assets/hero-van-poster.webp"
   />
   <div class="interstitial-caption">
     <div class="left">
       <span>[ —— ]</span>
-      <span>An intermission · Vancouver · golden hour</span>
+      <span>An intermission · Vancouver · in motion</span>
     </div>
-    <div class="right">A van, <em>at rest</em>.</div>
+    <div class="right">A van, <em>always moving</em>.</div>
   </div>
 </section>
 

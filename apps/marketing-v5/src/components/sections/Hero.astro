@@ -1,12 +1,11 @@
 ---
-// Hero — full-bleed scroll-scrubbed video of the driving van. Falls back
-// to autoplay loop within 3 seconds if scrub setup doesn't complete.
+// Hero — full-bleed 4K brand video (video-01.webm, ~857 KB VP9), simple
+// autoplay loop. Scroll-scrub was dropped: the prior 720p driving-van
+// scrub never reached the visual quality bar, and 4K VP9 + autoplay loop
+// gives a sharper, calmer hero at less than a fifth of the file weight.
+// 720p H.264 mp4 fallback for browsers without VP9 support (older Safari
+// builds). Poster image: video-01-poster.webp (extracted frame at 1s).
 // Hero CTA reads from PRICING.links.quote (external quote app).
-//
-// Video is MP4-only (no .webm source): VP9 with -g 1 keyframe-dense
-// encoding ballooned the .webm to 13 MB on Step D. H.264 baseline with
-// -g 1 stayed at 2 MB. Dropping .webm here means all browsers play the
-// MP4 — Chrome/Firefox/Safari all decode H.264 baseline.
 
 import { Image } from 'astro:assets';
 import { PRICING } from '../../lib/pricing';
@@ -29,13 +28,17 @@ import heroVan from '../../assets/hero-van.png';
     <video
       class="hero-bg-video"
       id="heroVideo"
-      src="/assets/video-02-720.mp4"
+      autoplay
+      loop
       muted
       playsinline
       preload="metadata"
-      poster="/assets/hero-van-poster.webp"
+      poster="/assets/video-01-poster.webp"
       webkit-playsinline
-    ></video>
+    >
+      <source src="/assets/video-01.webm" type="video/webm" />
+      <source src="/assets/video-01-720.mp4" type="video/mp4" />
+    </video>
     <div class="hero-bg-overlay"></div>
   </div>
 
@@ -68,7 +71,7 @@ import heroVan from '../../assets/hero-van.png';
   </div>
 
   <div class="scroll-indicator">
-    Scroll · the van moves with you <span class="scroll-indicator-line"></span>
+    Scroll <span class="scroll-indicator-line"></span>
   </div>
 </section>
 
@@ -228,78 +231,14 @@ import heroVan from '../../assets/hero-van.png';
 </style>
 
 <script>
-  // Hero scroll-scrub: video scrubs forward as the user scrolls down through
-  // the hero section. If `currentTime` writes ever throw, or the video can't
-  // load metadata within 3 seconds, we fall back to a normal autoplay loop
-  // so the hero is never broken — only less interactive.
+  // Reduced motion: pause the autoplay loop. The poster stays visible.
   try {
-    const heroVideo = document.getElementById('heroVideo') as HTMLVideoElement | null;
-    const heroSection = document.getElementById('hero');
-    if (!heroVideo || !heroSection) {
-      throw new Error('hero elements missing');
-    }
-
-    let scrubReady = false;
-    let scrubFailed = false;
-
-    const startAutoplayFallback = () => {
-      if (scrubFailed) return;
-      scrubFailed = true;
-      heroVideo.loop = true;
-      heroVideo.play().catch(() => {
-        /* autoplay can be blocked by browser; poster is fine */
-      });
-    };
-
-    heroVideo.addEventListener('loadedmetadata', () => {
-      scrubReady = true;
-      heroVideo.pause();
-      heroVideo.currentTime = 0;
-    });
-
-    setTimeout(() => {
-      if (!scrubReady) startAutoplayFallback();
-    }, 3000);
-
-    let lastTime = -1;
-    const updateHeroScrub = () => {
-      if (!scrubReady || scrubFailed) return;
-      const rect = heroSection.getBoundingClientRect();
-      const total = heroSection.offsetHeight;
-      const scrolled = -rect.top;
-      const progress = Math.max(0, Math.min(1, scrolled / total));
-      if (heroVideo.duration && !isNaN(heroVideo.duration)) {
-        const newTime = progress * heroVideo.duration;
-        if (Math.abs(newTime - lastTime) > 0.02) {
-          try {
-            heroVideo.currentTime = newTime;
-            lastTime = newTime;
-          } catch {
-            startAutoplayFallback();
-          }
-        }
-      }
-    };
-
-    let ticking = false;
-    window.addEventListener(
-      'scroll',
-      () => {
-        if (!ticking) {
-          requestAnimationFrame(() => {
-            updateHeroScrub();
-            ticking = false;
-          });
-          ticking = true;
-        }
-      },
-      { passive: true },
-    );
-
-    // Reduced motion: skip the scrub, never play the video.
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      heroVideo.removeAttribute('autoplay');
-      heroVideo.pause();
+      const heroVideo = document.getElementById('heroVideo') as HTMLVideoElement | null;
+      if (heroVideo) {
+        heroVideo.removeAttribute('autoplay');
+        heroVideo.pause();
+      }
     }
   } catch {
     /* poster image stays visible; section is content-complete without JS */
