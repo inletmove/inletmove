@@ -104,6 +104,17 @@ const itemListSchema = {
       one promise: quote = bill. The rate depends on the vehicle and type of move; we confirm before booking. Pick the tier that matches your home — the math is the same.
     </p>
 
+    <figure class="services-fleet reveal">
+      <img
+        src="/assets/truck-26ft.webp"
+        alt="Inlet Move 26ft box truck used for larger residential moves across Metro Vancouver"
+        loading="lazy"
+        width="1280"
+        height="1707"
+      />
+      <figcaption>26ft box truck — for 3-bedroom, multigenerational, and senior-downsizing moves.</figcaption>
+    </figure>
+
     <ul class="tier-list reveal-stagger">
       {tiers.map((t) => (
         <li>
@@ -131,6 +142,34 @@ const itemListSchema = {
     color: var(--fg-2);
     line-height: 1.55;
   }
+
+  /* Truck-fleet figure: between intro and tier list. Image scales to a
+     reasonable max-width on wide viewports; mobile fills width. */
+  .services-fleet {
+    margin: 3rem 0 0;
+    max-width: 560px;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -25px rgba(0, 0, 0, 0.55);
+  }
+  .services-fleet img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+  .services-fleet figcaption {
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    padding: 1rem 1.25rem;
+    background: rgba(244, 241, 234, 0.04);
+    border-top: 1px solid var(--line);
+  }
+
   .services-intro strong {
     color: var(--fg);
     font-weight: 500;
