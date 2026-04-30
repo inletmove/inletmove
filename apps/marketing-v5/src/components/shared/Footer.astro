@@ -76,6 +76,9 @@ const inletLinks = [
 
   <div class="footer-bottom">
     <span>© 2026 Inlet Move Co. · {trust.bcRegistered} · {trust.workSafeBC}</span>
+    <span class="footer-address">
+      {PRICING.address.streetAddress}, {PRICING.address.addressLocality}, {PRICING.address.addressRegion} {PRICING.address.postalCode}
+    </span>
     <span class="footer-llms"><a href="/llms.txt">AI-readable site map</a></span>
     <span class="powered">Powered by MoverOS · Advertised by <em>Demandra</em></span>
   </div>
@@ -164,4 +167,7 @@ const inletLinks = [
     transition: color 250ms var(--ease);
   }
   .footer-bottom .footer-llms a:hover { color: var(--fg); }
+  .footer-bottom .footer-address {
+    color: var(--fg-3);
+  }
 </style>
