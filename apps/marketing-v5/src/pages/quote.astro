@@ -20,19 +20,18 @@
 // move size, preferred date, optional notes). Honeypot ('botcheck')
 // + hCaptcha + Web3Forms strict spam filter cover the bot vector.
 //
-// Auto-reply to the customer is NOT available on Web3Forms free tier;
-// the success banner on /contact?success=1 communicates what an
-// auto-reply email otherwise would (response window, urgent-call
-// fallback).
+// Layout: split desktop grid (hero copy left, intake form right) so
+// both are visible without scroll on viewports ≥1024px. Tablet/mobile
+// stack single-column with the form starting within the first viewport
+// scroll. The previous CityHero + Chapter chrome around the form was
+// retired in this redesign per Feroz's "form above fold" directive.
 
 import Base from '../layouts/Base.astro';
-import CityHero from '../components/sections/CityHero.astro';
 import Chapter from '../components/sections/Chapter.astro';
 import Trust from '../components/sections/Trust.astro';
 import FinalCTA from '../components/sections/FinalCTA.astro';
 import Terms from '../components/shared/Terms.astro';
 import { PRICING, tierEstimate, type TierSlug, movesHoursLabel } from '../lib/pricing';
-import heroVan from '../assets/hero-van.png';
 
 const SITE = 'https://inletmove.ca';
 const PATH = '/quote';
@@ -78,148 +77,145 @@ const breadcrumbSchema = {
   ogType="website"
   extraSchema={[breadcrumbSchema]}
 >
-  <CityHero
-    city="Quote"
-    photo={heroVan}
-    photoAlt="Inlet Move cargo van on a Metro Vancouver street, ready for a same-week move"
-    h1Html="Tell us about your <em>move</em>."
-    intro={`Two movers + cargo van, from $${PRICING.rates.hourlyRate}/hr. We respond within an hour during dispatch hours (${moveHours}). Custom moves quoted at booking.`}
-    eyebrowText="[ INTAKE ]  Quote request · Inlet Move Co."
-    ctaHref="#form"
-  />
+  <section class="quote-hero">
+    <div class="quote-hero-grid">
+      <div class="quote-hero-copy">
+        <div class="quote-hero-eyebrow">[ INTAKE ]&nbsp;Quote request · Inlet Move Co.</div>
+        <h1 class="quote-hero-title">Tell us about your <em>move</em>.</h1>
+        <p class="quote-hero-sub">
+          We respond within an hour during dispatch hours ({moveHours}).
+          Same-week local moves across Metro Vancouver.
+        </p>
+        <Terms variant="block" />
+      </div>
 
-  <Chapter
-    num="01"
-    label="Your move"
-    titleHtml="Six fields. <em>One</em> hour."
-    id="form"
-  >
-    <form
-      class="intake-form reveal"
-      action="https://api.web3forms.com/submit"
-      method="POST"
-    >
-      <input type="hidden" name="access_key" value="538e1517-9f4f-4d1a-93c8-5c84a6f62098" />
-      <input type="hidden" name="subject" value="New lead from inletmove.ca" />
-      <input type="hidden" name="from_name" value="Inlet Move Co. Lead Form" />
-      <input type="hidden" name="redirect" value="https://inletmove.ca/contact?success=1" />
-      {/* Honeypot — Web3Forms standard, hidden from real users */}
-      <input
-        type="checkbox"
-        name="botcheck"
-        style="display: none;"
-        tabindex="-1"
-        aria-hidden="true"
-      />
-
-      <fieldset>
-        <legend>Contact</legend>
-
-        <label class="field">
-          <span class="field-label">Your name <em>*</em></span>
+      <div class="quote-hero-form" id="form">
+        <form
+          class="intake-form"
+          action="https://api.web3forms.com/submit"
+          method="POST"
+        >
+          <input type="hidden" name="access_key" value="538e1517-9f4f-4d1a-93c8-5c84a6f62098" />
+          <input type="hidden" name="subject" value="New lead from inletmove.ca" />
+          <input type="hidden" name="from_name" value="Inlet Move Co. Lead Form" />
+          <input type="hidden" name="redirect" value="https://inletmove.ca/contact?success=1" />
+          {/* Honeypot — Web3Forms standard, hidden from real users */}
           <input
-            type="text"
-            name="name"
-            required
-            autocomplete="name"
-            placeholder="Full name"
+            type="checkbox"
+            name="botcheck"
+            style="display: none;"
+            tabindex="-1"
+            aria-hidden="true"
           />
-        </label>
 
-        <label class="field">
-          <span class="field-label">Phone <em>*</em></span>
-          <input
-            type="tel"
-            name="phone"
-            required
-            autocomplete="tel"
-            placeholder="604 555 0123"
-          />
-        </label>
+          <fieldset>
+            <legend>Contact</legend>
 
-        <label class="field">
-          <span class="field-label">Email <em>*</em></span>
-          <input
-            type="email"
-            name="email"
-            required
-            autocomplete="email"
-            placeholder="you@example.com"
-          />
-        </label>
-      </fieldset>
+            <label class="field">
+              <span class="field-label">Your name <em>*</em></span>
+              <input
+                type="text"
+                name="name"
+                required
+                autocomplete="name"
+                placeholder="Full name"
+              />
+            </label>
 
-      <fieldset>
-        <legend>The move</legend>
+            <label class="field">
+              <span class="field-label">Phone <em>*</em></span>
+              <input
+                type="tel"
+                name="phone"
+                required
+                autocomplete="tel"
+                placeholder="604 555 0123"
+              />
+            </label>
 
-        <label class="field">
-          <span class="field-label">Moving from <em>*</em></span>
-          <input
-            type="text"
-            name="moving_from"
-            required
-            autocomplete="street-address"
-            placeholder="Street address, city"
-          />
-        </label>
+            <label class="field">
+              <span class="field-label">Email <em>*</em></span>
+              <input
+                type="email"
+                name="email"
+                required
+                autocomplete="email"
+                placeholder="you@example.com"
+              />
+            </label>
+          </fieldset>
 
-        <label class="field">
-          <span class="field-label">Moving to <em>*</em></span>
-          <input
-            type="text"
-            name="moving_to"
-            required
-            placeholder="Street address, city"
-          />
-        </label>
+          <fieldset>
+            <legend>The move</legend>
 
-        <label class="field">
-          <span class="field-label">Move size <em>*</em></span>
-          <select name="move_size" required>
-            <option value="">Choose tier...</option>
-            {tierOptions.map((opt) => (
-              <option value={opt.value}>{opt.label}</option>
-            ))}
-          </select>
-        </label>
+            <label class="field">
+              <span class="field-label">Moving from <em>*</em></span>
+              <input
+                type="text"
+                name="moving_from"
+                required
+                autocomplete="street-address"
+                placeholder="Street address, city"
+              />
+            </label>
 
-        <label class="field">
-          <span class="field-label">Preferred move date <em>*</em></span>
-          <input type="date" name="move_date" required />
-          <small class="field-help">Earliest date we can quote toward. We'll work with you on actual scheduling.</small>
-        </label>
+            <label class="field">
+              <span class="field-label">Moving to <em>*</em></span>
+              <input
+                type="text"
+                name="moving_to"
+                required
+                placeholder="Street address, city"
+              />
+            </label>
 
-        <label class="field">
-          <span class="field-label">Special items or notes</span>
-          <textarea
-            name="notes"
-            rows="4"
-            placeholder="Piano, antiques, parking constraints, elevator booking — anything we should know"
-          ></textarea>
-        </label>
-      </fieldset>
+            <label class="field">
+              <span class="field-label">Move size <em>*</em></span>
+              <select name="move_size" required>
+                <option value="">Choose tier...</option>
+                {tierOptions.map((opt) => (
+                  <option value={opt.value}>{opt.label}</option>
+                ))}
+              </select>
+            </label>
 
-      <label class="consent field">
-        <input type="checkbox" name="consent" required />
-        <span>I consent to being contacted by Inlet Move Co. about my move. See <a href="/privacy" class="inline-link">Privacy Policy</a>.</span>
-      </label>
+            <label class="field">
+              <span class="field-label">Preferred move date <em>*</em></span>
+              <input type="date" name="move_date" required />
+              <small class="field-help">Earliest date we can quote toward. We'll work with you on actual scheduling.</small>
+            </label>
 
-      {/* hCaptcha — Web3Forms shared sitekey. Their loader script
-          (loaded below) injects the widget here automatically. */}
-      <div
-        class="h-captcha"
-        data-captcha="true"
-        data-sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
-      ></div>
+            <label class="field">
+              <span class="field-label">Special items or notes</span>
+              <textarea
+                name="notes"
+                rows="4"
+                placeholder="Piano, antiques, parking constraints, elevator booking — anything we should know"
+              ></textarea>
+            </label>
+          </fieldset>
 
-      <button type="submit" class="cta-button cta-button--large magnetic">
-        Send request
-        <span class="arrow">→</span>
-      </button>
-    </form>
+          <label class="consent field">
+            <input type="checkbox" name="consent" required />
+            <span>I consent to being contacted by Inlet Move Co. about my move. See <a href="/privacy" class="inline-link">Privacy Policy</a>.</span>
+          </label>
 
-    <Terms variant="block" />
-  </Chapter>
+          {/* hCaptcha — Web3Forms shared sitekey. Their loader script
+              (loaded below) injects the widget here automatically. */}
+          <div
+            class="h-captcha"
+            data-captcha="true"
+            data-sitekey="50b2fe65-b00b-4b9e-ad62-3ba471098be2"
+          ></div>
+
+          <button type="submit" class="cta-button cta-button--large magnetic">
+            Send request
+            <span class="arrow">→</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </section>
 
   <Chapter
     num="02"
@@ -246,9 +242,73 @@ const breadcrumbSchema = {
 <script is:inline src="https://web3forms.com/client/script.js" async defer></script>
 
 <style>
+  /* ============ /quote split-layout hero ============
+     Desktop: two-column grid. Hero copy left (40%), form right (60%).
+     Tablet/mobile: single column, hero compressed at top, form below.
+     The form sits cleanly with no chapter chrome around it. */
+
+  .quote-hero {
+    padding: 9rem 5vw 6rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+  }
+
+  .quote-hero-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 42fr 58fr;
+    gap: 5rem;
+    align-items: start;
+  }
+
+  .quote-hero-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    margin-bottom: 2rem;
+  }
+  .quote-hero-eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .quote-hero-title {
+    font-family: var(--serif);
+    font-size: clamp(2.75rem, 6.5vw, 6rem);
+    line-height: 0.95;
+    letter-spacing: -0.045em;
+    font-weight: 300;
+    max-width: 14ch;
+    margin: 0 0 2rem;
+  }
+  .quote-hero-title em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .quote-hero-sub {
+    max-width: 36ch;
+    font-size: 1.05rem;
+    color: var(--fg);
+    line-height: 1.6;
+    margin: 0 0 2.5rem;
+  }
+
+  /* ============ Intake form ============
+     Sized up per redesign: bigger labels, bigger inputs, more padding. */
+
   .intake-form {
     max-width: 56ch;
-    margin: 4rem 0 0;
+    margin: 0;
     display: flex;
     flex-direction: column;
     gap: 2.25rem;
@@ -263,7 +323,7 @@ const breadcrumbSchema = {
   }
   .intake-form legend {
     font-family: var(--mono);
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: var(--fg-3);
     letter-spacing: 0.18em;
     text-transform: uppercase;
@@ -278,7 +338,7 @@ const breadcrumbSchema = {
   }
   .field-label {
     font-family: var(--mono);
-    font-size: 0.7rem;
+    font-size: 0.85rem;
     color: var(--fg-2);
     letter-spacing: 0.12em;
     text-transform: uppercase;
@@ -288,7 +348,7 @@ const breadcrumbSchema = {
     font-style: normal;
   }
   .field-help {
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     color: var(--fg-3);
     line-height: 1.45;
     margin-top: 0.25rem;
@@ -303,11 +363,11 @@ const breadcrumbSchema = {
     background: var(--bg-2);
     color: var(--fg);
     font-family: var(--sans);
-    font-size: 1rem;
+    font-size: 1.1rem;
     line-height: 1.5;
     border: 1px solid var(--line);
     border-radius: 2px;
-    padding: 0.75rem 0.95rem;
+    padding: 0.875rem 1.1rem;
     width: 100%;
     transition: border-color 250ms var(--ease), background 250ms var(--ease);
     -webkit-appearance: none;
@@ -340,8 +400,8 @@ const breadcrumbSchema = {
   .intake-form select {
     background-image: linear-gradient(45deg, transparent 50%, var(--fg-2) 50%),
                       linear-gradient(135deg, var(--fg-2) 50%, transparent 50%);
-    background-position: calc(100% - 1.25rem) 1.05rem,
-                         calc(100% - 0.75rem) 1.05rem;
+    background-position: calc(100% - 1.25rem) 1.15rem,
+                         calc(100% - 0.75rem) 1.15rem;
     background-size: 6px 6px, 6px 6px;
     background-repeat: no-repeat;
     padding-right: 2.5rem;
@@ -392,8 +452,20 @@ const breadcrumbSchema = {
   }
   .next-prose .inline-link:hover { color: var(--accent); }
 
+  /* ============ Tablet / mobile ============ */
+  @media (max-width: 1024px) {
+    .quote-hero-grid {
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
+  }
+
   @media (max-width: 768px) {
-    .intake-form { margin-top: 3rem; gap: 1.75rem; }
+    .quote-hero { padding: 7rem 1.5rem 4rem; min-height: auto; }
+    .quote-hero-eyebrow { margin-bottom: 1.5rem; }
+    .quote-hero-title { font-size: clamp(2.5rem, 11vw, 4rem); margin-bottom: 1.5rem; }
+    .quote-hero-sub { margin-bottom: 2rem; }
+    .intake-form { gap: 1.75rem; }
     .next-prose { margin-top: 3rem; font-size: 1rem; }
   }
 </style>
