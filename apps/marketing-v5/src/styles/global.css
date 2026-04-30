@@ -110,45 +110,41 @@ html.js .reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.65s; }
 html.js .reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.75s; }
 
 /* ============ CTA BUTTON (shared by Hero + FinalCTA + others) ============
-   `.cta-button` is the base. `.cta-button--large` is the FinalCTA variant.
-   `.magnetic` is a behavior class read by the global mousemove handler. */
+   Solid accent fill is the resting state. Subtle orange glow box-shadow
+   intensifies on hover with a -2px lift. The previous outlined-glassy
+   treatment with a slide-up overlay is retired — the directive's brief is
+   "illuminated with orange, beautiful, right in the center."
+   `.cta-button--large` is the FinalCTA / quote-form-submit display variant
+   (Fraunces, larger). `.magnetic` is a behavior class read by the global
+   mousemove handler. */
 .cta-button {
   font-family: var(--sans);
-  font-size: 0.95rem;
+  font-size: 1.1rem;
   font-weight: 700;
-  color: var(--fg);
+  color: var(--bg);
   text-decoration: none;
-  padding: 1.125rem 2rem;
-  border: 1px solid var(--fg);
+  padding: 1.125rem 2.75rem;
+  background: var(--accent);
+  border: 1px solid var(--accent);
   border-radius: 999px;
   display: inline-flex;
   align-items: center;
   gap: 1rem;
   position: relative;
   overflow: hidden;
-  transition: border-color 400ms var(--ease), color 400ms var(--ease);
+  transition: transform 400ms var(--ease), box-shadow 400ms var(--ease), background 400ms var(--ease);
   will-change: transform;
-  background: rgba(10, 10, 10, 0.35);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-}
-.cta-button::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  transform: translateY(101%);
-  transition: transform 600ms var(--ease);
-  z-index: -1;
+  box-shadow: 0 0 24px rgba(231, 111, 81, 0.25);
+  min-height: 48px;
 }
 .cta-button:hover {
-  border-color: var(--accent);
-  color: var(--bg);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 36px rgba(231, 111, 81, 0.45);
 }
-.cta-button:hover::before { transform: translateY(0); }
 .cta-button .arrow {
   font-family: var(--serif);
   font-style: italic;
+  color: var(--bg);
   transition: transform 400ms var(--ease);
 }
 .cta-button:hover .arrow { transform: translateX(6px); }
@@ -157,18 +153,15 @@ html.js .reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.75s; }
   font-family: var(--serif);
   font-size: clamp(1.5rem, 3vw, 2.25rem);
   font-weight: 400;
-  padding: 1.5rem 2.5rem;
+  padding: 1.5rem 3rem;
   gap: 1.5rem;
-  background: transparent;
-  border-color: var(--line);
 }
 .cta-button--large .arrow {
-  color: var(--accent);
-  transition: transform 500ms var(--ease), color 500ms var(--ease);
+  color: var(--bg);
+  transition: transform 500ms var(--ease);
 }
 .cta-button--large:hover .arrow {
   transform: translateX(10px);
-  color: var(--bg);
 }
 
 /* ============ REDUCED MOTION ============ */
