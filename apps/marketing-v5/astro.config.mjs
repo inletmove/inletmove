@@ -11,7 +11,15 @@ export default defineConfig({
   site: 'https://inletmove.ca',
   output: 'static',
   trailingSlash: 'never',
-  integrations: [sitemap()],
+  integrations: [
+    sitemap({
+      // Emit `<lastmod>` per URL on every build so search engines can
+      // prioritize recrawl after content updates. Each build stamps every
+      // URL with the same UTC timestamp; per-URL git-mtime accuracy is
+      // unnecessary for a 22-URL site that ships as a single deploy.
+      lastmod: new Date(),
+    }),
+  ],
   build: {
     // 'always' — inlines every stylesheet into the document head as a
     // <style> block, eliminating the render-blocking external CSS link.
