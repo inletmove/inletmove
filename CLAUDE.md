@@ -1,3 +1,5 @@
+# Repo made public 2026-04-29 - Vercel Hobby plan private repo collaboration fix
+
 # CLAUDE.md — Inlet Move Co. project guide
 
 For future Claude Code sessions working in this repo. Read this and the
