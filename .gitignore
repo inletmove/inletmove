@@ -67,6 +67,9 @@ apps/marketing-v5/.astro/
 apps/marketing/dist/
 apps/marketing/.astro/
 
+# Local-only backups of replaced assets (rollback target is the prior git commit)
+apps/marketing-v5/public/assets/_originals/
+
 # Environment files (wildcard form for any environment)
 .env.*.local
 
