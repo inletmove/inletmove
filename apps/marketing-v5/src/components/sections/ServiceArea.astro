@@ -49,7 +49,7 @@ const cities = [
 ];
 ---
 
-<section class="chapter" id="area">
+<section class="chapter service-area-section" id="area">
   <div class="chapter-header reveal">
     <div class="ch-num">[ 04 ]</div>
     <div class="ch-label">Service area</div>
@@ -82,6 +82,27 @@ const cities = [
   @media (max-width: 768px) {
     .chapter { padding: 7rem 1.5rem; }
   }
+
+  /* Service-area: Vancouver skyline blue-hour photo as faded
+     background. The overlay holds text contrast against the imagery —
+     0.85 navy alpha keeps WCAG AA easily for both --fg headings
+     (~15:1 effective) and --fg-3 neighbourhood prose. */
+  .service-area-section {
+    background-image: url('/assets/vancouver-skyline-bluehour.webp');
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    background-color: var(--bg);
+  }
+  .service-area-section::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 20, 25, 0.85);
+    pointer-events: none;
+    z-index: 0;
+  }
+  .service-area-section > * { position: relative; z-index: 1; }
 
   .chapter-header {
     display: grid;
