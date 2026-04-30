@@ -211,8 +211,10 @@ const ogImageUrl = ogImage.startsWith('http')
                 my = e.clientY;
               });
               const loop = () => {
-                cx += (mx - cx) * 0.18;
-                cy += (my - cy) * 0.18;
+                // Lerp factor 0.28: closer mouse tracking with smoothing preserved.
+                // Prior 0.18 felt laggy on fast movements per Feroz feedback.
+                cx += (mx - cx) * 0.28;
+                cy += (my - cy) * 0.28;
                 cursor.style.transform = 'translate(' + (cx - 4) + 'px, ' + (cy - 4) + 'px)';
                 requestAnimationFrame(loop);
               };
