@@ -37,6 +37,13 @@
     "emailResponseHours": 1,
     "damageResponseLabel": "as soon as we can"
   },
+  "reviews": {
+    "ratingValue": null,
+    "reviewCount": 0,
+    "bestRating": 5,
+    "worstRating": 1,
+    "minCountForSchema": 5
+  },
   "trust": {
     "bcRegistered": true,
     "workSafeBCActive": true,

@@ -39,6 +39,13 @@ export interface PricingConfig {
     emailResponseHours: number;
     damageResponseLabel: string;
   };
+  reviews: {
+    ratingValue: number | null;
+    reviewCount: number;
+    bestRating: number;
+    worstRating: number;
+    minCountForSchema: number;
+  };
   address: {
     streetAddress: string;
     addressLocality: string;

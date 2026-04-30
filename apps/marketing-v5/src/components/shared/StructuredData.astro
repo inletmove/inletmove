@@ -12,7 +12,13 @@
  *   - Telephone fields are gated on `PRICING.phone.active`. If that flag
  *     flips false the phone disappears from JSON-LD automatically.
  *   - All prices read from `PRICING.rates` — no hardcoded $150 in markup.
- *   - No aggregateRating / review count (would require actual reviews).
+ *   - aggregateRating is pre-wired with conditional emission: when
+ *     PRICING.reviews.reviewCount >= PRICING.reviews.minCountForSchema
+ *     (default 5) AND ratingValue is non-null, MovingCompany.aggregateRating
+ *     emits automatically. Pre-wiring means star snippets activate the
+ *     instant the first 5 reviews are recorded — no schema deploy needed
+ *     after launch. Until then the property is omitted (lying about
+ *     ratings is the worst of the honesty-contract violations).
  *   - knowsLanguage narrowed to ['en'] for v5 ship. v3 declared
  *     ['en','zh','pa','hi'] but Inlet doesn't actually serve customers
  *     in Mandarin/Cantonese/Punjabi/Hindi today; declaring those would
@@ -132,6 +138,25 @@ const tiers: Array<{ name: string; description: string }> = [
   },
 ];
 
+// AggregateRating — conditionally emitted only when reviews.reviewCount
+// crosses the minCountForSchema gate AND ratingValue is non-null. Both
+// guards are required: count without value is invalid, value without
+// count creates a trivial 1-review rating that Google rejects. Five
+// reviews is the conservative minimum where an aggregate is meaningful.
+const reviews = PRICING.reviews;
+const aggregateRatingFields =
+  reviews.ratingValue !== null && reviews.reviewCount >= reviews.minCountForSchema
+    ? {
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: reviews.ratingValue,
+          reviewCount: reviews.reviewCount,
+          bestRating: reviews.bestRating,
+          worstRating: reviews.worstRating,
+        },
+      }
+    : {};
+
 const businessSchema = {
   '@context': 'https://schema.org',
   '@type': 'MovingCompany',
@@ -142,6 +167,7 @@ const businessSchema = {
   description: businessDescription,
   priceRange: '$$',
   ...phoneFields,
+  ...aggregateRatingFields,
   address: {
     '@type': 'PostalAddress',
     streetAddress: PRICING.address.streetAddress,
