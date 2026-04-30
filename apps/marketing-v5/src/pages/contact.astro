@@ -194,8 +194,42 @@ const contactPointSchema = {
     </div>
   </Chapter>
 
-  <Trust num="03" />
-  <FinalCTA num="04" />
+  <Chapter
+    num="03"
+    label="Office"
+    titleHtml="Where we <em>dispatch</em> from."
+    id="office"
+  >
+    <div class="office-block reveal">
+      <p class="office-address">
+        {PRICING.address.streetAddress}<br />
+        {PRICING.address.addressLocality}, {PRICING.address.addressRegion} {PRICING.address.postalCode}
+      </p>
+      <p class="office-note">
+        Crews dispatch from here every morning. Walk-ins are not staffed —
+        please book by phone, email, or quote form. The pin is for routing
+        and trust, not customer reception.
+      </p>
+      <a
+        class="office-maps-link"
+        href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}`)}`}
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        View on Google Maps <span aria-hidden="true">→</span>
+      </a>
+      <iframe
+        class="office-map"
+        title={`Inlet Move office at ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, on Google Maps`}
+        src={`https://maps.google.com/maps?q=${encodeURIComponent(`${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}`)}&output=embed`}
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      ></iframe>
+    </div>
+  </Chapter>
+
+  <Trust num="04" />
+  <FinalCTA num="05" />
 </Base>
 
 <style>
@@ -377,5 +411,51 @@ const contactPointSchema = {
     line-height: 1.6;
     margin: 0;
     max-width: 44ch;
+  }
+
+  .office-block {
+    margin-top: 4rem;
+    max-width: 72ch;
+  }
+  .office-address {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.6vw, 2rem);
+    line-height: 1.3;
+    letter-spacing: -0.025em;
+    font-weight: 400;
+    color: var(--fg);
+    margin: 0 0 1.25rem;
+  }
+  .office-note {
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--fg-2);
+    line-height: 1.6;
+    margin: 0 0 1.5rem;
+    max-width: 56ch;
+  }
+  .office-maps-link {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.06em;
+    color: var(--fg);
+    text-decoration: underline;
+    text-decoration-color: var(--accent-soft);
+    text-underline-offset: 0.3em;
+    margin-bottom: 2.5rem;
+    transition: color 250ms var(--ease);
+  }
+  .office-maps-link:hover { color: var(--accent); }
+  .office-map {
+    display: block;
+    width: 100%;
+    height: 360px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--bg-2, #111);
+  }
+  @media (max-width: 768px) {
+    .office-map { height: 280px; }
   }
 </style>
