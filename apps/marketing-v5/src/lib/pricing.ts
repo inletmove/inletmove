@@ -13,6 +13,18 @@ export interface PricingConfig {
     hourlyRateLabel: string;
     variabilityNote: string;
   };
+  fleet: {
+    cargoVan: {
+      type: string;
+      primary: boolean;
+      use: string;
+    };
+    truck: {
+      type: string;
+      primary: boolean;
+      use: string;
+    };
+  };
   phone: {
     vanity: string;
     tel: string;

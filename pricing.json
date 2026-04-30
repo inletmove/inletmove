@@ -11,6 +11,18 @@
     "hourlyRateLabel": "from $150/hr",
     "variabilityNote": "Rate depends on the vehicle and type of move. From $150/hr for standard local moves with two movers + cargo van."
   },
+  "fleet": {
+    "cargoVan": {
+      "type": "Mercedes Sprinter",
+      "primary": true,
+      "use": "Standard moves: studio through 2-bedroom"
+    },
+    "truck": {
+      "type": "26ft box truck",
+      "primary": false,
+      "use": "Larger moves: 3+ bedroom, multigenerational, senior downsizing"
+    }
+  },
   "phone": {
     "vanity": "1-833-MOVE-393",
     "tel": "+18336683393",

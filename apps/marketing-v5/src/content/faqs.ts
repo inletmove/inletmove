@@ -91,5 +91,10 @@ export function getFaqs(): Faq[] {
       question: 'How do I get a quote?',
       answer: `Submit a 60-second form at ${quoteHost} — six questions, no login, no credit card required. A real human texts back within an hour with a written estimate (target ${PRICING.claims.responseTimeMinutes} minutes). Most quotes get a confirmed date within the same week.`,
     },
+    {
+      id: 'fleet',
+      question: 'What size truck do you use?',
+      answer: `Two vehicles in the fleet. A ${PRICING.fleet.cargoVan.type} cargo van handles standard moves (${PRICING.fleet.cargoVan.use}). A ${PRICING.fleet.truck.type} handles the larger ones (${PRICING.fleet.truck.use}). We pick the right vehicle for your move size when we quote, so you only pay for what fits — never an oversized truck that bills extra hours to load.`,
+    },
   ];
 }

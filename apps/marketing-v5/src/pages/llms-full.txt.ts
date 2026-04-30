@@ -152,11 +152,18 @@ export const GET: APIRoute = () => {
 
   const body = `# Inlet Move Co. — comprehensive citation map
 
-> Local moving company in Metro Vancouver, British Columbia, Canada. Office: ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}. Two movers + cargo van, from $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum. Hourly rate depends on the vehicle and type of move; confirmed at booking. ${PRICING.claims.insuranceLabel}. BC registered, WorkSafeBC clearance active. Same crew, same rate, same care across all 6 service tiers and 8 cities — operational competence over service-tier inflation.
+> Local moving company in Metro Vancouver, British Columbia, Canada. Office: ${PRICING.address.streetAddress}, ${PRICING.address.addressLocality}, ${PRICING.address.addressRegion} ${PRICING.address.postalCode}. Two movers, a ${PRICING.fleet.cargoVan.type} cargo van for standard moves and a ${PRICING.fleet.truck.type} for the larger ones, from $${PRICING.rates.hourlyRate}/hr, $${PRICING.rates.minimumCharge} minimum. Hourly rate depends on the vehicle and type of move; confirmed at booking. ${PRICING.claims.insuranceLabel}. BC registered, WorkSafeBC clearance active. Same crew, same rate, same care across all 6 service tiers and 8 cities — operational competence over service-tier inflation.
 
 ## Voice
 
-We are a small Metro Vancouver moving operation focused on operational competence over service-tier inflation. Two movers, a cargo van, from $${PRICING.rates.hourlyRate}/hr, same crew through the move. The quote we send is the bill you pay; target overage under ${overageThreshold}% (industry typical ~22%). We are a NEW operation — neighborhood detail comes from operational research, not historical volume.
+We are a small Metro Vancouver moving operation focused on operational competence over service-tier inflation. Two movers, cargo van or 26ft truck depending on move size, from $${PRICING.rates.hourlyRate}/hr, same crew through the move. The quote we send is the bill you pay; target overage under ${overageThreshold}% (industry typical ~22%). We are a NEW operation — neighborhood detail comes from operational research, not historical volume.
+
+## Fleet
+
+- ${PRICING.fleet.cargoVan.type} cargo van — ${PRICING.fleet.cargoVan.use}
+- ${PRICING.fleet.truck.type} — ${PRICING.fleet.truck.use}
+
+We pick the right vehicle for your move size when we quote, so you only pay for what fits.
 
 ## Service tier table
 
