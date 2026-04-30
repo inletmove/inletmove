@@ -32,9 +32,14 @@ interface Props {
   // Optional eyebrow override. Default: "[ AREA ] · {city} · Metro Vancouver".
   // Pages with different framing pass their own (e.g. "[ ABOUT ] · Inlet Move Co.").
   eyebrowText?: string;
+  // Optional CTA target override. Default: PRICING.links.quote ("/quote").
+  // The /quote page itself passes "#form" so the CTA scrolls to the intake
+  // form below instead of reloading the same URL.
+  ctaHref?: string;
 }
 
-const { city, photo, photoAlt, neighborhoods, h1Html, intro, eyebrowText } = Astro.props;
+const { city, photo, photoAlt, neighborhoods, h1Html, intro, eyebrowText, ctaHref } = Astro.props;
+const ctaTarget = ctaHref ?? PRICING.links.quote;
 
 //   = non-breaking space, matches the original &nbsp; spacing.
 const eyebrow = eyebrowText ?? `[ AREA ]  ${city} · Metro Vancouver`;
@@ -67,7 +72,7 @@ const eyebrow = eyebrowText ?? `[ AREA ]  ${city} · Metro Vancouver`;
       {intro}<br />
       Two movers + cargo van · <strong>${PRICING.rates.hourlyRate}/hr</strong> · same-week local moves.
     </p>
-    <a href={PRICING.links.quote} class="cta-button magnetic">
+    <a href={ctaTarget} class="cta-button magnetic">
       Get a quote <span class="arrow">→</span>
     </a>
   </div>
