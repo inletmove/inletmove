@@ -10,6 +10,7 @@
 import { Image } from 'astro:assets';
 import { PRICING } from '../../lib/pricing';
 import heroVan from '../../assets/hero-van.png';
+import HeroFormPreview from './HeroFormPreview.astro';
 ---
 
 <section class="hero" id="hero">
@@ -65,6 +66,8 @@ import heroVan from '../../assets/hero-van.png';
       Get a quote <span class="arrow">→</span>
     </a>
   </div>
+
+  <HeroFormPreview />
 
   <div class="scroll-indicator">
     Scroll <span class="scroll-indicator-line"></span>

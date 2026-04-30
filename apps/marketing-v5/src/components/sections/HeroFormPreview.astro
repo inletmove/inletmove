@@ -1,0 +1,221 @@
+---
+// HeroFormPreview — decorative animated form panel rendered in the home
+// hero. Pure CSS animation (no JS), GPU-accelerated (opacity + transform
+// only) so CLS stays at 0. Hidden on viewports < 768px so mobile hero
+// stays uncluttered. Respects prefers-reduced-motion.
+//
+// This is NOT a functional form. Customers click the existing "Get a
+// quote" CTA in the hero to reach /quote where the real intake form
+// lives. The panel suggests "intake-form readiness" without competing
+// with the cinematic hero video for attention.
+//
+// Animation: 5 stages × 2s each = 10s infinite loop. Each stage is a
+// pre-rendered field skeleton; the cycle fades stages in/out via
+// opacity + small translateY. No typewriter character-by-character
+// (would require non-GPU layout) — instead we cross-fade between
+// "before-typed" and "after-typed" state representations of each
+// field, plus a final "all set" success frame.
+---
+
+<aside class="hero-form-preview" aria-hidden="true">
+  <div class="hfp-panel">
+    <div class="hfp-eyebrow">[ 60-second quote ]</div>
+
+    <div class="hfp-stage-stack">
+      {/* Stage 1 — empty Name field with blinking cursor */}
+      <div class="hfp-stage" data-stage="1">
+        <span class="hfp-label">Your name</span>
+        <span class="hfp-input">
+          <span class="hfp-caret"></span>
+        </span>
+      </div>
+
+      {/* Stage 2 — Name field filled */}
+      <div class="hfp-stage" data-stage="2">
+        <span class="hfp-label">Your name</span>
+        <span class="hfp-input"><span class="hfp-typed">John</span></span>
+      </div>
+
+      {/* Stage 3 — Moving from filled */}
+      <div class="hfp-stage" data-stage="3">
+        <span class="hfp-label">Moving from</span>
+        <span class="hfp-input"><span class="hfp-typed">Vancouver, BC</span></span>
+      </div>
+
+      {/* Stage 4 — Move size dropdown */}
+      <div class="hfp-stage" data-stage="4">
+        <span class="hfp-label">Move size</span>
+        <span class="hfp-input hfp-select">
+          <span class="hfp-typed">2-bedroom</span>
+          <span class="hfp-caret-down"></span>
+        </span>
+      </div>
+
+      {/* Stage 5 — All set success */}
+      <div class="hfp-stage" data-stage="5">
+        <span class="hfp-label">Quote request</span>
+        <span class="hfp-input hfp-success">
+          <span class="hfp-check">✓</span>
+          <span class="hfp-typed">Sent · we reply within an hour</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .hero-form-preview {
+    position: absolute;
+    right: 5vw;
+    top: 50%;
+    transform: translateY(-30%);
+    width: 360px;
+    z-index: 3;
+    pointer-events: none;
+  }
+
+  .hfp-panel {
+    background: rgba(15, 20, 25, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px;
+    padding: 1.5rem;
+  }
+
+  .hfp-eyebrow {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+    color: var(--fg-3);
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+
+  .hfp-stage-stack {
+    position: relative;
+    height: 5.5rem; /* fixed height = no CLS as stages cycle */
+  }
+
+  .hfp-stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    opacity: 0;
+    will-change: opacity, transform;
+    animation: hfp-cycle 10s infinite;
+  }
+
+  /* Each stage is offset by 2s; the 10s keyframe block shows the
+     stage during its 2s window, fades over 0.3s on each side. */
+  .hfp-stage[data-stage="1"] { animation-delay: 0s; }
+  .hfp-stage[data-stage="2"] { animation-delay: 2s; }
+  .hfp-stage[data-stage="3"] { animation-delay: 4s; }
+  .hfp-stage[data-stage="4"] { animation-delay: 6s; }
+  .hfp-stage[data-stage="5"] { animation-delay: 8s; }
+
+  @keyframes hfp-cycle {
+    0%   { opacity: 0; transform: translateY(6px); }
+    3%   { opacity: 1; transform: translateY(0); }
+    17%  { opacity: 1; transform: translateY(0); }
+    20%  { opacity: 0; transform: translateY(-6px); }
+    100% { opacity: 0; transform: translateY(6px); }
+  }
+
+  .hfp-label {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    color: var(--fg-2);
+    text-transform: uppercase;
+  }
+
+  .hfp-input {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(244, 241, 234, 0.04);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 0.7rem 0.85rem;
+    min-height: 2.6rem;
+    font-family: var(--sans);
+    font-size: 0.95rem;
+    color: var(--fg);
+  }
+  .hfp-input.hfp-select {
+    justify-content: space-between;
+  }
+  .hfp-input.hfp-success {
+    background: rgba(231, 111, 81, 0.08);
+    border-color: var(--accent);
+    color: var(--fg);
+  }
+
+  .hfp-caret {
+    display: inline-block;
+    width: 1px;
+    height: 1.05rem;
+    background: var(--accent);
+    animation: hfp-blink 1s steps(2) infinite;
+  }
+  @keyframes hfp-blink {
+    50% { opacity: 0; }
+  }
+
+  .hfp-caret-down {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--fg-2);
+    transform-origin: center;
+    animation: hfp-caret-down-spin 1.2s ease-in-out infinite alternate;
+  }
+  @keyframes hfp-caret-down-spin {
+    0%   { transform: rotate(0); }
+    100% { transform: rotate(180deg); }
+  }
+
+  .hfp-typed { white-space: nowrap; overflow: hidden; }
+
+  .hfp-check {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.1rem;
+    height: 1.1rem;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 0.75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* Mobile: hide entirely. The hero is video + h1 + CTA there. */
+  @media (max-width: 768px) {
+    .hero-form-preview { display: none; }
+  }
+
+  /* Tablets and narrower desktops: shrink panel + reposition */
+  @media (max-width: 1024px) and (min-width: 769px) {
+    .hero-form-preview {
+      right: 1.5rem;
+      width: 300px;
+      transform: translateY(-20%);
+    }
+    .hfp-panel { padding: 1.25rem; }
+  }
+
+  /* Reduced motion: pause cycle on the success frame so the panel
+     still reads as "form ready" without animation. */
+  @media (prefers-reduced-motion: reduce) {
+    .hfp-stage { animation: none; opacity: 0; }
+    .hfp-stage[data-stage="5"] { opacity: 1; }
+    .hfp-caret, .hfp-caret-down { animation: none; }
+  }
+</style>
